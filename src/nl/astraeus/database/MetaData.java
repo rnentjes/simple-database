@@ -77,6 +77,8 @@ public class MetaData {
 
             fields.put(field, info);
         }
+
+        // get metadata from database
     }
 
     private void processAnnotation(Table table) {
@@ -84,4 +86,5 @@ public class MetaData {
             tableName = table.name();
         }
     }
+
 }

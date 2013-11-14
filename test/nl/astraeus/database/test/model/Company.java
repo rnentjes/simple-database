@@ -1,5 +1,7 @@
 package nl.astraeus.database.test.model;
 
+import nl.astraeus.database.annotations.Length;
+
 import java.util.List;
 
 /**
@@ -9,6 +11,8 @@ import java.util.List;
  */
 public class Company {
 
+    @Length(precision = 12, scale = 4)
+    private double amount;
     private List<Person> employees;
 
 }

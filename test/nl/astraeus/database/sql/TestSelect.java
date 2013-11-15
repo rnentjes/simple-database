@@ -26,9 +26,9 @@ public class TestSelect {
 
         Map<String, Object> model = new HashMap<>();
 
-        List<Map.Entry> keys = new ArrayList<>();
+        List<String> keys = new ArrayList<>();
 
-        keys.add(new AbstractMap.SimpleEntry("name", "'John'"));
+        keys.add("name");
 
         model.put("tableName", "person");
         model.put("keys", keys);

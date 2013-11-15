@@ -1,7 +1,5 @@
 package nl.astraeus.database;
 
-import java.sql.Connection;
-
 /**
  * Date: 11/13/13
  * Time: 9:36 PM
@@ -9,13 +7,30 @@ import java.sql.Connection;
 public class ObjectPersister {
 
     private Class<?> cls;
+    private MetaData metaData;
 
     public ObjectPersister(Class<?> cls) {
         this.cls = cls;
+        this.metaData = MetaDataHandler.get().getMetaData(cls);
     }
 
-    public void store(Connection connection, Object object) {
+    public void insert(Object object) {
+        // get insert sql
+        // fill prepared statement from object
 
+
+    }
+
+    public void update(Object object) {
+
+    }
+
+    public void delete(Object object) {
+
+    }
+
+    public Object find(long id) {
+        return null;
     }
 
 }

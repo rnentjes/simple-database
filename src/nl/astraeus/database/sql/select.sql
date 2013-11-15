@@ -1,4 +1,4 @@
-select ${each(keys as key)}${key.key}, ${eachlast}${key.key}${/each}
+select ${each(keys as key)}${key}, ${eachlast}${key}${/each}
   from ${tableName}
-  where ${each(keys as key)}${key.key} = ${key.value},
-    ${eachlast}${key.key} = ${key.value}${/each};
+  where ${each(keys as key)}${key} = ?,
+    ${eachlast}${key} = ?${/each};

@@ -26,17 +26,17 @@ public class TestUpdate {
 
         Map<String, Object> model = new HashMap<>();
 
-        List<Map.Entry> columns = new ArrayList<>();
+        List<String> columns = new ArrayList<>();
 
-        columns.add(new AbstractMap.SimpleEntry("address", "'Some street 1'"));
-        columns.add(new AbstractMap.SimpleEntry("age", "31"));
-        columns.add(new AbstractMap.SimpleEntry("zip", "1234"));
-        columns.add(new AbstractMap.SimpleEntry("comment", "'Some Pipo somewhere in clownsville'"));
+        columns.add("address");
+        columns.add("age");
+        columns.add("zip");
+        columns.add("comment");
 
-        List<Map.Entry> keys = new ArrayList<>();
+        List<String> keys = new ArrayList<>();
 
-        keys.add(new AbstractMap.SimpleEntry("name", "'John'"));
-        keys.add(new AbstractMap.SimpleEntry("id", "12345"));
+        keys.add("name");
+        keys.add("id");
 
         model.put("tableName", "person");
         model.put("columns", columns);

@@ -9,7 +9,7 @@ import java.lang.annotation.RetentionPolicy;
  * Time: 4:13 PM
  */
 @Retention(RetentionPolicy.RUNTIME)
-public @interface Table {
+public @interface Column {
 
     String name() default "";
 

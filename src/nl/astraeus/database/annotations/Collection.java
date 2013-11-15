@@ -1,16 +1,18 @@
 package nl.astraeus.database.annotations;
 
+import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
 /**
- * User: rnentjes
  * Date: 11/13/13
- * Time: 4:13 PM
+ * Time: 9:57 PM
  */
 @Retention(RetentionPolicy.RUNTIME)
-public @interface Table {
+@Target( { ElementType.FIELD } )
+public @interface Collection {
 
-    String name() default "";
+    Class<?> value();
 
 }

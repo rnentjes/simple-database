@@ -26,10 +26,10 @@ public class TestInsert {
 
         Map<String, Object> model = new HashMap<>();
 
-        List<Map.Entry> columns = new ArrayList<>();
+        List<String> columns = new ArrayList<>();
 
-        columns.add(new AbstractMap.SimpleEntry("name", "'John'"));
-        columns.add(new AbstractMap.SimpleEntry("age", "31"));
+        columns.add("name");
+        columns.add("age");
 
         model.put("tableName", "person");
         model.put("columns", columns);

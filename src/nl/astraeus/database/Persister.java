@@ -3,6 +3,7 @@ package nl.astraeus.database;
 import org.h2.jdbcx.JdbcDataSource;
 
 import javax.sql.DataSource;
+import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
@@ -36,6 +37,14 @@ public class Persister {
         return dataSource;
     }
 
+    protected static Connection getConnection() {
+        if (transactions.get() == null) {
+            throw new IllegalStateException("No transaction active!");
+        }
+
+        return transactions.get().getConnection();
+    }
+
     public static void begin() {
         try {
             transactions.set(new Transaction(getDataSource().getConnection()));
@@ -51,6 +60,11 @@ public class Persister {
             } catch (SQLException e) {
                 throw new IllegalStateException(e);
             } finally {
+                try {
+                    transactions.get().getConnection().close();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
                 transactions.set(null);
             }
         }
@@ -63,6 +77,11 @@ public class Persister {
             } catch (SQLException e) {
                 throw new IllegalStateException(e);
             } finally {
+                try {
+                    transactions.get().getConnection().close();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
                 transactions.set(null);
             }
         }
@@ -82,8 +101,20 @@ public class Persister {
         }
     }
 
-    public static void store(Object obj) {
-        getObjectPersister(obj.getClass()).store(transactions.get().getConnection(), obj);
+    public static void insert(Object obj) {
+        getObjectPersister(obj.getClass()).insert(obj);
+    }
+
+    public static void update(Object obj) {
+        getObjectPersister(obj.getClass()).update(obj);
+    }
+
+    public static void delete(Object obj) {
+        getObjectPersister(obj.getClass()).delete(obj);
+    }
+
+    public static <T> T find(Class<T> cls, long id) {
+        return (T)getObjectPersister(cls).find(id);
     }
 
     private static ObjectPersister getObjectPersister(Class<?> cls) {

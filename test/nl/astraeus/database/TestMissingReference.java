@@ -7,7 +7,7 @@ import nl.astraeus.database.test.model.Person;
  * Date: 11/16/13
  * Time: 12:27 AM
  */
-public class TestOrphan {
+public class TestMissingReference {
 
     public static void main(String [] args) {
         final Person person = new Person("Test", 44, "Somewhere");

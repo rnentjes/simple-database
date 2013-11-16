@@ -300,7 +300,7 @@ public class FieldMetaData {
                 Object object = Persister.find(javaType, id);
 
                 if (object == null) {
-                    logger.warn("Orphan detected "+javaType.getSimpleName()+":"+id);
+                    logger.warn("Missing reference detected "+field.getDeclaringClass().getSimpleName()+"."+getFieldName()+":"+id);
                 }
 
                 set(obj, object);
@@ -335,7 +335,7 @@ public class FieldMetaData {
             Object object = Persister.find(javaType, id);
 
             if (object == null) {
-                logger.warn("Orphan detected "+javaType.getSimpleName()+":"+id);
+                logger.warn("Missing reference detected "+field.getDeclaringClass().getSimpleName()+"."+getFieldName()+":"+id);
             }
 
             set(result, object);

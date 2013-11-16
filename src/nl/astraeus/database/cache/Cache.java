@@ -22,15 +22,7 @@ public class Cache {
     }
 
     public <T> T get(Class<T> cls, Long id) {
-        T result = null;
-
-        ObjectCache objectCache = cache.get(cls);
-
-        if (objectCache != null) {
-            result = (T) objectCache.getObject(id);
-        }
-
-        return result;
+        return getObjectCache(cls).getObject(id);
     }
 
     public <T> void set(Class<T> cls, Long id, T object) {
@@ -43,6 +35,26 @@ public class Cache {
         }
 
         objectCache.setObject(id, object);
+    }
+
+    private <T> ObjectCache<T> getObjectCache(Class<T> cls) {
+        ObjectCache<T> objectCache = (ObjectCache<T>) cache.get(cls);
+
+        if (objectCache == null) {
+            objectCache = new ObjectCache<T>();
+
+            cache.put(cls, objectCache);
+        }
+
+        return objectCache;
+    }
+
+    public <T> void setMaxSize(Class<T> cls, int maxSize) {
+        getObjectCache(cls).setMaxSize(maxSize);
+    }
+
+    public <T> void setMaxAge(Class<T> cls, long maxAge) {
+        getObjectCache(cls).setMaxAge(maxAge);
     }
 
     public void clear() {

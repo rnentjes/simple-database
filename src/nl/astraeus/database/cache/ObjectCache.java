@@ -11,6 +11,9 @@ public class ObjectCache<T> {
 
     private Map<Long, ObjectReference<T>> cache = new ConcurrentHashMap<>();
 
+    private int maxSize = 100;
+    private long maxAge = 0;
+
     public boolean knownObject(Long id) {
         return cache.get(id) != null;
     }
@@ -42,4 +45,11 @@ public class ObjectCache<T> {
         return cache.size();
     }
 
+    public void setMaxSize(int maxSize) {
+        this.maxSize = maxSize;
+    }
+
+    public void setMaxAge(long maxAge) {
+        this.maxAge = maxAge;
+    }
 }

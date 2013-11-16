@@ -9,14 +9,15 @@ import nl.astraeus.database.test.model.Person;
 public class TestInsert {
 
     public static void main(String [] args) {
-        Persister.begin();
-
-        Persister.insert(new Person("Rien", 40, "Rozendael"));
-        Persister.insert(new Person("Jan", 32, "Straat"));
-        Persister.insert(new Person("Piet", 26, "Weg"));
-        Persister.insert(new Person("Klaas", 10, "Pad"));
-
-        Persister.commit();
+        Persister.execute(new Persister.Executor() {
+            @Override
+            public void execute() {
+                insert(new Person("Rien", 40, "Rozendael"));
+                insert(new Person("Jan", 32, "Straat"));
+                insert(new Person("Piet", 26, "Weg"));
+                insert(new Person("Klaas", 10, "Pad"));
+            }
+        });
     }
 
 }

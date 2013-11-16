@@ -91,11 +91,45 @@ public class Persister {
         }
     }
 
-    public static void execute(Runnable runnable) {
+    public abstract static class Executor {
+
+        protected void insert(Object o) {
+            Persister.insert(o);
+        }
+
+        protected void update(Object o) {
+            Persister.update(o);
+        }
+
+        protected void delete(Object o) {
+            Persister.delete(o);
+        }
+
+        protected <T> T find(Class<T> cls, long id) {
+            return Persister.find(cls, id);
+        }
+
+        protected <T>List<T> selectFrom(Class<T> cls, String query, Object ... params) {
+            return Persister.selectFrom(cls, query, params);
+        }
+
+        protected <T>List<T> selectAll(Class<T> cls) {
+            return Persister.selectAll(cls);
+        }
+
+        protected static <T>List<T> selectWhere(Class<T> cls, String query, Object ... params) {
+            return Persister.selectWhere(cls, query, params);
+        }
+
+        public abstract void execute();
+
+    }
+
+    public static void execute(Executor runnable) {
         try {
             begin();
 
-            runnable.run();
+            runnable.execute();
 
             commit();
         } finally {

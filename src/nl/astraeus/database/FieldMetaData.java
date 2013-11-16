@@ -29,6 +29,8 @@ public class FieldMetaData {
     private Length length;
     private Default defaultValue;
 
+    private boolean primaryKey = false;
+
     private static Map<Class<?>, SimpleTemplate> ddlMapping;
     private static Map<Class<?>, Integer> sqlTypeMapping;
 
@@ -73,9 +75,15 @@ public class FieldMetaData {
         length = field.getAnnotation(Length.class);
         defaultValue = field.getAnnotation(Default.class);
         Column column = field.getAnnotation(Column.class);
+        Id id = field.getAnnotation(Id.class);
 
         if (column != null) {
             columnName = column.name();
+        }
+
+        if (id != null) {
+            primaryKey = true;
+            field.setAccessible(true);
         }
 
         Map<String, Object> model = new HashMap<>();
@@ -126,6 +134,10 @@ public class FieldMetaData {
         columnInfo = new ColumnInfo(columnName, type);
     }
 
+    public boolean isPrimaryKey() {
+        return primaryKey;
+    }
+
     public Field getField() {
         return field;
     }
@@ -169,25 +181,29 @@ public class FieldMetaData {
     public void set(PreparedStatement statement, int index, Object obj) throws SQLException {
         Object value = get(obj);
 
-        switch(sqlType) {
-            case Types.VARCHAR:
-                statement.setString(index, (String)value);
-                break;
-            case Types.BIGINT:
-                statement.setLong(index, (Long) value);
-                break;
-            case Types.INTEGER:
-                statement.setInt(index, (Integer) value);
-                break;
-            case Types.SMALLINT:
-                statement.setShort(index, (Short) value);
-                break;
-            case Types.DECIMAL:
-                statement.setDouble(index, (Double) value);
-                break;
-            case Types.BLOB:
-                //statement.setBlob(index, (Double) value);
-                break;
+        if (value == null) {
+            statement.setNull(index, sqlType);
+        } else {
+            switch(sqlType) {
+                case Types.VARCHAR:
+                    statement.setString(index, (String)value);
+                    break;
+                case Types.BIGINT:
+                    statement.setLong(index, (Long) value);
+                    break;
+                case Types.INTEGER:
+                    statement.setInt(index, (Integer) value);
+                    break;
+                case Types.SMALLINT:
+                    statement.setShort(index, (Short) value);
+                    break;
+                case Types.DECIMAL:
+                    statement.setDouble(index, (Double) value);
+                    break;
+                case Types.BLOB:
+                    //statement.setBlob(index, (Double) value);
+                    break;
+            }
         }
     }
 

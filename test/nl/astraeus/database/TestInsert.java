@@ -9,11 +9,12 @@ import nl.astraeus.database.test.model.Person;
 public class TestInsert {
 
     public static void main(String [] args) {
-        Person person = new Person(1L, "Rien", 40, "Rozendael");
-
         Persister.begin();
 
-        Persister.insert(person);
+        Persister.insert(new Person("Rien", 40, "Rozendael"));
+        Persister.insert(new Person("Jan", 32, "Straat"));
+        Persister.insert(new Person("Piet", 26, "Weg"));
+        Persister.insert(new Person("Klaas", 10, "Pad"));
 
         Persister.commit();
     }

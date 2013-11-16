@@ -11,6 +11,7 @@ import java.lang.reflect.Field;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.*;
 
 /**
@@ -22,9 +23,8 @@ public class MetaData {
 
     private Class<?> cls;
     private String tableName;
-    private Field [] fields;
-    private Field pk = null;
-    private Map<Field, FieldMetaData> fieldsMetaData;
+    private FieldMetaData pk = null;
+    private FieldMetaData [] fieldsMetaData;
     private String insertSql;
 
     public MetaData(Class<?> cls) {
@@ -36,13 +36,14 @@ public class MetaData {
             tableName = cls.getSimpleName();
         }
 
-        this.fieldsMetaData = new HashMap<>();
-        this.fields = cls.getDeclaredFields();
+        Field [] fields = cls.getDeclaredFields();
+        this.fieldsMetaData = new FieldMetaData[fields.length];
+        int index = 0;
 
         for (Field field : fields) {
             FieldMetaData info = new FieldMetaData(field);
 
-            fieldsMetaData.put(field, info);
+            fieldsMetaData[index] = info;
 
             if (field.getAnnotation(Id.class) != null) {
                 if (!field.getType().equals(Long.class) &&
@@ -55,8 +56,10 @@ public class MetaData {
                     throw new IllegalStateException("Compound primary keys not supported, multable id field defined in "+field.getDeclaringClass().getSimpleName());
                 }
 
-                pk = field;
+                pk = info;
             }
+
+            index++;
         }
 
         try {
@@ -64,20 +67,18 @@ public class MetaData {
             ResultSet result = Persister.getConnection().getMetaData().getTables(null, null, tableName.toUpperCase(), null);
 
             if (result.next()) {
-                for (Field field : fields) {
-                    FieldMetaData meta = fieldsMetaData.get(field);
-
+                for (FieldMetaData meta : fieldsMetaData) {
                     ResultSet columnMetaData = Persister.getConnection().getMetaData().getColumns(null, null, tableName.toUpperCase(), meta.getColumnInfo().getName().toUpperCase());
 
                     if (columnMetaData.next()) {
-                        if (pk.equals(field)) {
+                        if (meta.isPrimaryKey()) {
 
                         }
                         // check type etc
                         // warn if different
                     } else {
                         // create Column....
-                        createColumn(field);
+                        createColumn(meta);
                     }
                 }
             } else {
@@ -90,8 +91,10 @@ public class MetaData {
 
             List<String> columns = new LinkedList<>();
 
-            for (Field field : fields) {
-                columns.add(fieldsMetaData.get(field).getColumnInfo().getName());
+            for (FieldMetaData meta : fieldsMetaData) {
+                if (!meta.isPrimaryKey()) {
+                    columns.add(meta.getColumnInfo().getName());
+                }
             }
 
             model.put("tableName", tableName);
@@ -115,31 +118,24 @@ public class MetaData {
         Map<String, Object> model = new HashMap<>();
 
         List<ColumnInfo> columns = new ArrayList<>();
-        List<String> keys = new ArrayList<>();
 
-        for (Field field : fields) {
-            FieldMetaData meta = fieldsMetaData.get(field);
-
-            columns.add(meta.getColumnInfo());
+        for (FieldMetaData meta : fieldsMetaData) {
+            if (!meta.isPrimaryKey()) {
+                columns.add(meta.getColumnInfo());
+            }
         }
-
-        FieldMetaData meta = fieldsMetaData.get(pk);
-
-        keys.add(meta.getColumnInfo().getName());
 
         model.put("tableName", tableName);
         model.put("columns", columns);
-        model.put("keys", keys);
+        model.put("key", pk.getColumnInfo().getName());
 
         SimpleTemplate template = TemplateHandler.get().getCreateTemplate();
 
         execute(template, model);
      }
 
-    private void createColumn(Field column) {
+    private void createColumn(FieldMetaData meta) {
         Map<String, Object> model = new HashMap<>();
-
-        FieldMetaData meta = fieldsMetaData.get(column);
 
         model.put("tableName", tableName);
         model.put("column", meta.getColumnInfo());
@@ -154,6 +150,7 @@ public class MetaData {
 
         try {
             String sql = createTemplate.render(model);
+            System.out.println("Executing:\n"+sql);
             statement = Persister.getConnection().prepareStatement(sql);
 
             statement.execute();
@@ -168,6 +165,43 @@ public class MetaData {
                 }
             }
         }
+    }
+
+    protected <T> void insert(T object) {
+        PreparedStatement statement = null;
+
+        try {
+            statement = Persister.getConnection().prepareStatement(insertSql, Statement.RETURN_GENERATED_KEYS);
+            int index = 1;
+
+            for (FieldMetaData meta : fieldsMetaData) {
+                if (!meta.isPrimaryKey()) {
+                    meta.set(statement, index++, object);
+                }
+            }
+
+            statement.execute();
+
+            ResultSet rs = statement.getGeneratedKeys();
+
+            if (rs != null && rs.next()) {
+                pk.set(object, rs.getLong(1));
+            }
+        } catch (SQLException e) {
+            throw new IllegalStateException(e);
+        } finally {
+            if (statement != null) {
+                try {
+                    statement.close();
+                } catch (SQLException e) {
+                    throw new IllegalStateException(e);
+                }
+            }
+        }
+    }
+
+    private <T> void setId(T object, Long key) {
+        //To change body of created methods use File | Settings | File Templates.
     }
 
 }

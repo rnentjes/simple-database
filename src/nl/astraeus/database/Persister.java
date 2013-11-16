@@ -1,9 +1,10 @@
 package nl.astraeus.database;
 
-import org.h2.jdbcx.JdbcDataSource;
+import nl.astraeus.database.jdbc.ConnectionPool;
 
 import javax.sql.DataSource;
 import java.sql.Connection;
+import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
@@ -17,24 +18,29 @@ public class Persister {
     private static ThreadLocal<Transaction> transactions = new ThreadLocal<Transaction>();
     private static Map<Class<?>, ObjectPersister> objectPersisters = new HashMap<>();
     private static DataSource dataSource;
+    private static ConnectionPool connectionPool;
 
+    static {
+        connectionPool.setConnectionProvider(new ConnectionProvider() {
+            @Override
+            public Connection getConnection() {
+                try {
+                    Class.forName("org.h2.Driver");
+                    Class.forName("nl.astraeus.jdbc.Driver");
 
-    private static DataSource getDataSource() {
-        if (dataSource == null) {
-            synchronized (Persister.class) {
-                if (dataSource == null) {
-                    JdbcDataSource jdbcDataSource = new JdbcDataSource();
+                    Connection connection = DriverManager.getConnection("jdbc:stat::jdbc:h2:mem:test", "sa", "");
+                    connection.setAutoCommit(false);
 
-                    jdbcDataSource.setUser("sa");
-                    jdbcDataSource.setPassword("");
-                    jdbcDataSource.setURL("jdbc:h2:~/test");
-
-                    dataSource = jdbcDataSource;
+                    return connection;
+                } catch (ClassNotFoundException e) {
+                    e.printStackTrace();
+                    throw new IllegalStateException(e);
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                    throw new IllegalStateException(e);
                 }
             }
-        }
-
-        return dataSource;
+        });
     }
 
     protected static Connection getConnection() {
@@ -46,22 +52,19 @@ public class Persister {
     }
 
     public static void begin() {
-        try {
-            transactions.set(new Transaction(getDataSource().getConnection()));
-        } catch (SQLException e) {
-            throw new IllegalStateException(e);
-        }
+        transactions.set(new Transaction(connectionPool.getConnection()));
     }
 
     public static void commit() {
         if (transactions.get() != null) {
+            Connection connection = transactions.get().getConnection();
             try {
-                transactions.get().getConnection().commit();
+                connection.commit();
             } catch (SQLException e) {
                 throw new IllegalStateException(e);
             } finally {
                 try {
-                    transactions.get().getConnection().close();
+                    connection.close();
                 } catch (SQLException e) {
                     e.printStackTrace();
                 }

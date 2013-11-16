@@ -15,10 +15,7 @@ public class ObjectPersister {
     }
 
     public void insert(Object object) {
-        // get insert sql
-        // fill prepared statement from object
-
-
+        metaData.insert(object);
     }
 
     public void update(Object object) {

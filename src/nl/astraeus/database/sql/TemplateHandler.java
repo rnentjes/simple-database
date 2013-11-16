@@ -2,9 +2,6 @@ package nl.astraeus.database.sql;
 
 import nl.astraeus.template.EscapeMode;
 import nl.astraeus.template.SimpleTemplate;
-import nl.astraeus.util.Util;
-
-import java.io.IOException;
 
 /**
  * Date: 11/15/13
@@ -21,20 +18,19 @@ public class TemplateHandler {
     private SimpleTemplate createTemplate;
     private SimpleTemplate createColumnTemplate;
     private SimpleTemplate insertTemplate;
+    private SimpleTemplate updateTemplate;
+    private SimpleTemplate deleteTemplate;
+    private SimpleTemplate selectTemplate;
+    private SimpleTemplate selectWhereTemplate;
 
     public TemplateHandler() {
-        try {
-            String ct = Util.readAsString(getClass().getResourceAsStream("create.sql"));
-
-            createTemplate = new SimpleTemplate("${", "}", EscapeMode.NONE, ct);
-
-            ct = Util.readAsString(getClass().getResourceAsStream("createColumn.sql"));
-
-            createColumnTemplate = new SimpleTemplate("${", "}", EscapeMode.NONE, ct);
-            insertTemplate = new SimpleTemplate("${", "}", EscapeMode.NONE, getClass(), "insert.sql");
-        } catch (IOException e) {
-            throw new IllegalStateException(e);
-        }
+        createTemplate          = new SimpleTemplate("${", "}", EscapeMode.NONE, getClass(), "create.sql");
+        createColumnTemplate    = new SimpleTemplate("${", "}", EscapeMode.NONE, getClass(), "createColumn.sql");
+        insertTemplate          = new SimpleTemplate("${", "}", EscapeMode.NONE, getClass(), "insert.sql");
+        updateTemplate          = new SimpleTemplate("${", "}", EscapeMode.NONE, getClass(), "update.sql");
+        deleteTemplate          = new SimpleTemplate("${", "}", EscapeMode.NONE, getClass(), "delete.sql");
+        selectTemplate          = new SimpleTemplate("${", "}", EscapeMode.NONE, getClass(), "select.sql");
+        selectWhereTemplate     = new SimpleTemplate("${", "}", EscapeMode.NONE, getClass(), "selectWhere.sql");
     }
 
     public SimpleTemplate getCreateTemplate() {
@@ -47,5 +43,21 @@ public class TemplateHandler {
 
     public SimpleTemplate getInsertTemplate() {
         return insertTemplate;
+    }
+
+    public SimpleTemplate getSelectWhereTemplate() {
+        return selectWhereTemplate;
+    }
+
+    public SimpleTemplate getSelectTemplate() {
+        return selectTemplate;
+    }
+
+    public SimpleTemplate getUpdateTemplate() {
+        return updateTemplate;
+    }
+
+    public SimpleTemplate getDeleteTemplate() {
+        return deleteTemplate;
     }
 }

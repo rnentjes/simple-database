@@ -45,4 +45,11 @@ public class Cache {
         objectCache.setObject(id, object);
     }
 
+    public void clear() {
+        cache.clear();
+    }
+
+    public Map<Class<?>, ObjectCache<?>> getCache() {
+        return cache;
+    }
 }

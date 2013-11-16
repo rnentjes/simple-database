@@ -1,4 +1,4 @@
-select ${each(keys as key)}${key}, ${eachlast}${key}${/each}
-  from ${tableName}
-  where ${each(keys as key)}${key} = ?,
-    ${eachlast}${key} = ?${/each};
+select ${each(columns as column)}`${column}`,
+       ${eachlast}`${column}`${/each}
+  from `${tableName}`
+  where `${key}` = ?;

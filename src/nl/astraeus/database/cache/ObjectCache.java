@@ -38,4 +38,8 @@ public class ObjectCache<T> {
         }
     }
 
+    public int getNumberCached() {
+        return cache.size();
+    }
+
 }

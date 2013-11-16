@@ -1,11 +1,7 @@
 package nl.astraeus.database.test.model;
 
-import nl.astraeus.database.annotations.Collection;
 import nl.astraeus.database.annotations.Id;
-import nl.astraeus.database.annotations.Length;
 import nl.astraeus.database.annotations.Table;
-
-import java.util.List;
 
 /**
  * User: rnentjes
@@ -16,12 +12,29 @@ import java.util.List;
 public class Company {
 
     @Id
-    private int id;
+    private Long id;
 
-    @Length(precision = 12, scale = 4)
-    private double amount;
+    private String name;
 
-    @Collection(Person.class)
-    private List<Person> employees;
+    //@Collection(Person.class)
+    //private List<Person> employees;
+
+    public Company() {}
+
+    public Company(String name) {
+        this.name = name;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
 
 }

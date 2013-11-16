@@ -4,11 +4,10 @@ import nl.astraeus.database.annotations.*;
 import nl.astraeus.template.EscapeMode;
 import nl.astraeus.template.SimpleTemplate;
 
+import java.io.ByteArrayInputStream;
 import java.lang.reflect.Field;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Types;
+import java.nio.ByteBuffer;
+import java.sql.*;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -18,9 +17,17 @@ import java.util.Map;
  */
 public class FieldMetaData {
 
+    public static enum ColumnType {
+        BASIC,
+        COLLECTION,
+        SERIALIZED,
+        REFERENCE;
+    }
+
     private Field field;
     private String fieldName;
 
+    private ColumnType type;
     private Class<?> javaType;
     private Integer sqlType;
 
@@ -28,6 +35,7 @@ public class FieldMetaData {
 
     private Length length;
     private Default defaultValue;
+    private Class<?> collectionClass;
 
     private boolean primaryKey = false;
 
@@ -71,6 +79,7 @@ public class FieldMetaData {
         fieldName = field.getName();
         String columnName = fieldName;
         javaType = field.getType();
+        type = ColumnType.BASIC;
 
         length = field.getAnnotation(Length.class);
         defaultValue = field.getAnnotation(Default.class);
@@ -109,7 +118,8 @@ public class FieldMetaData {
             Collection collection = field.getAnnotation(Collection.class);
 
             if (collection != null) {
-                Class<?> collectionClass = collection.value();
+                collectionClass = collection.value();
+                this.type = ColumnType.COLLECTION;
 
                 // BLOB
                 type = "BLOB";
@@ -121,10 +131,12 @@ public class FieldMetaData {
                     // BLOB
                     type = "BLOB";
                     sqlType = Types.BLOB;
+                    this.type = ColumnType.SERIALIZED;
                 } else if (javaType.getAnnotation(Table.class) != null) {
                     // oneToone
                     type = "BIGINT";
                     sqlType = Types.BIGINT;
+                    this.type = ColumnType.REFERENCE;
                 } else {
                     throw new IllegalStateException("Type "+field.getType().getSimpleName()+" of field "+field.getDeclaringClass().getSimpleName()+"."+field.getName()+" is not supported!");
                 }
@@ -180,53 +192,98 @@ public class FieldMetaData {
 
     public void set(PreparedStatement statement, int index, Object obj) throws SQLException {
         Object value = get(obj);
+        MetaData metaData = null;
 
         if (value == null) {
-            statement.setNull(index, sqlType);
+            switch(type) {
+                case BASIC:
+                    statement.setNull(index, sqlType);
+                    break;
+                case REFERENCE:
+                    statement.setNull(index, Types.BIGINT);
+                    break;
+                case COLLECTION:
+                    statement.setNull(index, Types.BLOB);
+                    break;
+
+            }
         } else {
-            switch(sqlType) {
-                case Types.VARCHAR:
-                    statement.setString(index, (String)value);
+            switch(type) {
+                case BASIC:
+                    switch(sqlType) {
+                        case Types.VARCHAR:
+                            statement.setString(index, (String)value);
+                            break;
+                        case Types.BIGINT:
+                            statement.setLong(index, (Long) value);
+                            break;
+                        case Types.INTEGER:
+                            statement.setInt(index, (Integer) value);
+                            break;
+                        case Types.SMALLINT:
+                            statement.setShort(index, (Short) value);
+                            break;
+                        case Types.DECIMAL:
+                            statement.setDouble(index, (Double) value);
+                            break;
+                    }
                     break;
-                case Types.BIGINT:
-                    statement.setLong(index, (Long) value);
+                case REFERENCE:
+                    metaData = MetaDataHandler.get().getMetaData(value.getClass());
+                    statement.setLong(index, metaData.getId(value));
                     break;
-                case Types.INTEGER:
-                    statement.setInt(index, (Integer) value);
-                    break;
-                case Types.SMALLINT:
-                    statement.setShort(index, (Short) value);
-                    break;
-                case Types.DECIMAL:
-                    statement.setDouble(index, (Double) value);
-                    break;
-                case Types.BLOB:
-                    //statement.setBlob(index, (Double) value);
+                case COLLECTION:
+                    metaData = MetaDataHandler.get().getMetaData(collectionClass);
+                    java.util.Collection c = (java.util.Collection)value;
+                    ByteBuffer buffer = ByteBuffer.allocate(c.size() * 8);
+                    for (Object o : c) {
+                        buffer.putLong(metaData.getId(o));
+                    }
+
+                    statement.setBlob(index, new ByteArrayInputStream(buffer.array()));
                     break;
             }
         }
     }
 
     public void set(ResultSet rs, int index, Object obj) throws SQLException {
-        switch(sqlType) {
-            case Types.VARCHAR:
-                set(obj, rs.getString(index));
+        Long id = null;
+
+        switch(type) {
+            case BASIC:
+                switch(sqlType) {
+                    case Types.VARCHAR:
+                        set(obj, rs.getString(index));
+                        break;
+                    case Types.BIGINT:
+                        set(obj, rs.getLong(index));
+                        break;
+                    case Types.INTEGER:
+                        set(obj, rs.getInt(index));
+                        break;
+                    case Types.SMALLINT:
+                        set(obj, rs.getShort(index));
+                        break;
+                    case Types.DECIMAL:
+                        set(obj, rs.getDouble(index));
+                        break;
+                }
                 break;
-            case Types.BIGINT:
-                set(obj, rs.getLong(index));
+            case REFERENCE:
+                id = rs.getLong(index);
+
+                set(obj, Persister.find(javaType, id));
                 break;
-            case Types.INTEGER:
-                set(obj, rs.getInt(index));
-                break;
-            case Types.SMALLINT:
-                set(obj, rs.getShort(index));
-                break;
-            case Types.DECIMAL:
-                set(obj, rs.getDouble(index));
-                break;
-            case Types.BLOB:
-                //set(obj, rs.getString(index));
-                //statement.setBlob(index, (Double) value);
+            case COLLECTION:
+                Blob blob = rs.getBlob(index);
+
+                ByteBuffer buffer = ByteBuffer.wrap(blob.getBytes(0, (int) blob.length()));
+
+                while(buffer.hasRemaining()) {
+                    id = buffer.getLong();
+
+                    // todo: do something with these ids
+                }
                 break;
         }
 

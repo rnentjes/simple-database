@@ -1,11 +1,13 @@
 package nl.astraeus.database;
 
+import nl.astraeus.database.cache.Cache;
 import nl.astraeus.database.jdbc.ConnectionPool;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -44,6 +46,10 @@ public class Persister {
         }
 
         return transactions.get().getConnection();
+    }
+
+    protected static Connection getNewConnection() {
+        return ConnectionPool.get().getConnection();
     }
 
     public static void begin() {
@@ -112,17 +118,37 @@ public class Persister {
     }
 
     public static <T> T find(Class<T> cls, long id) {
-        return (T)getObjectPersister(cls).find(id);
+        if (Cache.get().inCache(cls, id)) {
+            return Cache.get().get(cls, id);
+        }
+
+        T result = getObjectPersister(cls).find(id);
+
+        Cache.get().set(cls, id, result);
+
+        return result;
     }
 
-    private static ObjectPersister getObjectPersister(Class<?> cls) {
-        ObjectPersister result = objectPersisters.get(cls);
+    public static <T>List<T> select(Class<T> cls, String query, Object ... params) {
+        return getObjectPersister(cls).select(query, params);
+    }
+
+    public static <T>List<T> selectAll(Class<T> cls) {
+        return getObjectPersister(cls).selectWhere("1 = 1");
+    }
+
+    public static <T>List<T> selectWhere(Class<T> cls, String query, Object ... params) {
+        return getObjectPersister(cls).selectWhere(query, params);
+    }
+
+    private static <T> ObjectPersister<T> getObjectPersister(Class<T> cls) {
+        ObjectPersister<T> result = objectPersisters.get(cls);
 
         if (result == null) {
             synchronized (Persister.class) {
                 result = objectPersisters.get(cls);
                 if (result == null) {
-                    result = new ObjectPersister(cls);
+                    result = new ObjectPersister<T>(cls);
 
                     objectPersisters.put(cls, result);
                 }

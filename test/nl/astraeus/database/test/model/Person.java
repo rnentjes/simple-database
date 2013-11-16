@@ -1,9 +1,6 @@
 package nl.astraeus.database.test.model;
 
-import nl.astraeus.database.annotations.Default;
-import nl.astraeus.database.annotations.Id;
-import nl.astraeus.database.annotations.Length;
-import nl.astraeus.database.annotations.Table;
+import nl.astraeus.database.annotations.*;
 
 /**
  * User: rnentjes
@@ -11,6 +8,7 @@ import nl.astraeus.database.annotations.Table;
  * Time: 4:09 PM
  */
 @Table(name="persons")
+@Cache(maxSize = 10000)
 public class Person {
 
     @Id
@@ -21,8 +19,14 @@ public class Person {
     private String name;
     @Default("21")
     private int age;
+    @Length(precision = 10, scale = 2)
+    private double balance;
     private String address;
+
     private Company company;
+
+    // needed for retrieval from db
+    public Person() {}
 
     public Person(String name, int age, String address) {
         this.name = name;

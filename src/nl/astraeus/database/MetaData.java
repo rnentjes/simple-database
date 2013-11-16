@@ -8,26 +8,27 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.Field;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 import java.util.*;
+import java.util.Date;
 
 /**
  * Date: 11/13/13
  * Time: 9:41 PM
  */
-public class MetaData {
+public class MetaData<T> {
     private final static Logger logger = LoggerFactory.getLogger(MetaData.class);
 
-    private Class<?> cls;
+    private Class<T> cls;
     private String tableName;
     private FieldMetaData pk = null;
     private FieldMetaData [] fieldsMetaData;
     private String insertSql;
+    private String selectSql;
+    private String updateSql;
+    private String deleteSql;
 
-    public MetaData(Class<?> cls) {
+    public MetaData(Class<T> cls) {
         this.cls = cls;
 
         processAnnotation(cls.getAnnotation(Table.class));
@@ -86,6 +87,9 @@ public class MetaData {
             }
 
             SimpleTemplate insertTemplate = TemplateHandler.get().getInsertTemplate();
+            SimpleTemplate selectTemplate = TemplateHandler.get().getSelectTemplate();
+            SimpleTemplate updateTemplate = TemplateHandler.get().getUpdateTemplate();
+            SimpleTemplate deleteTemplate = TemplateHandler.get().getDeleteTemplate();
 
             Map<String, Object> model = new HashMap<>();
 
@@ -99,9 +103,14 @@ public class MetaData {
 
             model.put("tableName", tableName);
             model.put("columns", columns);
+            model.put("key", pk.getColumnInfo().getName());
 
             insertSql = insertTemplate.render(model);
-            System.out.println(insertSql);
+            updateSql = updateTemplate.render(model);
+            deleteSql = deleteTemplate.render(model);
+
+            columns.add(0, pk.getColumnInfo().getName());
+            selectSql = selectTemplate.render(model);
         } catch (SQLException e) {
             throw new IllegalStateException(e);
         }
@@ -167,6 +176,43 @@ public class MetaData {
         }
     }
 
+    protected <T> T find(final Long id) {
+        return executeInNewConnection(new ExecuteConnectionWithResult<T>() {
+            @Override
+            public T execute(Connection connection) throws SQLException {
+                PreparedStatement statement = null;
+
+                try {
+                    T result = null;
+                    statement = connection.prepareStatement(selectSql);
+
+                    statement.setLong(1, id);
+
+                    ResultSet rs = statement.executeQuery();
+
+                    if (rs.next()) {
+                        result = (T)cls.newInstance();
+                        int index = 1;
+
+                        for (FieldMetaData meta : fieldsMetaData) {
+                            meta.set(rs, index++, result);
+                        }
+                    }
+
+                    return result;
+                } catch (InstantiationException e) {
+                    throw new IllegalStateException(e);
+                } catch (IllegalAccessException e) {
+                    throw new IllegalStateException(e);
+                } finally {
+                    if (statement != null) {
+                        statement.close();
+                    }
+                }
+            }
+        });
+    }
+
     protected <T> void insert(T object) {
         PreparedStatement statement = null;
 
@@ -200,8 +246,173 @@ public class MetaData {
         }
     }
 
-    private <T> void setId(T object, Long key) {
-        //To change body of created methods use File | Settings | File Templates.
+    protected <T> void update(T object) {
+        PreparedStatement statement = null;
+
+        try {
+            statement = Persister.getConnection().prepareStatement(updateSql);
+            int index = 1;
+
+            for (FieldMetaData meta : fieldsMetaData) {
+                if (!meta.isPrimaryKey()) {
+                    meta.set(statement, index++, object);
+                }
+            }
+
+            pk.set(statement, index++, object);
+
+            statement.execute();
+        } catch (SQLException e) {
+            throw new IllegalStateException(e);
+        } finally {
+            if (statement != null) {
+                try {
+                    statement.close();
+                } catch (SQLException e) {
+                    throw new IllegalStateException(e);
+                }
+            }
+        }
     }
 
+    public void delete(Long id) {
+        PreparedStatement statement = null;
+
+        try {
+            statement = Persister.getConnection().prepareStatement(deleteSql);
+
+            statement.setLong(1, id);
+
+            statement.execute();
+        } catch (SQLException e) {
+            throw new IllegalStateException(e);
+        } finally {
+            if (statement != null) {
+                try {
+                    statement.close();
+                } catch (SQLException e) {
+                    throw new IllegalStateException(e);
+                }
+            }
+        }
+    }
+
+
+    public <T> List<T> selectWhere(String query, final Object[] params) {
+        List<T> result;
+        SimpleTemplate whereTemplate = TemplateHandler.get().getSelectWhereTemplate();
+
+        Map<String, Object> model = new HashMap<>();
+
+        List<String> columns = new LinkedList<>();
+
+        for (FieldMetaData meta : fieldsMetaData) {
+            if (!meta.isPrimaryKey()) {
+                columns.add(meta.getColumnInfo().getName());
+            }
+        }
+
+        model.put("tableName", tableName);
+        model.put("key", pk.getColumnInfo().getName());
+        model.put("query", query);
+
+        final String whereSql = whereTemplate.render(model);
+
+        PreparedStatement statement = null;
+
+        result = executeInNewConnection(new ExecuteConnectionWithResult<List<T>>() {
+            @Override
+            public List<T> execute(Connection connection) throws SQLException {
+                List<T> result = new ArrayList<>();
+                PreparedStatement statement = null;
+
+                try {
+                    statement = connection.prepareStatement(whereSql);
+                    int index = 1;
+
+                    for (Object param : params) {
+                        setStatementParameter(statement, index++, param);
+                    }
+
+                    ResultSet rs = statement.executeQuery();
+
+                    while (rs.next()) {
+                        Long id = rs.getLong(1);
+
+                        result.add((T) Persister.find(cls, id));
+                    }
+
+                    return result;
+                } finally {
+                    if (statement != null) {
+                        statement.close();
+                    }
+                }
+            }
+        });
+
+        return result;
+    }
+
+    private void setStatementParameter(PreparedStatement statement, int index, Object param) throws SQLException {
+        if (param.getClass().equals(String.class)) {
+            statement.setString(index, (String) param);
+        } else if (param.getClass().equals(Long.class) || param.getClass().equals(long.class)) {
+            statement.setLong(index, (Long) param);
+        } else if (param.getClass().equals(Integer.class) || param.getClass().equals(int.class)) {
+            statement.setInt(index, (Integer) param);
+        } else if (param.getClass().equals(Short.class) || param.getClass().equals(short.class)) {
+            statement.setShort(index, (Short)param);
+        } else if (param.getClass().equals(Double.class) || param.getClass().equals(double.class)) {
+            statement.setDouble(index, (Double)param);
+        } else if (param.getClass().equals(Date.class)) {
+            java.sql.Date date = new java.sql.Date(((Date)param).getTime());
+
+            statement.setDate(index, date);
+        }
+    }
+
+    private void executeInNewConnection(ExecuteConnection es) {
+        Connection connection = null;
+
+        try {
+            connection = Persister.getNewConnection();
+
+            es.execute(connection);
+        } catch (SQLException e) {
+            throw new IllegalStateException(e);
+        } finally {
+            if (connection != null) {
+                try {
+                    connection.close();
+                } catch (SQLException e) {
+                    throw new IllegalStateException(e);
+                }
+            }
+        }
+    }
+
+    private <T> T executeInNewConnection(ExecuteConnectionWithResult<T> es) {
+        Connection connection = null;
+
+        try {
+            connection = Persister.getNewConnection();
+
+            return es.execute(connection);
+        } catch (SQLException e) {
+            throw new IllegalStateException(e);
+        } finally {
+            if (connection != null) {
+                try {
+                    connection.close();
+                } catch (SQLException e) {
+                    throw new IllegalStateException(e);
+                }
+            }
+        }
+    }
+
+    public Long getId(Object object) {
+        return (Long)pk.get(object);
+    }
 }

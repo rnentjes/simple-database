@@ -2,7 +2,6 @@ package nl.astraeus.database;
 
 import nl.astraeus.database.cache.Cache;
 
-import java.util.LinkedList;
 import java.util.List;
 
 /**
@@ -21,10 +20,16 @@ public class ObjectPersister<T> {
 
     public void insert(Object object) {
         metaData.insert(object);
+
+        Long id = metaData.getId(object);
+        Cache.get().set((Class<Object>) object.getClass(), id, object);
     }
 
     public void update(Object object) {
         metaData.update(object);
+
+        Long id = metaData.getId(object);
+        Cache.get().set((Class<Object>) object.getClass(), id, object);
     }
 
     public void delete(Object object) {
@@ -47,9 +52,8 @@ public class ObjectPersister<T> {
         return result;
     }
 
-    public List<T> select(String query, Object ... params) {
-        return new LinkedList<>();
-
+    public List<T> selectFrom(String query, Object... params) {
+        return metaData.selectFrom(query, params);
     }
 
     public List<T> selectWhere(String query, Object ... params) {

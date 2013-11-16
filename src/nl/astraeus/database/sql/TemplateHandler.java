@@ -22,6 +22,7 @@ public class TemplateHandler {
     private SimpleTemplate deleteTemplate;
     private SimpleTemplate selectTemplate;
     private SimpleTemplate selectWhereTemplate;
+    private SimpleTemplate selectFromTemplate;
 
     public TemplateHandler() {
         createTemplate          = new SimpleTemplate("${", "}", EscapeMode.NONE, getClass(), "create.sql");
@@ -31,6 +32,7 @@ public class TemplateHandler {
         deleteTemplate          = new SimpleTemplate("${", "}", EscapeMode.NONE, getClass(), "delete.sql");
         selectTemplate          = new SimpleTemplate("${", "}", EscapeMode.NONE, getClass(), "select.sql");
         selectWhereTemplate     = new SimpleTemplate("${", "}", EscapeMode.NONE, getClass(), "selectWhere.sql");
+        selectFromTemplate      = new SimpleTemplate("${", "}", EscapeMode.NONE, getClass(), "selectFrom.sql");
     }
 
     public SimpleTemplate getCreateTemplate() {
@@ -59,5 +61,9 @@ public class TemplateHandler {
 
     public SimpleTemplate getDeleteTemplate() {
         return deleteTemplate;
+    }
+
+    public SimpleTemplate getSelectFromTemplate() {
+        return selectFromTemplate;
     }
 }

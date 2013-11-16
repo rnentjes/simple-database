@@ -8,7 +8,7 @@ import nl.astraeus.database.annotations.*;
  * Time: 4:09 PM
  */
 @Table(name="persons")
-@Cache(maxSize = 10000)
+@Cache(maxSize = 10000, maxAge = 1000 * 60 * 60)
 public class Person {
 
     @Id
@@ -25,6 +25,8 @@ public class Person {
 
     private Company company;
 
+    private String newColumnTest;
+
     // needed for retrieval from db
     public Person() {}
 
@@ -32,6 +34,8 @@ public class Person {
         this.name = name;
         this.age = age;
         this.address = address;
+
+
     }
 
     public Long getId() {

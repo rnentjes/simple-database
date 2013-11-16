@@ -1,7 +1,11 @@
 package nl.astraeus.database.test.model;
 
+import nl.astraeus.database.annotations.Collection;
 import nl.astraeus.database.annotations.Id;
 import nl.astraeus.database.annotations.Table;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * User: rnentjes
@@ -16,8 +20,8 @@ public class Company {
 
     private String name;
 
-    //@Collection(Person.class)
-    //private List<Person> employees;
+    @Collection(Info.class)
+    private List<Info> infoLines = new ArrayList<Info>();
 
     public Company() {}
 
@@ -37,4 +41,11 @@ public class Company {
         this.name = name;
     }
 
+    public void addInfo(Info info) {
+        infoLines.add(info);
+    }
+
+    public List<Info> getInfoLines() {
+        return infoLines;
+    }
 }

@@ -63,13 +63,15 @@ public class MetaData<T> {
             index++;
         }
 
+        Connection connection = null;
         try {
             // get metadata from database
-            ResultSet result = Persister.getConnection().getMetaData().getTables(null, null, tableName.toUpperCase(), null);
+            connection = Persister.getNewConnection();
+            ResultSet result = connection.getMetaData().getTables(null, null, tableName.toUpperCase(), null);
 
             if (result.next()) {
                 for (FieldMetaData meta : fieldsMetaData) {
-                    ResultSet columnMetaData = Persister.getConnection().getMetaData().getColumns(null, null, tableName.toUpperCase(), meta.getColumnInfo().getName().toUpperCase());
+                    ResultSet columnMetaData = connection.getMetaData().getColumns(null, null, tableName.toUpperCase(), meta.getColumnInfo().getName().toUpperCase());
 
                     if (columnMetaData.next()) {
                         if (meta.isPrimaryKey()) {
@@ -111,10 +113,19 @@ public class MetaData<T> {
 
             columns.add(0, pk.getColumnInfo().getName());
             selectSql = selectTemplate.render(model);
+
+            connection.commit();
         } catch (SQLException e) {
             throw new IllegalStateException(e);
+        } finally {
+            if (connection != null) {
+                try {
+                    connection.close();
+                } catch (SQLException e) {
+                    throw new IllegalStateException(e);
+                }
+            }
         }
-
     }
 
     private void processAnnotation(Table table) {
@@ -155,20 +166,31 @@ public class MetaData<T> {
     }
 
     private void execute(SimpleTemplate createTemplate, Map<String, Object> model) {
+        Connection connection = null;
         PreparedStatement statement = null;
 
         try {
+            connection = Persister.getNewConnection();
+
             String sql = createTemplate.render(model);
             System.out.println("Executing:\n"+sql);
-            statement = Persister.getConnection().prepareStatement(sql);
+            statement = connection.prepareStatement(sql);
 
             statement.execute();
         } catch (SQLException e) {
             throw new IllegalStateException(e);
         } finally {
-            if (statement != null) {
-                try {
+            try {
+                if (statement != null) {
                     statement.close();
+                }
+            } catch (SQLException e) {
+                throw new IllegalStateException(e);
+            } finally {
+                try {
+                if (connection != null) {
+                    connection.close();
+                }
                 } catch (SQLException e) {
                     throw new IllegalStateException(e);
                 }
@@ -297,6 +319,51 @@ public class MetaData<T> {
         }
     }
 
+    public <T> List<T> selectFrom(String query, final Object[] params) {
+        List<T> result;
+        SimpleTemplate fromTemplate = TemplateHandler.get().getSelectFromTemplate();
+
+        Map<String, Object> model = new HashMap<>();
+
+        model.put("tableName", tableName);
+        model.put("key", pk.getColumnInfo().getName());
+        model.put("query", query);
+
+        final String fromSql = fromTemplate.render(model);
+
+        result = executeInNewConnection(new ExecuteConnectionWithResult<List<T>>() {
+            @Override
+            public List<T> execute(Connection connection) throws SQLException {
+                List<T> result = new ArrayList<>();
+                PreparedStatement statement = null;
+
+                try {
+                    statement = connection.prepareStatement(fromSql);
+                    int index = 1;
+
+                    for (Object param : params) {
+                        setStatementParameter(statement, index++, param);
+                    }
+
+                    ResultSet rs = statement.executeQuery();
+
+                    while (rs.next()) {
+                        Long id = rs.getLong(1);
+
+                        result.add((T) Persister.find(cls, id));
+                    }
+
+                    return result;
+                } finally {
+                    if (statement != null) {
+                        statement.close();
+                    }
+                }
+            }
+        });
+
+        return result;
+    }
 
     public <T> List<T> selectWhere(String query, final Object[] params) {
         List<T> result;
@@ -304,21 +371,11 @@ public class MetaData<T> {
 
         Map<String, Object> model = new HashMap<>();
 
-        List<String> columns = new LinkedList<>();
-
-        for (FieldMetaData meta : fieldsMetaData) {
-            if (!meta.isPrimaryKey()) {
-                columns.add(meta.getColumnInfo().getName());
-            }
-        }
-
         model.put("tableName", tableName);
         model.put("key", pk.getColumnInfo().getName());
         model.put("query", query);
 
         final String whereSql = whereTemplate.render(model);
-
-        PreparedStatement statement = null;
 
         result = executeInNewConnection(new ExecuteConnectionWithResult<List<T>>() {
             @Override
@@ -369,6 +426,8 @@ public class MetaData<T> {
             java.sql.Date date = new java.sql.Date(((Date)param).getTime());
 
             statement.setDate(index, date);
+        } else {
+            throw new IllegalStateException("Type "+param.getClass()+" not supported in where queries yet!");
         }
     }
 

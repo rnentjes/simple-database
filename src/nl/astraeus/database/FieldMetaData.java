@@ -237,7 +237,15 @@ public class FieldMetaData {
                     java.util.Collection c = (java.util.Collection)value;
                     ByteBuffer buffer = ByteBuffer.allocate(c.size() * 8);
                     for (Object o : c) {
-                        buffer.putLong(metaData.getId(o));
+                        Long id = metaData.getId(o);
+
+                        if (id == null || id == 0) {
+                            Persister.insert(o);
+
+                            id = metaData.getId(o);
+                        }
+
+                        buffer.putLong(id);
                     }
 
                     statement.setBlob(index, new ByteArrayInputStream(buffer.array()));
@@ -247,7 +255,7 @@ public class FieldMetaData {
     }
 
     public void set(ResultSet rs, int index, Object obj) throws SQLException {
-        Long id = null;
+        Long id;
 
         switch(type) {
             case BASIC:
@@ -276,14 +284,18 @@ public class FieldMetaData {
                 break;
             case COLLECTION:
                 Blob blob = rs.getBlob(index);
+                MetaData meta = MetaDataHandler.get().getMetaData(collectionClass);
+                ReferentList list = new ReferentList(collectionClass, meta);
 
                 ByteBuffer buffer = ByteBuffer.wrap(blob.getBytes(0, (int) blob.length()));
 
                 while(buffer.hasRemaining()) {
                     id = buffer.getLong();
 
-                    // todo: do something with these ids
+                    list.addId(id);
                 }
+
+                set(obj, list);
                 break;
         }
 

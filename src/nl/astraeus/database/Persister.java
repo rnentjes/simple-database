@@ -27,7 +27,7 @@ public class Persister {
                     Class.forName("org.h2.Driver");
                     Class.forName("nl.astraeus.jdbc.Driver");
 
-                    Connection connection = DriverManager.getConnection("jdbc:stat::jdbc:h2:mem:test", "sa", "");
+                    Connection connection = DriverManager.getConnection("jdbc:stat::jdbc:h2:~/test", "sa", "");
                     connection.setAutoCommit(false);
 
                     return connection;
@@ -129,12 +129,12 @@ public class Persister {
         return result;
     }
 
-    public static <T>List<T> select(Class<T> cls, String query, Object ... params) {
-        return getObjectPersister(cls).select(query, params);
+    public static <T>List<T> selectFrom(Class<T> cls, String query, Object ... params) {
+        return getObjectPersister(cls).selectFrom(query, params);
     }
 
     public static <T>List<T> selectAll(Class<T> cls) {
-        return getObjectPersister(cls).selectWhere("1 = 1");
+        return getObjectPersister(cls).selectFrom("");
     }
 
     public static <T>List<T> selectWhere(Class<T> cls, String query, Object ... params) {

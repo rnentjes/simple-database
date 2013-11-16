@@ -2,7 +2,6 @@ package nl.astraeus.database;
 
 import nl.astraeus.database.jdbc.ConnectionPool;
 
-import javax.sql.DataSource;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
@@ -17,11 +16,9 @@ public class Persister {
 
     private static ThreadLocal<Transaction> transactions = new ThreadLocal<Transaction>();
     private static Map<Class<?>, ObjectPersister> objectPersisters = new HashMap<>();
-    private static DataSource dataSource;
-    private static ConnectionPool connectionPool;
 
     static {
-        connectionPool.setConnectionProvider(new ConnectionProvider() {
+        ConnectionPool.get().setConnectionProvider(new ConnectionProvider() {
             @Override
             public Connection getConnection() {
                 try {
@@ -33,10 +30,8 @@ public class Persister {
 
                     return connection;
                 } catch (ClassNotFoundException e) {
-                    e.printStackTrace();
                     throw new IllegalStateException(e);
                 } catch (SQLException e) {
-                    e.printStackTrace();
                     throw new IllegalStateException(e);
                 }
             }
@@ -52,7 +47,7 @@ public class Persister {
     }
 
     public static void begin() {
-        transactions.set(new Transaction(connectionPool.getConnection()));
+        transactions.set(new Transaction(ConnectionPool.get().getConnection()));
     }
 
     public static void commit() {

@@ -14,7 +14,7 @@ public class ObjectCache<T> {
     private int maxSize = 100;
     private long maxAge = 0;
 
-    public boolean knownObject(Long id) {
+    public boolean inCache(Long id) {
         return cache.get(id) != null;
     }
 
@@ -33,11 +33,25 @@ public class ObjectCache<T> {
         ObjectReference<T> ref = cache.get(id);
 
         if (ref == null) {
-            ref = new ObjectReference<T>(object);
+            ref = new ObjectReference<T>(id, object);
 
             cache.put(id, ref);
         } else {
             ref.set(object);
+        }
+
+        if (cache.size() > maxSize) {
+            ObjectReference delete = null;
+
+            for (ObjectReference objRef : cache.values()) {
+                if (delete == null || delete.getLastAccessTime() > objRef.getLastAccessTime()) {
+                    delete = objRef;
+                }
+            }
+
+            if (delete != null) {
+                cache.remove(delete.getId());
+            }
         }
     }
 

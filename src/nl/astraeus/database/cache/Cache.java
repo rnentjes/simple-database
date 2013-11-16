@@ -18,7 +18,7 @@ public class Cache {
     private Map<Class<?>, ObjectCache<?>> cache = new ConcurrentHashMap<>();
 
     public boolean inCache(Class<?> cls, Long id) {
-        return cache.get(cls) != null && cache.get(cls).knownObject(id);
+        return cache.get(cls) != null && cache.get(cls).inCache(id);
     }
 
     public <T> T get(Class<T> cls, Long id) {

@@ -3,6 +3,8 @@ package nl.astraeus.database;
 import nl.astraeus.database.annotations.*;
 import nl.astraeus.template.EscapeMode;
 import nl.astraeus.template.SimpleTemplate;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.ByteArrayInputStream;
 import java.lang.reflect.Field;
@@ -16,6 +18,7 @@ import java.util.Map;
  * Time: 8:59 PM
  */
 public class FieldMetaData {
+    private final static Logger logger = LoggerFactory.getLogger(FieldMetaData.class);
 
     public static enum ColumnType {
         BASIC,
@@ -150,6 +153,10 @@ public class FieldMetaData {
         return primaryKey;
     }
 
+    public ColumnType getType() {
+        return type;
+    }
+
     public Field getField() {
         return field;
     }
@@ -193,6 +200,7 @@ public class FieldMetaData {
     public void set(PreparedStatement statement, int index, Object obj) throws SQLException {
         Object value = get(obj);
         MetaData metaData = null;
+        Long id = null;
 
         if (value == null) {
             switch(type) {
@@ -230,14 +238,23 @@ public class FieldMetaData {
                     break;
                 case REFERENCE:
                     metaData = MetaDataHandler.get().getMetaData(value.getClass());
-                    statement.setLong(index, metaData.getId(value));
+
+                    id = metaData.getId(value);
+
+                    if (id == null) {
+                        Persister.insert(value);
+
+                        id = metaData.getId(value);
+                    }
+
+                    statement.setLong(index, id);
                     break;
                 case COLLECTION:
                     metaData = MetaDataHandler.get().getMetaData(collectionClass);
                     java.util.Collection c = (java.util.Collection)value;
                     ByteBuffer buffer = ByteBuffer.allocate(c.size() * 8);
                     for (Object o : c) {
-                        Long id = metaData.getId(o);
+                        id = metaData.getId(o);
 
                         if (id == null || id == 0) {
                             Persister.insert(o);
@@ -280,7 +297,13 @@ public class FieldMetaData {
             case REFERENCE:
                 id = rs.getLong(index);
 
-                set(obj, Persister.find(javaType, id));
+                Object object = Persister.find(javaType, id);
+
+                if (object == null) {
+                    logger.warn("Orphan detected "+javaType.getSimpleName()+":"+id);
+                }
+
+                set(obj, object);
                 break;
             case COLLECTION:
                 Blob blob = rs.getBlob(index);
@@ -300,4 +323,23 @@ public class FieldMetaData {
         }
 
     }
+
+    public <T> void reloadReference(T result) {
+        Object current = get(result);
+
+        if (current != null) {
+            MetaData meta = MetaDataHandler.get().getMetaData(current.getClass());
+
+            Long id = meta.getId(current);
+
+            Object object = Persister.find(javaType, id);
+
+            if (object == null) {
+                logger.warn("Orphan detected "+javaType.getSimpleName()+":"+id);
+            }
+
+            set(result, object);
+        }
+    }
+
 }

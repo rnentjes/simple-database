@@ -6,16 +6,22 @@ package nl.astraeus.database.cache;
  */
 public class ObjectReference<T> {
 
+    private long id;
     private T object;
     private long cachedTime;
     private long lastAccessTime;
     private long reads, writes;
 
-    public ObjectReference(T object) {
+    public ObjectReference(long id, T object) {
+        this.id = id;
         this.object = object;
         this.cachedTime = System.currentTimeMillis();
         this.reads = 0;
         this.writes = 0;
+    }
+
+    public long getId() {
+        return id;
     }
 
     public T get() {

@@ -1,5 +1,6 @@
 package nl.astraeus.database;
 
+import nl.astraeus.database.annotations.Cache;
 import nl.astraeus.database.annotations.Id;
 import nl.astraeus.database.annotations.Table;
 import nl.astraeus.database.sql.TemplateHandler;
@@ -35,6 +36,13 @@ public class MetaData<T> {
 
         if (tableName == null) {
             tableName = cls.getSimpleName();
+        }
+
+        Cache cache = cls.getAnnotation(Cache.class);
+
+        if (cache != null) {
+            nl.astraeus.database.cache.Cache.get().setMaxSize(cls, cache.maxSize());
+            nl.astraeus.database.cache.Cache.get().setMaxAge(cls, cache.maxAge());
         }
 
         Field [] fields = cls.getDeclaredFields();
@@ -173,7 +181,7 @@ public class MetaData<T> {
             connection = Persister.getNewConnection();
 
             String sql = createTemplate.render(model);
-            System.out.println("Executing:\n"+sql);
+            logger.info("Executing:\n" + sql);
             statement = connection.prepareStatement(sql);
 
             statement.execute();
@@ -473,5 +481,13 @@ public class MetaData<T> {
 
     public Long getId(Object object) {
         return (Long)pk.get(object);
+    }
+
+    public <T> void reloadReferences(T result) {
+        for (FieldMetaData field : fieldsMetaData) {
+            if (field.getType() == FieldMetaData.ColumnType.REFERENCE) {
+                field.reloadReference(result);
+            }
+        }
     }
 }

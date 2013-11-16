@@ -36,7 +36,6 @@ public class ObjectPersister<T> {
         Long id = metaData.getId(object);
 
         metaData.delete(id);
-
         Cache.get().set(object.getClass(), id, null);
     }
 

@@ -11,7 +11,7 @@ import java.lang.annotation.RetentionPolicy;
 @Retention(RetentionPolicy.RUNTIME)
 public @interface Cache {
 
-    int maxSize() default 1000;
+    int maxSize() default 100;
     long maxAge() default 0;
 
 }

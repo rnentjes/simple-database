@@ -153,7 +153,13 @@ public class Persister {
 
     public static <T> T find(Class<T> cls, long id) {
         if (Cache.get().inCache(cls, id)) {
-            return Cache.get().get(cls, id);
+            T result = Cache.get().get(cls, id);
+
+            MetaData meta = MetaDataHandler.get().getMetaData(cls);
+
+            meta.reloadReferences(result);
+
+            return result;
         }
 
         T result = getObjectPersister(cls).find(id);

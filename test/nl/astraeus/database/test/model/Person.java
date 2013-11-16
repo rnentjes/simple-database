@@ -8,7 +8,7 @@ import nl.astraeus.database.annotations.*;
  * Time: 4:09 PM
  */
 @Table(name="persons")
-@Cache(maxSize = 10000, maxAge = 1000 * 60 * 60)
+@Cache(maxSize = 6, maxAge = 1000 * 60 * 60)
 public class Person {
 
     @Id

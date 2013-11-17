@@ -1,7 +1,16 @@
 package nl.astraeus.database;
 
+import junit.framework.Assert;
+import nl.astraeus.database.jdbc.ConnectionPool;
 import nl.astraeus.database.test.model.Company;
 import nl.astraeus.database.test.model.Info;
+import org.junit.AfterClass;
+import org.junit.BeforeClass;
+import org.junit.Test;
+
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
 
 /**
  * Date: 11/16/13
@@ -9,8 +18,34 @@ import nl.astraeus.database.test.model.Info;
  */
 public class TestCollection {
 
+    @BeforeClass
+    public static void createDatabase() {
+        ConnectionPool.get().setConnectionProvider(new ConnectionProvider() {
+            @Override
+            public Connection getConnection() {
+                try {
+                    Class.forName("org.h2.Driver");
 
-    public static void main(String [] args) {
+                    Connection connection = DriverManager.getConnection("jdbc:h2:mem:TestCollection", "sa", "");
+                    connection.setAutoCommit(false);
+
+                    return connection;
+                } catch (ClassNotFoundException e) {
+                    throw new IllegalStateException(e);
+                } catch (SQLException e) {
+                    throw new IllegalStateException(e);
+                }
+            }
+        });
+    }
+
+    @AfterClass
+    public static void clearMetaData() {
+        Persister.dispose();
+    }
+
+    @Test
+    public void testCollection() {
         Persister.begin();
 
         Company company = new Company("Astraeus BV");
@@ -24,11 +59,8 @@ public class TestCollection {
 
         Company found = Persister.find(Company.class, company.getId());
 
-        System.out.println("company "+company.getName());
-
-        for (Info info : company.getInfoLines()) {
-            System.out.println("info: "+info.getInfo()+" - "+info.getDescription());
-         }
+        Assert.assertNotNull(found);
+        Assert.assertEquals(company.getInfoLines().size(), 2);
 
         Persister.begin();
 
@@ -40,11 +72,8 @@ public class TestCollection {
 
         found = Persister.find(Company.class, company.getId());
 
-        System.out.println("company "+company.getName());
-
-        for (Info info : company.getInfoLines()) {
-            System.out.println("info: "+info.getInfo()+" - "+info.getDescription());
-        }
+        Assert.assertNotNull(found);
+        Assert.assertEquals(company.getInfoLines().size(), 3);
 
         Persister.begin();
 
@@ -57,15 +86,8 @@ public class TestCollection {
 
         found = Persister.find(Company.class, company.getId());
 
-        System.out.println("company "+company.getName());
-
-        for (Info info : company.getInfoLines()) {
-            System.out.println("info: "+info.getInfo()+" - "+info.getDescription());
-        }
-
-        for (Info info : Persister.selectAll(Info.class)) {
-            System.out.println("--> Info: "+info.getInfo()+" - "+info.getDescription());
-        }
+        Assert.assertNotNull(found);
+        Assert.assertEquals(company.getInfoLines().size(), 2);
     }
 
 }

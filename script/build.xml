@@ -387,7 +387,7 @@
     <!-- =================================================================== -->
     <!-- Hudson                                                              -->
     <!-- =================================================================== -->
-    <target name="hudson" depends="clean, compile, junit, jar">
+    <target name="hudson" depends="clean, compile, jar">
         <echo>Done.</echo>
     </target>
 
@@ -395,7 +395,7 @@
     <!-- Hudson                              jdepend                                -->
     <!-- =================================================================== -->
     <target name="all"
-            depends="init, prepare, javadoc, ncss, findbugs, pmd, cpd, jar, dist">
+            depends="init, prepare, javadoc, ncss, findbugs, pmd, cpd, jacoco, jar, dist">
         <echo>Done.</echo>
     </target>
 

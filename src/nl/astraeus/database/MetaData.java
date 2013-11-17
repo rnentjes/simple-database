@@ -46,30 +46,31 @@ public class MetaData<T> {
         }
 
         Field [] fields = cls.getDeclaredFields();
-        this.fieldsMetaData = new FieldMetaData[fields.length];
-        int index = 0;
+        List<FieldMetaData> fieldMeta = new ArrayList<>();
 
         for (Field field : fields) {
-            FieldMetaData info = new FieldMetaData(field);
+            if (!field.getName().contains("jacoco")) {
+                FieldMetaData info = new FieldMetaData(field);
 
-            fieldsMetaData[index] = info;
+                fieldMeta.add(info);
 
-            if (field.getAnnotation(Id.class) != null) {
-                if (!field.getType().equals(Long.class) &&
-                    !field.getType().equals(long.class) &&
-                    !field.getType().equals(Integer.class) &&
-                    !field.getType().equals(int.class)) {
+                if (field.getAnnotation(Id.class) != null) {
+                    if (!field.getType().equals(Long.class) &&
+                        !field.getType().equals(long.class) &&
+                        !field.getType().equals(Integer.class) &&
+                        !field.getType().equals(int.class)) {
 
-                    throw new IllegalStateException("PK Field must be long or integer! ("+field.getDeclaringClass().getSimpleName()+"."+field.getName()+")");
-                } else if (pk != null) {
-                    throw new IllegalStateException("Compound primary keys not supported, multable id field defined in "+field.getDeclaringClass().getSimpleName());
+                        throw new IllegalStateException("PK Field must be long or integer! ("+field.getDeclaringClass().getSimpleName()+"."+field.getName()+")");
+                    } else if (pk != null) {
+                        throw new IllegalStateException("Compound primary keys not supported, multable id field defined in "+field.getDeclaringClass().getSimpleName());
+                    }
+
+                    pk = info;
                 }
-
-                pk = info;
             }
-
-            index++;
         }
+
+        this.fieldsMetaData = fieldMeta.toArray(new FieldMetaData[fieldMeta.size()]);
 
         Connection connection = null;
         try {

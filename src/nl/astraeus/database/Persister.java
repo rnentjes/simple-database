@@ -20,24 +20,26 @@ public class Persister {
     private static Map<Class<?>, ObjectPersister> objectPersisters = new HashMap<>();
 
     static {
-        ConnectionPool.get().setConnectionProvider(new ConnectionProvider() {
-            @Override
-            public Connection getConnection() {
-                try {
-                    Class.forName("org.h2.Driver");
-                    Class.forName("nl.astraeus.jdbc.Driver");
+        if (!ConnectionPool.get().hasConnectionProvider()) {
+            ConnectionPool.get().setConnectionProvider(new ConnectionProvider() {
+                @Override
+                public Connection getConnection() {
+                    try {
+                        Class.forName("org.h2.Driver");
+                        Class.forName("nl.astraeus.jdbc.Driver");
 
-                    Connection connection = DriverManager.getConnection("jdbc:stat::jdbc:h2:~/test", "sa", "");
-                    connection.setAutoCommit(false);
+                        Connection connection = DriverManager.getConnection("jdbc:stat::jdbc:h2:~/test", "sa", "");
+                        connection.setAutoCommit(false);
 
-                    return connection;
-                } catch (ClassNotFoundException e) {
-                    throw new IllegalStateException(e);
-                } catch (SQLException e) {
-                    throw new IllegalStateException(e);
+                        return connection;
+                    } catch (ClassNotFoundException e) {
+                        throw new IllegalStateException(e);
+                    } catch (SQLException e) {
+                        throw new IllegalStateException(e);
+                    }
                 }
-            }
-        });
+            });
+        }
     }
 
     protected static Connection getConnection() {
@@ -200,6 +202,12 @@ public class Persister {
 
     public static boolean transactionActive() {
         return transactions.get() != null;
+    }
+
+    public static void dispose() {
+        ConnectionPool.get().clear();
+        MetaDataHandler.get().clear();
+        objectPersisters.clear();
     }
 
 }

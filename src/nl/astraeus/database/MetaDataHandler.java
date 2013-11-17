@@ -1,7 +1,7 @@
 package nl.astraeus.database;
 
-import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * Date: 11/15/13
@@ -15,7 +15,7 @@ public class MetaDataHandler {
         return instance;
     }
 
-    private Map<Class<?>, MetaData> metaData = new HashMap<>();
+    private Map<Class<?>, MetaData> metaData = new ConcurrentHashMap<>();
 
     public MetaData getMetaData(Class<?> cls) {
         MetaData result = metaData.get(cls);
@@ -34,4 +34,10 @@ public class MetaDataHandler {
 
         return result;
     }
+
+    /** Used to reset tests */
+    public void clear() {
+        metaData = new ConcurrentHashMap<>();
+    }
+
 }

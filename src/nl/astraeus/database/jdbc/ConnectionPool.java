@@ -1,12 +1,10 @@
 package nl.astraeus.database.jdbc;
 
 import nl.astraeus.database.ConnectionProvider;
-import org.h2.tools.Server;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.sql.Connection;
-import java.sql.SQLException;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -23,7 +21,7 @@ public class ConnectionPool {
         return instance;
     }
 
-    private ConnectionProvider connectionProvider;
+    private ConnectionProvider connectionProvider = null;
 
     private List<ConnectionWrapper> connectionPool = new LinkedList<>();
     private int minimumNumberOfConnections = 2;
@@ -31,14 +29,6 @@ public class ConnectionPool {
     private int used = 0;
 
     public ConnectionPool() {
-        String [] args = new String[0];
-
-        try {
-            Server server = Server.createTcpServer(args).start();
-        } catch (SQLException e) {
-            e.printStackTrace();
-            throw new IllegalStateException(e);
-        }
     }
 
     public synchronized void setConnectionProvider(ConnectionProvider connectionProvider) {
@@ -61,7 +51,7 @@ public class ConnectionPool {
             ConnectionWrapper wrapper = new ConnectionWrapper(this, connectionProvider.getConnection());
 
             used++;
-            return new ConnectionWrapper(this, connectionProvider.getConnection());
+            return wrapper;
         }
 
         while(connectionPool.isEmpty()) {
@@ -83,4 +73,11 @@ public class ConnectionPool {
         notify();
     }
 
+    public boolean hasConnectionProvider() {
+        return connectionProvider != null;
+    }
+
+    public void clear() {
+        connectionPool = new LinkedList<>();
+    }
 }

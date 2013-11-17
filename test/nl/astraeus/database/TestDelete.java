@@ -1,7 +1,15 @@
 package nl.astraeus.database;
 
+import junit.framework.Assert;
+import nl.astraeus.database.jdbc.ConnectionPool;
 import nl.astraeus.database.test.model.Person;
+import org.junit.AfterClass;
+import org.junit.BeforeClass;
+import org.junit.Test;
 
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
 import java.util.List;
 
 /**
@@ -10,7 +18,34 @@ import java.util.List;
  */
 public class TestDelete {
 
-    public static void main(String [] args) {
+    @BeforeClass
+    public static void createDatabase() {
+        ConnectionPool.get().setConnectionProvider(new ConnectionProvider() {
+            @Override
+            public Connection getConnection() {
+                try {
+                    Class.forName("org.h2.Driver");
+
+                    Connection connection = DriverManager.getConnection("jdbc:h2:mem:TestDelete", "sa", "");
+                    connection.setAutoCommit(false);
+
+                    return connection;
+                } catch (ClassNotFoundException e) {
+                    throw new IllegalStateException(e);
+                } catch (SQLException e) {
+                    throw new IllegalStateException(e);
+                }
+            }
+        });
+    }
+
+    @AfterClass
+    public static void clearMetaData() {
+        Persister.dispose();
+    }
+
+    @Test
+    public void testDelete() {
         Persister.begin();
 
         Persister.insert(new Person("Rien", 40, "Rozendael"));
@@ -26,8 +61,6 @@ public class TestDelete {
         Persister.begin();
 
         for (Person person : persons) {
-            System.out.println("age > 30 Found: "+person.getName()+" age: "+person.getAge());
-
             Persister.delete(person);
         }
 
@@ -35,10 +68,7 @@ public class TestDelete {
 
         persons = Persister.selectAll(Person.class);
 
-        for (Person person : persons) {
-            System.out.println("2: age > 30 deleted Found: "+person.getName()+" age: "+person.getAge());
-        }
-
+        Assert.assertEquals(persons.size(), 2);
     }
 
 }

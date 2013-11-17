@@ -77,7 +77,7 @@ public class ConnectionPool {
         return connectionProvider != null;
     }
 
-    public void clear() {
+    public synchronized void clear() {
         connectionPool = new LinkedList<>();
     }
 }

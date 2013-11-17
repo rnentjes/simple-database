@@ -37,7 +37,7 @@ public class Cache {
         objectCache.setObject(id, object);
     }
 
-    private <T> ObjectCache<T> getObjectCache(Class<T> cls) {
+    public <T> ObjectCache<T> getObjectCache(Class<T> cls) {
         ObjectCache<T> objectCache = (ObjectCache<T>) cache.get(cls);
 
         if (objectCache == null) {

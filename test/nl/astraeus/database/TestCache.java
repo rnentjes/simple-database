@@ -1,11 +1,17 @@
 package nl.astraeus.database;
 
+import junit.framework.Assert;
 import nl.astraeus.database.cache.Cache;
 import nl.astraeus.database.cache.ObjectCache;
-import nl.astraeus.database.test.model.Company;
-import nl.astraeus.database.test.model.Info;
+import nl.astraeus.database.jdbc.ConnectionPool;
 import nl.astraeus.database.test.model.Person;
+import org.junit.AfterClass;
+import org.junit.BeforeClass;
+import org.junit.Test;
 
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
 
@@ -15,41 +21,58 @@ import java.util.Map;
  */
 public class TestCache {
 
-    public static void main(String [] args) {
-        List<Person> persons = Persister.selectAll(Person.class);
-        List<Company> company = Persister.selectAll(Company.class);
-        List<Info> infos = Persister.selectAll(Info.class);
+    @BeforeClass
+    public static void createDatabase() {
+        ConnectionPool.get().setConnectionProvider(new ConnectionProvider() {
+            @Override
+            public Connection getConnection() {
+                try {
+                    Class.forName("org.h2.Driver");
 
-        if (persons.size() == 0) {
-            Persister.execute(new Persister.Executor() {
-                @Override
-                public void execute() {
-                    insert(new Person("Rien", 40, "Rozendael"));
-                    insert(new Person("Jan", 32, "Straat"));
-                    insert(new Person("Piet", 26, "Weg"));
-                    insert(new Person("Klaas", 10, "Pad"));
-                    insert(new Person("Rien", 40, "Rozendael"));
-                    insert(new Person("Jan", 32, "Straat"));
-                    insert(new Person("Piet", 26, "Weg"));
-                    insert(new Person("Klaas", 10, "Pad"));
+                    Connection connection = DriverManager.getConnection("jdbc:h2:mem:TestCache", "sa", "");
+                    connection.setAutoCommit(false);
+
+                    return connection;
+                } catch (ClassNotFoundException e) {
+                    throw new IllegalStateException(e);
+                } catch (SQLException e) {
+                    throw new IllegalStateException(e);
                 }
-            });
+            }
+        });
+    }
 
-            persons = Persister.selectAll(Person.class);
-        }
+    @AfterClass
+    public static void clearMetaData() {
+        Persister.dispose();
+    }
 
+    @Test
+    public void testCache() {
         Map<Class<?>, ObjectCache<?>> cache = Cache.get().getCache();
 
-        for (Class cls : cache.keySet()) {
-            System.out.println("# Cached "+cls.getSimpleName()+": " + cache.get(cls).getNumberCached());
-        }
+        Assert.assertNotNull(cache);
+        Assert.assertNotNull(Cache.get().getObjectCache(Person.class));
 
-        Persister.selectAll(Person.class);
+        Cache.get().getObjectCache(Person.class).setMaxSize(6);
 
-        for (Class cls : cache.keySet()) {
-            System.out.println("# Cached "+cls.getSimpleName()+": " + cache.get(cls).getNumberCached());
-        }
+        Persister.execute(new Persister.Executor() {
+            @Override
+            public void execute() {
+                insert(new Person("Rien", 40, "Rozendael"));
+                insert(new Person("Jan", 32, "Straat"));
+                insert(new Person("Piet", 26, "Weg"));
+                insert(new Person("Klaas", 10, "Pad"));
+                insert(new Person("Rien", 40, "Rozendael"));
+                insert(new Person("Jan", 32, "Straat"));
+                insert(new Person("Piet", 26, "Weg"));
+                insert(new Person("Klaas", 10, "Pad"));
+            }
+        });
 
+        List<Person> persons = Persister.selectAll(Person.class);
+
+        Assert.assertEquals(Cache.get().getObjectCache(Person.class).getNumberCached() ,6);
     }
 
 }

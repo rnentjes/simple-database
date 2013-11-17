@@ -1,11 +1,17 @@
 package nl.astraeus.database;
 
+import junit.framework.Assert;
 import nl.astraeus.database.cache.Cache;
-import nl.astraeus.database.cache.ObjectCache;
+import nl.astraeus.database.jdbc.ConnectionPool;
 import nl.astraeus.database.test.model.Company;
 import nl.astraeus.database.test.model.Person;
+import org.junit.AfterClass;
+import org.junit.BeforeClass;
+import org.junit.Test;
 
-import java.util.Map;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
 
 /**
  * Date: 11/16/13
@@ -13,11 +19,38 @@ import java.util.Map;
  */
 public class TestReference {
 
-    public static void main(String [] args) {
+    @BeforeClass
+    public static void createDatabase() {
+        ConnectionPool.get().setConnectionProvider(new ConnectionProvider() {
+            @Override
+            public Connection getConnection() {
+                try {
+                    Class.forName("org.h2.Driver");
+
+                    Connection connection = DriverManager.getConnection("jdbc:h2:mem:TestReference", "sa", "");
+                    connection.setAutoCommit(false);
+
+                    return connection;
+                } catch (ClassNotFoundException e) {
+                    throw new IllegalStateException(e);
+                } catch (SQLException e) {
+                    throw new IllegalStateException(e);
+                }
+            }
+        });
+    }
+
+    @AfterClass
+    public static void clearMetaData() {
+        Persister.dispose();
+    }
+
+    @Test
+    public void testReference() {
         Persister.begin();
 
-        Person person = new Person("Rien", 40, "Rozendael");
-        Company company = new Company("Astraeus BV");
+        Person person = new Person("Name", 40, "Street");
+        Company company = new Company("Company name");
         person.setCompany(company);
 
         Persister.insert(company);
@@ -27,14 +60,12 @@ public class TestReference {
 
         Person p2 = Persister.find(Person.class, person.getId());
 
-        System.out.println("p2 company "+p2.getCompany());
-        System.out.println("p2 company name "+p2.getCompany().getName());
+        Assert.assertNotNull(p2);
+        Assert.assertNotNull(p2.getCompany());
+        Assert.assertEquals(p2.getCompany().getName(), "Company name");
 
-        Map<Class<?>, ObjectCache<?>> cache = Cache.get().getCache();
-
-        for (Class cls : cache.keySet()) {
-            System.out.println("# Cached "+cls.getSimpleName()+": " + cache.get(cls).getNumberCached());
-        }
+        Assert.assertEquals(Cache.get().getObjectCache(Person.class).getNumberCached(), 1);
+        Assert.assertEquals(Cache.get().getObjectCache(Company.class).getNumberCached(), 1);
     }
 
 }

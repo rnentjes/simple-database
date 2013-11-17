@@ -85,6 +85,11 @@ public class TestReference {
 
         Company found = Persister.find(Company.class, company.getId());
 
+        for (Info info : company.getInfoLines()) {
+            Assert.assertNotNull(info.getDescription());
+            Assert.assertNotNull(info.getInfo());
+        }
+
         Assert.assertNotNull(found);
         Assert.assertNotNull(found.getInfoLines());
         Assert.assertEquals(found.getInfoLines().size(), 4);

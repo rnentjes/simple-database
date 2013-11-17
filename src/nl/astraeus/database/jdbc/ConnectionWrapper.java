@@ -140,7 +140,7 @@ public class ConnectionWrapper implements Connection {
 
     @Override
     public CallableStatement prepareCall(String s, int i, int i2) throws SQLException {
-        return prepareCall(s, i, i2);
+        return connection.prepareCall(s, i, i2);
     }
 
     @Override

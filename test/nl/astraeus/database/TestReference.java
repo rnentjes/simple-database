@@ -4,6 +4,7 @@ import junit.framework.Assert;
 import nl.astraeus.database.cache.Cache;
 import nl.astraeus.database.jdbc.ConnectionPool;
 import nl.astraeus.database.test.model.Company;
+import nl.astraeus.database.test.model.Info;
 import nl.astraeus.database.test.model.Person;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
@@ -66,6 +67,27 @@ public class TestReference {
 
         Assert.assertEquals(Cache.get().getObjectCache(Person.class).getNumberCached(), 1);
         Assert.assertEquals(Cache.get().getObjectCache(Company.class).getNumberCached(), 1);
+    }
+
+    @Test
+    public void testReferentList() {
+        Persister.begin();
+
+        Company company = new Company("Company name");
+        company.addInfo(new Info("description", "info"));
+        company.addInfo(new Info("description", "info"));
+        company.addInfo(new Info("description", "info"));
+        company.addInfo(new Info("description", "info"));
+
+        Persister.insert(company);
+
+        Persister.commit();
+
+        Company found = Persister.find(Company.class, company.getId());
+
+        Assert.assertNotNull(found);
+        Assert.assertNotNull(found.getInfoLines());
+        Assert.assertEquals(found.getInfoLines().size(), 4);
     }
 
 }

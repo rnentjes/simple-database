@@ -1,7 +1,17 @@
 package nl.astraeus.database;
 
+import junit.framework.Assert;
+import nl.astraeus.database.jdbc.ConnectionPool;
 import nl.astraeus.database.test.model.Person;
+import org.junit.AfterClass;
+import org.junit.BeforeClass;
+import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
 import java.util.List;
 
 /**
@@ -9,8 +19,36 @@ import java.util.List;
  * Time: 12:27 AM
  */
 public class TestUpdate {
+    private final static Logger logger = LoggerFactory.getLogger(TestUpdate.class);
 
-    public static void main(String [] args) {
+    @BeforeClass
+    public static void createDatabase() {
+        ConnectionPool.get().setConnectionProvider(new ConnectionProvider() {
+            @Override
+            public Connection getConnection() {
+                try {
+                    Class.forName("org.h2.Driver");
+
+                    Connection connection = DriverManager.getConnection("jdbc:h2:mem:TestUpdate", "sa", "");
+                    connection.setAutoCommit(false);
+
+                    return connection;
+                } catch (ClassNotFoundException e) {
+                    throw new IllegalStateException(e);
+                } catch (SQLException e) {
+                    throw new IllegalStateException(e);
+                }
+            }
+        });
+    }
+
+    @AfterClass
+    public static void clearMetaData() {
+        Persister.dispose();
+    }
+
+    @Test
+    public void testUpdate() {
         Persister.begin();
 
         Persister.insert(new Person("Rien", 40, "Rozendael"));
@@ -26,8 +64,6 @@ public class TestUpdate {
         Persister.begin();
 
         for (Person person : persons) {
-            System.out.println("age > 30 Found: "+person.getName()+" age: "+person.getAge());
-
             person.setAge(person.getAge() + 1);
 
             Persister.update(person);
@@ -35,12 +71,9 @@ public class TestUpdate {
 
         Persister.commit();
 
-        persons = Persister.selectWhere(Person.class, "age > ?", 30);
+        persons = Persister.selectWhere(Person.class, "age > ?", 32);
 
-        for (Person person : persons) {
-            System.out.println("2: age > 30 Found: "+person.getName()+" age: "+person.getAge());
-        }
-
+        Assert.assertEquals(persons.size(), 2);
     }
 
 }

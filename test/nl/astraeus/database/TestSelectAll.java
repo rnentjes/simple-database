@@ -1,9 +1,19 @@
 package nl.astraeus.database;
 
+import junit.framework.Assert;
 import nl.astraeus.database.cache.Cache;
 import nl.astraeus.database.cache.ObjectCache;
+import nl.astraeus.database.jdbc.ConnectionPool;
 import nl.astraeus.database.test.model.Person;
+import org.junit.AfterClass;
+import org.junit.BeforeClass;
+import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
 
@@ -12,8 +22,36 @@ import java.util.Map;
  * Time: 12:27 AM
  */
 public class TestSelectAll {
+    private final static Logger logger = LoggerFactory.getLogger(TestSelectAll.class);
 
-    public static void main(String [] args) {
+    @BeforeClass
+    public static void createDatabase() {
+        ConnectionPool.get().setConnectionProvider(new ConnectionProvider() {
+            @Override
+            public Connection getConnection() {
+                try {
+                    Class.forName("org.h2.Driver");
+
+                    Connection connection = DriverManager.getConnection("jdbc:h2:mem:TestSelectAll", "sa", "");
+                    connection.setAutoCommit(false);
+
+                    return connection;
+                } catch (ClassNotFoundException e) {
+                    throw new IllegalStateException(e);
+                } catch (SQLException e) {
+                    throw new IllegalStateException(e);
+                }
+            }
+        });
+    }
+
+    @AfterClass
+    public static void clearMetaData() {
+        Persister.dispose();
+    }
+
+    @Test
+    public void testSelectAll() {
         Persister.begin();
 
         Persister.insert(new Person("Rien", 40, "Rozendael"));
@@ -25,6 +63,9 @@ public class TestSelectAll {
         Persister.commit();
 
         List<Person> persons = Persister.selectAll(Person.class);
+
+        Assert.assertEquals(persons.size(), 5);
+
         Cache.get().clear();
 
         long start1 = System.nanoTime();
@@ -32,7 +73,7 @@ public class TestSelectAll {
         long stop1 = System.nanoTime();
 
         for (Person person : persons) {
-            System.out.println("all Found: "+person.getName());
+            logger.info("all Found: " + person.getName());
         }
 
         long start2 = System.nanoTime();
@@ -40,7 +81,7 @@ public class TestSelectAll {
         long stop2 = System.nanoTime();
 
         for (Person person : persons) {
-            System.out.println("2all Found: "+person.getName());
+            logger.info("2all Found: "+person.getName());
         }
 
         long start3 = System.nanoTime();
@@ -48,17 +89,17 @@ public class TestSelectAll {
         long stop3 = System.nanoTime();
 
         for (Person person : persons) {
-            System.out.println("3all Found: "+person.getName());
+            logger.info("3all Found: "+person.getName());
         }
 
-        System.out.println("time1 "+(stop1-start1));
-        System.out.println("time2 "+(stop2-start2));
-        System.out.println("time3 "+(stop3-start3));
+        logger.info("time1 "+(stop1-start1));
+        logger.info("time2 "+(stop2-start2));
+        logger.info("time3 "+(stop3-start3));
 
         Map<Class<?>, ObjectCache<?>> cache = Cache.get().getCache();
 
         for (Class cls : cache.keySet()) {
-            System.out.println("# Cached "+cls.getSimpleName()+": " + cache.get(cls).getNumberCached());
+            logger.info("# Cached "+cls.getSimpleName()+": " + cache.get(cls).getNumberCached());
         }
     }
 

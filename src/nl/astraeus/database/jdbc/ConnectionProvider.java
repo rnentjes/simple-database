@@ -1,4 +1,4 @@
-package nl.astraeus.database;
+package nl.astraeus.database.jdbc;
 
 import java.sql.Connection;
 

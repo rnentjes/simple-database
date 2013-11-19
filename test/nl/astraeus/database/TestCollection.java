@@ -2,6 +2,7 @@ package nl.astraeus.database;
 
 import junit.framework.Assert;
 import nl.astraeus.database.jdbc.ConnectionPool;
+import nl.astraeus.database.jdbc.ConnectionProvider;
 import nl.astraeus.database.test.model.Company;
 import nl.astraeus.database.test.model.Info;
 import org.junit.AfterClass;

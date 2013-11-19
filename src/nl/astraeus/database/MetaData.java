@@ -3,7 +3,6 @@ package nl.astraeus.database;
 import nl.astraeus.database.annotations.Cache;
 import nl.astraeus.database.annotations.Id;
 import nl.astraeus.database.annotations.Table;
-import nl.astraeus.database.sql.TemplateHandler;
 import nl.astraeus.template.SimpleTemplate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -97,10 +96,10 @@ public class MetaData<T> {
                 createTable();
             }
 
-            SimpleTemplate insertTemplate = TemplateHandler.get().getInsertTemplate();
-            SimpleTemplate selectTemplate = TemplateHandler.get().getSelectTemplate();
-            SimpleTemplate updateTemplate = TemplateHandler.get().getUpdateTemplate();
-            SimpleTemplate deleteTemplate = TemplateHandler.get().getDeleteTemplate();
+            SimpleTemplate insertTemplate = DdlMapping.get().getQueryTemplate(DdlMapping.QueryTemplates.INSERT);
+            SimpleTemplate selectTemplate = DdlMapping.get().getQueryTemplate(DdlMapping.QueryTemplates.SELECT);
+            SimpleTemplate updateTemplate = DdlMapping.get().getQueryTemplate(DdlMapping.QueryTemplates.UPDATE);
+            SimpleTemplate deleteTemplate = DdlMapping.get().getQueryTemplate(DdlMapping.QueryTemplates.DELETE);
 
             Map<String, Object> model = new HashMap<>();
 
@@ -158,7 +157,7 @@ public class MetaData<T> {
         model.put("columns", columns);
         model.put("key", pk.getColumnInfo().getName());
 
-        SimpleTemplate template = TemplateHandler.get().getCreateTemplate();
+        SimpleTemplate template = DdlMapping.get().getQueryTemplate(DdlMapping.QueryTemplates.CREATE);
 
         execute(template, model);
      }
@@ -169,7 +168,7 @@ public class MetaData<T> {
         model.put("tableName", tableName);
         model.put("column", meta.getColumnInfo());
 
-        SimpleTemplate template = TemplateHandler.get().getCreateColumnTemplate();
+        SimpleTemplate template = DdlMapping.get().getQueryTemplate(DdlMapping.QueryTemplates.CREATE_COLUMN);
 
         execute(template, model);
     }
@@ -330,7 +329,7 @@ public class MetaData<T> {
 
     public <T> List<T> selectFrom(String query, final Object[] params) {
         List<T> result;
-        SimpleTemplate fromTemplate = TemplateHandler.get().getSelectFromTemplate();
+        SimpleTemplate fromTemplate = DdlMapping.get().getQueryTemplate(DdlMapping.QueryTemplates.SELECT_FROM);
 
         Map<String, Object> model = new HashMap<>();
 
@@ -376,7 +375,7 @@ public class MetaData<T> {
 
     public <T> List<T> selectWhere(String query, final Object[] params) {
         List<T> result;
-        SimpleTemplate whereTemplate = TemplateHandler.get().getSelectWhereTemplate();
+        SimpleTemplate whereTemplate = DdlMapping.get().getQueryTemplate(DdlMapping.QueryTemplates.SELECT_WHERE);
 
         Map<String, Object> model = new HashMap<>();
 

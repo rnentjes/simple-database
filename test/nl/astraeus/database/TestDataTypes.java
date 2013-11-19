@@ -5,6 +5,7 @@ import nl.astraeus.database.annotations.Length;
 import nl.astraeus.database.annotations.Serialized;
 import nl.astraeus.database.cache.Cache;
 import nl.astraeus.database.jdbc.ConnectionPool;
+import nl.astraeus.database.jdbc.ConnectionProvider;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -67,6 +68,8 @@ public class TestDataTypes {
 
         public Date lastAccess;
 
+        public boolean bit;
+
         @Serialized
         public String blub;
 
@@ -86,6 +89,7 @@ public class TestDataTypes {
                 type.created = System.currentTimeMillis();
                 type.lastAccess = new Date();
                 type.blub = "Some serialized string thingy!";
+                type.bit = true;
 
                 insert(type);
             }
@@ -105,6 +109,7 @@ public class TestDataTypes {
                 System.out.println("Created: "+type.created+" ("+new Date(type.created)+")");
                 System.out.println("LastAccess: "+type.lastAccess);
                 System.out.println("Blub: "+type.blub);
+                System.out.println("Bit: "+type.bit);
 
                 Cache.get().clear();
 
@@ -119,6 +124,7 @@ public class TestDataTypes {
                 System.out.println("Created: "+type.created+" ("+new Date(type.created)+")");
                 System.out.println("LastAccess: "+type.lastAccess);
                 System.out.println("Blub: "+type.blub);
+                System.out.println("Bit: "+type.bit);
             }
         });
 

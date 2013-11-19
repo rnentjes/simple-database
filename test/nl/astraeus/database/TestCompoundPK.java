@@ -3,6 +3,7 @@ package nl.astraeus.database;
 import nl.astraeus.database.annotations.Id;
 import nl.astraeus.database.annotations.Table;
 import nl.astraeus.database.jdbc.ConnectionPool;
+import nl.astraeus.database.jdbc.ConnectionProvider;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;

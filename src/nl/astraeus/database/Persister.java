@@ -2,6 +2,7 @@ package nl.astraeus.database;
 
 import nl.astraeus.database.cache.Cache;
 import nl.astraeus.database.jdbc.ConnectionPool;
+import nl.astraeus.database.jdbc.ConnectionProvider;
 
 import java.sql.Connection;
 import java.sql.DriverManager;

@@ -1,7 +1,6 @@
 package nl.astraeus.database;
 
 import nl.astraeus.database.annotations.*;
-import nl.astraeus.template.EscapeMode;
 import nl.astraeus.template.SimpleTemplate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -43,29 +42,17 @@ public class FieldMetaData {
 
     private boolean primaryKey = false;
 
-    private static Map<Class<?>, SimpleTemplate> ddlMapping;
     private static Map<Class<?>, Integer> sqlTypeMapping;
 
 //    java.lang.Boolean BOOLEAN
 //    java.lang.Byte TINYINT
 //    java.lang.BigDecinal DECIMAL(${precision}, ${scale})
 
+    private static Map<String, DdlMapping> ddlMappingx;
+
     // todo: get these definitions from some configuration file
     static {
-        ddlMapping = new HashMap<>();
         sqlTypeMapping = new HashMap<>();
-
-        ddlMapping.put(String.class, new SimpleTemplate("${", "}", EscapeMode.NONE, "VARCHAR(${length})"));
-        ddlMapping.put(Long.class, new SimpleTemplate("${", "}", EscapeMode.NONE, "BIGINT"));
-        ddlMapping.put(long.class, new SimpleTemplate("${", "}", EscapeMode.NONE, "BIGINT"));
-        ddlMapping.put(Integer.class, new SimpleTemplate("${", "}", EscapeMode.NONE, "INT"));
-        ddlMapping.put(int.class, new SimpleTemplate("${", "}", EscapeMode.NONE, "INT"));
-        ddlMapping.put(Short.class, new SimpleTemplate("${", "}", EscapeMode.NONE, "SMALLINT"));
-        ddlMapping.put(short.class, new SimpleTemplate("${", "}", EscapeMode.NONE, "SMALLINT"));
-        ddlMapping.put(Double.class, new SimpleTemplate("${", "}", EscapeMode.NONE, "DECIMAL(${precision}, ${scale})"));
-        ddlMapping.put(double.class, new SimpleTemplate("${", "}", EscapeMode.NONE, "DECIMAL(${precision}, ${scale})"));
-        ddlMapping.put(BigDecimal.class, new SimpleTemplate("${", "}", EscapeMode.NONE, "DECIMAL(${precision}, ${scale})"));
-        ddlMapping.put(java.util.Date.class, new SimpleTemplate("${", "}", EscapeMode.NONE, "TIMESTAMP"));
 
         sqlTypeMapping.put(String.class, Types.VARCHAR);
         sqlTypeMapping.put(Long.class, Types.BIGINT);
@@ -76,6 +63,8 @@ public class FieldMetaData {
         sqlTypeMapping.put(short.class, Types.SMALLINT);
         sqlTypeMapping.put(Double.class, Types.DECIMAL);
         sqlTypeMapping.put(double.class, Types.DECIMAL);
+        sqlTypeMapping.put(Boolean.class, Types.BOOLEAN);
+        sqlTypeMapping.put(boolean.class, Types.BOOLEAN);
         sqlTypeMapping.put(BigDecimal.class, Types.DECIMAL);
         sqlTypeMapping.put(java.util.Date.class, Types.TIMESTAMP);
     }
@@ -115,7 +104,7 @@ public class FieldMetaData {
             model.put("scale", length.scale());
         }
 
-        SimpleTemplate template = ddlMapping.get(javaType);
+        SimpleTemplate template = DdlMapping.get().getDdlTemplateForType(javaType);
         sqlType = sqlTypeMapping.get(javaType);
 
         String type = "BIGINT"; // default to id ref
@@ -123,14 +112,9 @@ public class FieldMetaData {
         Serialized serialized = field.getAnnotation(Serialized.class);
         Collection collection = field.getAnnotation(Collection.class);
 
-        if (javaType.getAnnotation(Table.class) != null) {
-            // oneToone
-            type = "BIGINT";
-            sqlType = Types.BIGINT;
-            this.type = ColumnType.REFERENCE;
-        } else if (serialized != null) {
+        if (serialized != null) {
             // BLOB
-            type = "BLOB";
+            type = DdlMapping.get().getBlobType().render(model);
             sqlType = Types.BLOB;
             this.type = ColumnType.SERIALIZED;
         } else if (collection != null) {
@@ -138,8 +122,13 @@ public class FieldMetaData {
             this.type = ColumnType.COLLECTION;
 
             // BLOB
-            type = "BLOB";
+            type = DdlMapping.get().getBlobType().render(model);
             sqlType = Types.BLOB;
+        } else if (javaType.getAnnotation(Table.class) != null) {
+            // oneToone
+            type = DdlMapping.get().getIdType().render(model);
+            sqlType = Types.BIGINT;
+            this.type = ColumnType.REFERENCE;
         } else if (template != null) {
             type = template.render(model);
         } else {
@@ -232,6 +221,9 @@ public class FieldMetaData {
                         case Types.SMALLINT:
                             statement.setShort(index, (Short) value);
                             break;
+                        case Types.BOOLEAN:
+                            statement.setBoolean(index, (Boolean) value);
+                            break;
                         case Types.DECIMAL:
                             if (javaType.equals(BigDecimal.class)) {
                                 statement.setBigDecimal(index, (BigDecimal) value);
@@ -249,7 +241,7 @@ public class FieldMetaData {
 
                     id = metaData.getId(value);
 
-                    if (id == null) {
+                    if (id == null || id == 0) {
                         Persister.insert(value);
 
                         id = metaData.getId(value);
@@ -307,6 +299,9 @@ public class FieldMetaData {
                         break;
                     case Types.SMALLINT:
                         set(obj, rs.getShort(index));
+                        break;
+                    case Types.BOOLEAN:
+                        set(obj, rs.getBoolean(index));
                         break;
                     case Types.DECIMAL:
                         if (javaType.equals(BigDecimal.class)) {

@@ -1,6 +1,5 @@
 package nl.astraeus.database.jdbc;
 
-import nl.astraeus.database.ConnectionProvider;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

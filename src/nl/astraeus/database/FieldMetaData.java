@@ -6,8 +6,9 @@ import nl.astraeus.template.SimpleTemplate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.ByteArrayInputStream;
+import java.io.*;
 import java.lang.reflect.Field;
+import java.math.BigDecimal;
 import java.nio.ByteBuffer;
 import java.sql.*;
 import java.util.HashMap;
@@ -63,6 +64,8 @@ public class FieldMetaData {
         ddlMapping.put(short.class, new SimpleTemplate("${", "}", EscapeMode.NONE, "SMALLINT"));
         ddlMapping.put(Double.class, new SimpleTemplate("${", "}", EscapeMode.NONE, "DECIMAL(${precision}, ${scale})"));
         ddlMapping.put(double.class, new SimpleTemplate("${", "}", EscapeMode.NONE, "DECIMAL(${precision}, ${scale})"));
+        ddlMapping.put(BigDecimal.class, new SimpleTemplate("${", "}", EscapeMode.NONE, "DECIMAL(${precision}, ${scale})"));
+        ddlMapping.put(java.util.Date.class, new SimpleTemplate("${", "}", EscapeMode.NONE, "TIMESTAMP"));
 
         sqlTypeMapping.put(String.class, Types.VARCHAR);
         sqlTypeMapping.put(Long.class, Types.BIGINT);
@@ -73,6 +76,8 @@ public class FieldMetaData {
         sqlTypeMapping.put(short.class, Types.SMALLINT);
         sqlTypeMapping.put(Double.class, Types.DECIMAL);
         sqlTypeMapping.put(double.class, Types.DECIMAL);
+        sqlTypeMapping.put(BigDecimal.class, Types.DECIMAL);
+        sqlTypeMapping.put(java.util.Date.class, Types.TIMESTAMP);
     }
 
     public FieldMetaData(Field field) {
@@ -115,35 +120,30 @@ public class FieldMetaData {
 
         String type = "BIGINT"; // default to id ref
 
-        if (template != null) {
+        Serialized serialized = field.getAnnotation(Serialized.class);
+        Collection collection = field.getAnnotation(Collection.class);
+
+        if (javaType.getAnnotation(Table.class) != null) {
+            // oneToone
+            type = "BIGINT";
+            sqlType = Types.BIGINT;
+            this.type = ColumnType.REFERENCE;
+        } else if (serialized != null) {
+            // BLOB
+            type = "BLOB";
+            sqlType = Types.BLOB;
+            this.type = ColumnType.SERIALIZED;
+        } else if (collection != null) {
+            collectionClass = collection.value();
+            this.type = ColumnType.COLLECTION;
+
+            // BLOB
+            type = "BLOB";
+            sqlType = Types.BLOB;
+        } else if (template != null) {
             type = template.render(model);
         } else {
-            Collection collection = field.getAnnotation(Collection.class);
-
-            if (collection != null) {
-                collectionClass = collection.value();
-                this.type = ColumnType.COLLECTION;
-
-                // BLOB
-                type = "BLOB";
-                sqlType = Types.BLOB;
-            } else {
-                Serialized serialized = field.getAnnotation(Serialized.class);
-
-                if (serialized != null) {
-                    // BLOB
-                    type = "BLOB";
-                    sqlType = Types.BLOB;
-                    this.type = ColumnType.SERIALIZED;
-                } else if (javaType.getAnnotation(Table.class) != null) {
-                    // oneToone
-                    type = "BIGINT";
-                    sqlType = Types.BIGINT;
-                    this.type = ColumnType.REFERENCE;
-                } else {
-                    throw new IllegalStateException("Type "+field.getType().getSimpleName()+" of field "+field.getDeclaringClass().getSimpleName()+"."+field.getName()+" is not supported!");
-                }
-            }
+            throw new IllegalStateException("Type "+field.getType().getSimpleName()+" of field "+field.getDeclaringClass().getSimpleName()+"."+field.getName()+" is not supported!");
         }
 
         columnInfo = new ColumnInfo(columnName, type);
@@ -211,6 +211,7 @@ public class FieldMetaData {
                     statement.setNull(index, Types.BIGINT);
                     break;
                 case COLLECTION:
+                case SERIALIZED:
                     statement.setNull(index, Types.BLOB);
                     break;
 
@@ -232,7 +233,14 @@ public class FieldMetaData {
                             statement.setShort(index, (Short) value);
                             break;
                         case Types.DECIMAL:
-                            statement.setDouble(index, (Double) value);
+                            if (javaType.equals(BigDecimal.class)) {
+                                statement.setBigDecimal(index, (BigDecimal) value);
+                            } else {
+                                statement.setDouble(index, (Double) value);
+                            }
+                            break;
+                        case Types.TIMESTAMP:
+                            statement.setTimestamp(index, new Timestamp(((java.util.Date)value).getTime()));
                             break;
                     }
                     break;
@@ -267,6 +275,17 @@ public class FieldMetaData {
 
                     statement.setBlob(index, new ByteArrayInputStream(buffer.array()));
                     break;
+                case SERIALIZED:
+                    try (ByteArrayOutputStream objectStreamBuffer = new ByteArrayOutputStream();
+                         ObjectOutputStream out = new ObjectOutputStream(objectStreamBuffer)) {
+
+                        out.writeObject(value);
+
+                        statement.setBlob(index, new ByteArrayInputStream(objectStreamBuffer.toByteArray()));
+                    } catch (IOException e) {
+                        throw new IllegalStateException(e);
+                    }
+                    break;
             }
         }
     }
@@ -290,7 +309,14 @@ public class FieldMetaData {
                         set(obj, rs.getShort(index));
                         break;
                     case Types.DECIMAL:
-                        set(obj, rs.getDouble(index));
+                        if (javaType.equals(BigDecimal.class)) {
+                            set(obj, rs.getBigDecimal(index));
+                        } else {
+                            set(obj, rs.getDouble(index));
+                        }
+                        break;
+                    case Types.TIMESTAMP:
+                        set(obj, new java.util.Date(rs.getTimestamp(index).getTime()));
                         break;
                 }
                 break;
@@ -319,6 +345,18 @@ public class FieldMetaData {
                 }
 
                 set(obj, list);
+                break;
+            case SERIALIZED:
+                Blob blub = rs.getBlob(index);
+                try (ByteArrayInputStream bais = new ByteArrayInputStream(blub.getBytes(0, (int) blub.length()));
+                    ObjectInputStream ois = new ObjectInputStream(bais)) {
+
+                    set(obj, ois.readObject());
+                } catch (ClassNotFoundException e) {
+                    throw new IllegalStateException(e);
+                } catch (IOException e) {
+                    throw new IllegalStateException(e);
+                }
                 break;
         }
 

@@ -3,6 +3,7 @@ package nl.astraeus.database;
 import nl.astraeus.database.annotations.Id;
 import nl.astraeus.database.annotations.Length;
 import nl.astraeus.database.annotations.Serialized;
+import nl.astraeus.database.cache.Cache;
 import nl.astraeus.database.jdbc.ConnectionPool;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
@@ -96,6 +97,20 @@ public class TestDataTypes {
                 List<DataTypes> types = selectAll (DataTypes.class);
 
                 DataTypes type = types.get(0);
+
+                System.out.println("Name: "+type.name);
+                System.out.println("Amount: "+type.amount);
+                System.out.println("Price: "+type.price);
+                System.out.println("Age: "+type.age);
+                System.out.println("Created: "+type.created+" ("+new Date(type.created)+")");
+                System.out.println("LastAccess: "+type.lastAccess);
+                System.out.println("Blub: "+type.blub);
+
+                Cache.get().clear();
+
+                types = selectAll (DataTypes.class);
+
+                type = types.get(0);
 
                 System.out.println("Name: "+type.name);
                 System.out.println("Amount: "+type.amount);

@@ -236,7 +236,8 @@ public class MetaData<T> {
     }
 
     private <T> T getFromResultSet(ResultSet rs) {
-        T result = null;
+        T result;
+
         try {
             result = (T)cls.newInstance();
             int index = 1;

@@ -40,15 +40,15 @@ public class ObjectPersister<T> {
     }
 
     public T find(long id) {
-        if (Cache.get().inCache(cls, id)) {
-            return Cache.get().get(cls, id);
-        }
-
         T result = (T) metaData.find(id);
 
         Cache.get().set(cls, id, result);
 
         return result;
+    }
+
+    public List<T> selectAll() {
+        return metaData.selectAll();
     }
 
     public List<T> selectFrom(String query, Object... params) {
@@ -57,6 +57,10 @@ public class ObjectPersister<T> {
 
     public List<T> selectWhere(String query, Object ... params) {
         return metaData.selectWhere(query, params);
+    }
+
+    public T findWhere(String query, Object ... params) {
+        return (T) metaData.findWhere(query, params);
     }
 
 }

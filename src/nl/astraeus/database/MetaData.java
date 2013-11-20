@@ -222,19 +222,10 @@ public class MetaData<T> {
                     ResultSet rs = statement.executeQuery();
 
                     if (rs.next()) {
-                        result = (T)cls.newInstance();
-                        int index = 1;
-
-                        for (FieldMetaData meta : fieldsMetaData) {
-                            meta.set(rs, index++, result);
-                        }
+                        result = getFromResultSet(rs);
                     }
 
                     return result;
-                } catch (InstantiationException e) {
-                    throw new IllegalStateException(e);
-                } catch (IllegalAccessException e) {
-                    throw new IllegalStateException(e);
                 } finally {
                     if (statement != null) {
                         statement.close();
@@ -242,6 +233,22 @@ public class MetaData<T> {
                 }
             }
         });
+    }
+
+    private <T> T getFromResultSet(ResultSet rs) {
+        T result = null;
+        try {
+            result = (T)cls.newInstance();
+            int index = 1;
+
+            for (FieldMetaData meta : fieldsMetaData) {
+                meta.set(rs, index++, result);
+            }
+
+            return result;
+        } catch (InstantiationException | SQLException | IllegalAccessException e) {
+            throw new IllegalStateException (e);
+        }
     }
 
     protected <T> void insert(T object) {
@@ -327,6 +334,11 @@ public class MetaData<T> {
             }
         }
     }
+
+    public <T> List<T> selectAll() {
+        return selectFrom("order by "+pk.getColumnInfo().getName(), new Object [0]);
+    }
+
 
     public <T> List<T> selectFrom(String query, final Object[] params) {
         List<T> result;
@@ -416,6 +428,19 @@ public class MetaData<T> {
                 }
             }
         });
+
+        return result;
+    }
+
+    public <T> T findWhere(String query, final Object[] params) {
+        List<T> results = selectWhere(query, params);
+        T result = null;
+
+        if (results.size() == 1) {
+            result = results.get(0);
+        } else if (results.size() > 1) {
+            throw new IllegalStateException("Finder found more than one row! ["+query+"]");
+        }
 
         return result;
     }

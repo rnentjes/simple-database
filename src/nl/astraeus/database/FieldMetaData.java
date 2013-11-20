@@ -327,13 +327,17 @@ public class FieldMetaData {
                 case REFERENCE:
                     id = rs.getLong(index);
 
-                    Object object = Persister.find(javaType, id);
+                    if (id > 0L) {
+                        Object object = Persister.find(javaType, id);
 
-                    if (object == null) {
-                        logger.warn("Missing reference detected "+field.getDeclaringClass().getSimpleName()+"."+getFieldName()+":"+id);
+                        if (object == null) {
+                            logger.warn("Missing reference detected "+field.getDeclaringClass().getSimpleName()+"."+getFieldName()+":"+id);
+                        }
+
+                        set(obj, object);
+                    } else {
+                        set(obj, null);
                     }
-
-                    set(obj, object);
                     break;
                 case COLLECTION:
                     Blob blob = rs.getBlob(index);
@@ -356,9 +360,7 @@ public class FieldMetaData {
                         ObjectInputStream ois = new ObjectInputStream(bais)) {
 
                         set(obj, ois.readObject());
-                    } catch (ClassNotFoundException e) {
-                        throw new IllegalStateException(e);
-                    } catch (IOException e) {
+                    } catch (ClassNotFoundException | IOException e) {
                         throw new IllegalStateException(e);
                     }
                     break;
@@ -375,13 +377,17 @@ public class FieldMetaData {
 
             Long id = meta.getId(current);
 
-            Object object = Persister.find(javaType, id);
+            if (id != null && id > 0) {
+                Object object = Persister.find(javaType, id);
 
-            if (object == null) {
-                logger.warn("Missing reference detected "+field.getDeclaringClass().getSimpleName()+"."+getFieldName()+":"+id);
+                if (object == null) {
+                    logger.warn("Missing reference detected "+field.getDeclaringClass().getSimpleName()+"."+getFieldName()+":"+id);
+                }
+
+                set(result, object);
+            } else {
+                set(result, null);
             }
-
-            set(result, object);
         }
     }
 

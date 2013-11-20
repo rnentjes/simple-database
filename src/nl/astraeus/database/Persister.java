@@ -128,6 +128,10 @@ public class Persister {
             return Persister.selectWhere(cls, query, params);
         }
 
+        protected static <T> T findWhere(Class<T> cls, String query, Object ... params) {
+            return Persister.findWhere(cls, query, params);
+        }
+
         public abstract void execute();
 
     }
@@ -197,11 +201,15 @@ public class Persister {
     }
 
     public static <T>List<T> selectAll(Class<T> cls) {
-        return getObjectPersister(cls).selectFrom("");
+        return getObjectPersister(cls).selectAll();
     }
 
     public static <T>List<T> selectWhere(Class<T> cls, String query, Object ... params) {
         return getObjectPersister(cls).selectWhere(query, params);
+    }
+
+    public static <T> T findWhere(Class<T> cls, String query, Object ... params) {
+        return getObjectPersister(cls).findWhere(query, params);
     }
 
     private static <T> ObjectPersister<T> getObjectPersister(Class<T> cls) {

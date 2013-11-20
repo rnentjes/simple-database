@@ -96,6 +96,10 @@ public class Persister {
 
     public abstract static class Executor {
 
+        protected void store(Object o) {
+            Persister.insert(o);
+        }
+
         protected void insert(Object o) {
             Persister.insert(o);
         }
@@ -139,6 +143,22 @@ public class Persister {
             if (transactionActive()) {
                 rollback();
             }
+        }
+    }
+
+    public static void store(Object obj) {
+        MetaData meta = MetaDataHandler.get().getMetaData(obj.getClass());
+
+        if (meta != null) {
+            Long id = meta.getId(obj);
+
+            if (id == null || id == 0L) {
+                insert(obj);
+            } else {
+                update(obj);
+            }
+        } else {
+            throw new IllegalStateException("No metadata found for class "+obj.getClass().getName());
         }
     }
 

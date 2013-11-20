@@ -285,74 +285,84 @@ public class FieldMetaData {
     public void set(ResultSet rs, int index, Object obj) throws SQLException {
         Long id;
 
-        switch(type) {
-            case BASIC:
-                switch(sqlType) {
-                    case Types.VARCHAR:
-                        set(obj, rs.getString(index));
-                        break;
-                    case Types.BIGINT:
-                        set(obj, rs.getLong(index));
-                        break;
-                    case Types.INTEGER:
-                        set(obj, rs.getInt(index));
-                        break;
-                    case Types.SMALLINT:
-                        set(obj, rs.getShort(index));
-                        break;
-                    case Types.BOOLEAN:
-                        set(obj, rs.getBoolean(index));
-                        break;
-                    case Types.DECIMAL:
-                        if (javaType.equals(BigDecimal.class)) {
-                            set(obj, rs.getBigDecimal(index));
-                        } else {
-                            set(obj, rs.getDouble(index));
-                        }
-                        break;
-                    case Types.TIMESTAMP:
-                        set(obj, new java.util.Date(rs.getTimestamp(index).getTime()));
-                        break;
-                }
-                break;
-            case REFERENCE:
-                id = rs.getLong(index);
+        if (obj == null) {
+            set(obj, null);
+        } else {
+            switch(type) {
+                case BASIC:
+                    switch(sqlType) {
+                        case Types.VARCHAR:
+                            set(obj, rs.getString(index));
+                            break;
+                        case Types.BIGINT:
+                            set(obj, rs.getLong(index));
+                            break;
+                        case Types.INTEGER:
+                            set(obj, rs.getInt(index));
+                            break;
+                        case Types.SMALLINT:
+                            set(obj, rs.getShort(index));
+                            break;
+                        case Types.BOOLEAN:
+                            set(obj, rs.getBoolean(index));
+                            break;
+                        case Types.DECIMAL:
+                            if (javaType.equals(BigDecimal.class)) {
+                                set(obj, rs.getBigDecimal(index));
+                            } else {
+                                set(obj, rs.getDouble(index));
+                            }
+                            break;
+                        case Types.TIMESTAMP:
+                            Timestamp stamp = rs.getTimestamp(index);
 
-                Object object = Persister.find(javaType, id);
+                            if (stamp != null) {
+                                set(obj, new java.util.Date(rs.getTimestamp(index).getTime()));
+                            } else {
+                                set(obj, null);
+                            }
+                            break;
+                    }
+                    break;
+                case REFERENCE:
+                    id = rs.getLong(index);
 
-                if (object == null) {
-                    logger.warn("Missing reference detected "+field.getDeclaringClass().getSimpleName()+"."+getFieldName()+":"+id);
-                }
+                    Object object = Persister.find(javaType, id);
 
-                set(obj, object);
-                break;
-            case COLLECTION:
-                Blob blob = rs.getBlob(index);
-                MetaData meta = MetaDataHandler.get().getMetaData(collectionClass);
-                ReferentList list = new ReferentList(collectionClass, meta);
+                    if (object == null) {
+                        logger.warn("Missing reference detected "+field.getDeclaringClass().getSimpleName()+"."+getFieldName()+":"+id);
+                    }
 
-                ByteBuffer buffer = ByteBuffer.wrap(blob.getBytes(0, (int) blob.length()));
+                    set(obj, object);
+                    break;
+                case COLLECTION:
+                    Blob blob = rs.getBlob(index);
+                    MetaData meta = MetaDataHandler.get().getMetaData(collectionClass);
+                    ReferentList list = new ReferentList(collectionClass, meta);
 
-                while(buffer.hasRemaining()) {
-                    id = buffer.getLong();
+                    ByteBuffer buffer = ByteBuffer.wrap(blob.getBytes(0, (int) blob.length()));
 
-                    list.addId(id);
-                }
+                    while(buffer.hasRemaining()) {
+                        id = buffer.getLong();
 
-                set(obj, list);
-                break;
-            case SERIALIZED:
-                Blob blub = rs.getBlob(index);
-                try (ByteArrayInputStream bais = new ByteArrayInputStream(blub.getBytes(0, (int) blub.length()));
-                    ObjectInputStream ois = new ObjectInputStream(bais)) {
+                        list.addId(id);
+                    }
 
-                    set(obj, ois.readObject());
-                } catch (ClassNotFoundException e) {
-                    throw new IllegalStateException(e);
-                } catch (IOException e) {
-                    throw new IllegalStateException(e);
-                }
-                break;
+                    set(obj, list);
+                    break;
+                case SERIALIZED:
+                    Blob blub = rs.getBlob(index);
+                    try (ByteArrayInputStream bais = new ByteArrayInputStream(blub.getBytes(0, (int) blub.length()));
+                        ObjectInputStream ois = new ObjectInputStream(bais)) {
+
+                        set(obj, ois.readObject());
+                    } catch (ClassNotFoundException e) {
+                        throw new IllegalStateException(e);
+                    } catch (IOException e) {
+                        throw new IllegalStateException(e);
+                    }
+                    break;
+            }
         }
 
     }

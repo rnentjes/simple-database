@@ -38,6 +38,10 @@ public class MetaData<T> {
             tableName = cls.getSimpleName();
         }
 
+        if (DdlMapping.get().ddlNamesInUppercase()) {
+            tableName = tableName.toUpperCase();
+        }
+
         Cache cache = cls.getAnnotation(Cache.class);
 
         if (cache != null) {
@@ -76,11 +80,11 @@ public class MetaData<T> {
         try {
             // get metadata from database
             connection = Persister.getNewConnection();
-            ResultSet result = connection.getMetaData().getTables(null, null, tableName.toUpperCase(), null);
+            ResultSet result = connection.getMetaData().getTables(null, null, tableName, null);
 
             if (result.next()) {
                 for (FieldMetaData meta : fieldsMetaData) {
-                    ResultSet columnMetaData = connection.getMetaData().getColumns(null, null, tableName.toUpperCase(), meta.getColumnInfo().getName().toUpperCase());
+                    ResultSet columnMetaData = connection.getMetaData().getColumns(null, null, tableName, meta.getColumnInfo().getName());
 
                     if (columnMetaData.next()) {
                         if (meta.isPrimaryKey()) {
@@ -186,7 +190,16 @@ public class MetaData<T> {
             statement = connection.prepareStatement(sql);
 
             statement.execute();
+
+            connection.commit();
         } catch (SQLException e) {
+            if (connection != null) {
+                try {
+                    connection.rollback();
+                } catch (SQLException ex) {
+                    throw new IllegalStateException(ex);
+                }
+            }
             throw new IllegalStateException(e);
         } finally {
             try {
@@ -396,7 +409,6 @@ public class MetaData<T> {
         model.put("tableName", tableName);
         model.put("key", pk.getColumnInfo().getName());
         model.put("query", query);
-
         final String whereSql = whereTemplate.render(model);
 
         result = executeInNewConnection(new ExecuteConnectionWithResult<List<T>>() {
@@ -408,6 +420,8 @@ public class MetaData<T> {
                 try {
                     statement = connection.prepareStatement(whereSql);
                     int index = 1;
+
+                    logger.info("WhereSql: "+whereSql);
 
                     for (Object param : params) {
                         setStatementParameter(statement, index++, param);

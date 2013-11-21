@@ -2,6 +2,7 @@ package nl.astraeus.database;
 
 import nl.astraeus.database.annotations.*;
 import nl.astraeus.template.SimpleTemplate;
+import nl.astraeus.util.Util;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -135,6 +136,10 @@ public class FieldMetaData {
             throw new IllegalStateException("Type "+field.getType().getSimpleName()+" of field "+field.getDeclaringClass().getSimpleName()+"."+field.getName()+" is not supported!");
         }
 
+        if (DdlMapping.get().ddlNamesInUppercase()) {
+            columnName = columnName.toUpperCase();
+        }
+
         columnInfo = new ColumnInfo(columnName, type);
     }
 
@@ -265,7 +270,7 @@ public class FieldMetaData {
                         buffer.putLong(id);
                     }
 
-                    statement.setBlob(index, new ByteArrayInputStream(buffer.array()));
+                    statement.setBinaryStream(index, new ByteArrayInputStream(buffer.array()), buffer.position());
                     break;
                 case SERIALIZED:
                     try (ByteArrayOutputStream objectStreamBuffer = new ByteArrayOutputStream();
@@ -273,7 +278,9 @@ public class FieldMetaData {
 
                         out.writeObject(value);
 
-                        statement.setBlob(index, new ByteArrayInputStream(objectStreamBuffer.toByteArray()));
+                        byte [] bytes = objectStreamBuffer.toByteArray();
+
+                        statement.setBinaryStream(index, new ByteArrayInputStream(bytes), bytes.length);
                     } catch (IOException e) {
                         throw new IllegalStateException(e);
                     }
@@ -340,25 +347,27 @@ public class FieldMetaData {
                     }
                     break;
                 case COLLECTION:
-                    Blob blob = rs.getBlob(index);
-                    MetaData meta = MetaDataHandler.get().getMetaData(collectionClass);
-                    ReferentList list = new ReferentList(collectionClass, meta);
+                    try (InputStream in = rs.getBinaryStream(index)) {
+                        MetaData meta = MetaDataHandler.get().getMetaData(collectionClass);
+                        ReferentList list = new ReferentList(collectionClass, meta);
 
-                    ByteBuffer buffer = ByteBuffer.wrap(blob.getBytes(0, (int) blob.length()));
+                        ByteBuffer buffer = ByteBuffer.wrap(Util.readInputStream(in));
 
-                    while(buffer.hasRemaining()) {
-                        id = buffer.getLong();
+                        while(buffer.hasRemaining()) {
+                            id = buffer.getLong();
 
-                        list.addId(id);
+                            list.addId(id);
+                        }
+
+                        set(obj, list);
+                    } catch (IOException e) {
+                        throw new IllegalStateException(e);
                     }
 
-                    set(obj, list);
                     break;
                 case SERIALIZED:
-                    Blob blub = rs.getBlob(index);
-                    try (ByteArrayInputStream bais = new ByteArrayInputStream(blub.getBytes(0, (int) blub.length()));
-                        ObjectInputStream ois = new ObjectInputStream(bais)) {
-
+                    try (InputStream in = rs.getBinaryStream(index);
+                         ObjectInputStream ois = new ObjectInputStream(in)) {
                         set(obj, ois.readObject());
                     } catch (ClassNotFoundException | IOException e) {
                         throw new IllegalStateException(e);
@@ -366,7 +375,6 @@ public class FieldMetaData {
                     break;
             }
         }
-
     }
 
     public <T> void reloadReference(T result) {

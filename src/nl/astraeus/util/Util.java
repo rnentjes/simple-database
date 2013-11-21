@@ -26,4 +26,19 @@ public class Util {
 
         return new String(out.toByteArray(), Charset.forName("UTF-8"));
     }
+
+    public static byte [] readInputStream(InputStream in) {
+        byte [] buffer = new byte[8196];
+        int nr = 0;
+
+        try (ByteArrayOutputStream out = new ByteArrayOutputStream()) {
+            while((nr = in.read(buffer)) > 0) {
+                out.write(buffer, 0, nr);
+            }
+
+            return out.toByteArray();
+        } catch (IOException e) {
+            throw new IllegalStateException(e);
+        }
+    }
 }

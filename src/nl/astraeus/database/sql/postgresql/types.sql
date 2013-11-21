@@ -1,4 +1,4 @@
-java.lang.String=VARCHAR(${length})
+java.lang.String=TEXT
 java.lang.Boolean=BOOLEAN
 java.lang.Integer=INTEGER
 java.lang.Short=SMALLINT
@@ -7,4 +7,4 @@ java.lang.Long=BIGINT
 java.lang.Double=DECIMAL(${precision}, ${scale})
 java.math.BigDecimal=DECIMAL(${precision}, ${scale})
 java.util.Date=TIMESTAMP
-java.lang.Object=BLOB
+java.lang.Object=BYTEA

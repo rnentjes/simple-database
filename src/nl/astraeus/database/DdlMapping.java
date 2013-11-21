@@ -30,15 +30,17 @@ public class DdlMapping {
     }
 
     public static enum DatabaseDefinition {
-        H2("H2", "h2"),
-        POSTGRESQL("PostgreSQL", "postgres");
+        H2("H2", "h2", true),
+        POSTGRESQL("PostgreSQL", "postgresql", false);
 
         private String name;
         private String packageName;
+        private boolean ddlInUppercase;
 
-        private DatabaseDefinition(String name, String packageName) {
+        private DatabaseDefinition(String name, String packageName, boolean ddlInUppercase) {
             this.name = name;
             this.packageName = packageName;
+            this.ddlInUppercase = ddlInUppercase;
         }
 
         public String getName() {
@@ -47,6 +49,10 @@ public class DdlMapping {
 
         public String getPackageName() {
             return packageName;
+        }
+
+        public boolean ddlNamesInUppercase() {
+            return ddlInUppercase;
         }
     }
 
@@ -152,5 +158,9 @@ public class DdlMapping {
 
     public SimpleTemplate getQueryTemplate(QueryTemplates type) {
         return queryTemplates.get(type);
+    }
+
+    public boolean ddlNamesInUppercase() {
+        return database.ddlNamesInUppercase();
     }
 }

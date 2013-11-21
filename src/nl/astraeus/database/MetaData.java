@@ -29,6 +29,8 @@ public class MetaData<T> {
     private String updateSql;
     private String deleteSql;
 
+    private ThreadLocal<Map<Class<?>, Map<Long, Object>>> circularReferences = new ThreadLocal<>();
+
     public MetaData(Class<T> cls) {
         this.cls = cls;
 
@@ -54,7 +56,7 @@ public class MetaData<T> {
 
         for (Field field : fields) {
             if (!field.getName().contains("jacoco")) {
-                FieldMetaData info = new FieldMetaData(field);
+                FieldMetaData info = new FieldMetaData(this, field);
 
                 fieldMeta.add(info);
 

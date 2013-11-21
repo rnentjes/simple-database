@@ -28,6 +28,7 @@ public class FieldMetaData {
         REFERENCE;
     }
 
+    private MetaData metaData;
     private Field field;
     private String fieldName;
 
@@ -45,13 +46,6 @@ public class FieldMetaData {
 
     private static Map<Class<?>, Integer> sqlTypeMapping;
 
-//    java.lang.Boolean BOOLEAN
-//    java.lang.Byte TINYINT
-//    java.lang.BigDecinal DECIMAL(${precision}, ${scale})
-
-    private static Map<String, DdlMapping> ddlMappingx;
-
-    // todo: get these definitions from some configuration file
     static {
         sqlTypeMapping = new HashMap<>();
 
@@ -70,7 +64,8 @@ public class FieldMetaData {
         sqlTypeMapping.put(java.util.Date.class, Types.TIMESTAMP);
     }
 
-    public FieldMetaData(Field field) {
+    public FieldMetaData(MetaData metaData, Field field) {
+        this.metaData = metaData;
         this.field = field;
         this.field.setAccessible(true);
 
@@ -108,7 +103,7 @@ public class FieldMetaData {
         SimpleTemplate template = DdlMapping.get().getDdlTemplateForType(javaType);
         sqlType = sqlTypeMapping.get(javaType);
 
-        String type = "BIGINT"; // default to id ref
+        String type;
 
         Serialized serialized = field.getAnnotation(Serialized.class);
         Collection collection = field.getAnnotation(Collection.class);
@@ -335,6 +330,9 @@ public class FieldMetaData {
                     id = rs.getLong(index);
 
                     if (id > 0L) {
+                        // check for circular references
+
+
                         Object object = Persister.find(javaType, id);
 
                         if (object == null) {

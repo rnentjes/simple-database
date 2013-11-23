@@ -332,7 +332,6 @@ public class FieldMetaData {
                     if (id > 0L) {
                         // check for circular references
 
-
                         Object object = Persister.find(javaType, id);
 
                         if (object == null) {
@@ -366,7 +365,7 @@ public class FieldMetaData {
                 case SERIALIZED:
                     try (InputStream in = rs.getBinaryStream(index);
                          ObjectInputStream ois = new ObjectInputStream(in)) {
-                        set(obj, ois.readObject());
+                         set(obj, ois.readObject());
                     } catch (ClassNotFoundException | IOException e) {
                         throw new IllegalStateException(e);
                     }

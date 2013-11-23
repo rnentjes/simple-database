@@ -1,1 +1,1 @@
-delete from ${tableName} where ${key} = ?;
+delete from ${tableName} where ${key} = ?

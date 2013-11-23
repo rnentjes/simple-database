@@ -182,9 +182,13 @@ public class Persister {
         if (Cache.get().inCache(cls, id)) {
             T result = Cache.get().get(cls, id);
 
-            MetaData meta = MetaDataHandler.get().getMetaData(cls);
+            MetaData<T> meta = MetaDataHandler.get().getMetaData(cls);
 
-            meta.reloadReferences(result);
+            if (result != null) {
+                result = meta.clone(result);
+
+                meta.reloadReferences(result);
+            }
 
             return result;
         }

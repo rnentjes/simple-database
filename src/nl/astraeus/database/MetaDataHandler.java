@@ -17,7 +17,7 @@ public class MetaDataHandler {
 
     private Map<Class<?>, MetaData> metaData = new ConcurrentHashMap<>();
 
-    public MetaData getMetaData(Class<?> cls) {
+    public <T> MetaData<T> getMetaData(Class<T> cls) {
         MetaData result = metaData.get(cls);
 
         if (result == null) {
@@ -25,7 +25,7 @@ public class MetaDataHandler {
                 result = metaData.get(cls);
 
                 if (result == null) {
-                    result = new MetaData(cls);
+                    result = new MetaData<>(cls);
 
                     metaData.put(cls, result);
                 }

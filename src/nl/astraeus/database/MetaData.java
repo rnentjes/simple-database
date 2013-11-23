@@ -537,4 +537,20 @@ public class MetaData<T> {
             }
         }
     }
+
+    public <T> T clone(T original) {
+        try {
+            T result = (T) cls.newInstance();
+
+            for (FieldMetaData meta : fieldsMetaData) {
+                meta.set(result, meta.get(original));
+            }
+
+            return result;
+        } catch (InstantiationException e) {
+            throw new IllegalStateException(e);
+        } catch (IllegalAccessException e) {
+            throw new IllegalStateException(e);
+        }
+    }
 }

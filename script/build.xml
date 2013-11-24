@@ -165,11 +165,11 @@
     <!-- PMD                                                                 -->
     <!-- =================================================================== -->
     <target name="pmd" depends="prepare">
-        <pmd shortFilenames="true" rulesetfiles="pmd-ruleset.xml">
-            <formatter type="html" toFile="${build.dir}/pmd_report.html"
-                       linkPrefix="http://46.137.78.14:8080/job/Eos/javadoc/"/>
-            <formatter type="xml" toFile="${build.dir}/pmd.xml"
-                       linkPrefix="http://46.137.78.14:8080/job/Eos/javadoc/"/>
+        <pmd shortFilenames="true">
+            <ruleset>rulesets/java/braces.xml</ruleset>
+            <ruleset>java-basic</ruleset>
+            <formatter type="html" toFile="${build.dir}/pmd_report.html"/>
+            <formatter type="xml" toFile="${build.dir}/pmd.xml" />
             <fileset dir="${src.dir}">
                 <include name="**/*.java"/>
             </fileset>

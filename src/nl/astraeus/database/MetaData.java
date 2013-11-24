@@ -240,6 +240,8 @@ public class MetaData<T> {
                         result = getFromResultSet(rs);
                     }
 
+                    rs.close();
+
                     return result;
                 } finally {
                     if (statement != null) {

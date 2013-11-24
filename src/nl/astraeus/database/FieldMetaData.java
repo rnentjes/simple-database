@@ -287,90 +287,86 @@ public class FieldMetaData {
     public void set(ResultSet rs, int index, Object obj) throws SQLException {
         Long id;
 
-        if (obj == null) {
-            set(obj, null);
-        } else {
-            switch(type) {
-                case BASIC:
-                    switch(sqlType) {
-                        case Types.VARCHAR:
-                            set(obj, rs.getString(index));
-                            break;
-                        case Types.BIGINT:
-                            set(obj, rs.getLong(index));
-                            break;
-                        case Types.INTEGER:
-                            set(obj, rs.getInt(index));
-                            break;
-                        case Types.SMALLINT:
-                            set(obj, rs.getShort(index));
-                            break;
-                        case Types.BOOLEAN:
-                            set(obj, rs.getBoolean(index));
-                            break;
-                        case Types.DECIMAL:
-                            if (javaType.equals(BigDecimal.class)) {
-                                set(obj, rs.getBigDecimal(index));
-                            } else {
-                                set(obj, rs.getDouble(index));
-                            }
-                            break;
-                        case Types.TIMESTAMP:
-                            Timestamp stamp = rs.getTimestamp(index);
-
-                            if (stamp != null) {
-                                set(obj, new java.util.Date(rs.getTimestamp(index).getTime()));
-                            } else {
-                                set(obj, null);
-                            }
-                            break;
-                    }
-                    break;
-                case REFERENCE:
-                    id = rs.getLong(index);
-
-                    if (id > 0L) {
-                        // check for circular references
-
-                        Object object = Persister.find(javaType, id);
-
-                        if (object == null) {
-                            logger.warn("Missing reference detected "+field.getDeclaringClass().getSimpleName()+"."+getFieldName()+":"+id);
+        switch(type) {
+            case BASIC:
+                switch(sqlType) {
+                    case Types.VARCHAR:
+                        set(obj, rs.getString(index));
+                        break;
+                    case Types.BIGINT:
+                        set(obj, rs.getLong(index));
+                        break;
+                    case Types.INTEGER:
+                        set(obj, rs.getInt(index));
+                        break;
+                    case Types.SMALLINT:
+                        set(obj, rs.getShort(index));
+                        break;
+                    case Types.BOOLEAN:
+                        set(obj, rs.getBoolean(index));
+                        break;
+                    case Types.DECIMAL:
+                        if (javaType.equals(BigDecimal.class)) {
+                            set(obj, rs.getBigDecimal(index));
+                        } else {
+                            set(obj, rs.getDouble(index));
                         }
+                        break;
+                    case Types.TIMESTAMP:
+                        Timestamp stamp = rs.getTimestamp(index);
 
-                        set(obj, object);
-                    } else {
-                        set(obj, null);
-                    }
-                    break;
-                case COLLECTION:
-                    try (InputStream in = rs.getBinaryStream(index)) {
-                        MetaData meta = MetaDataHandler.get().getMetaData(collectionClass);
-                        ReferentList list = new ReferentList(collectionClass, meta);
-
-                        ByteBuffer buffer = ByteBuffer.wrap(Util.readInputStream(in));
-
-                        while(buffer.hasRemaining()) {
-                            id = buffer.getLong();
-
-                            list.addId(id);
+                        if (stamp != null) {
+                            set(obj, new java.util.Date(rs.getTimestamp(index).getTime()));
+                        } else {
+                            set(obj, null);
                         }
+                        break;
+                }
+                break;
+            case REFERENCE:
+                id = rs.getLong(index);
 
-                        set(obj, list);
-                    } catch (IOException e) {
-                        throw new IllegalStateException(e);
+                if (id > 0L) {
+                    // check for circular references
+
+                    Object object = Persister.find(javaType, id);
+
+                    if (object == null) {
+                        logger.warn("Missing reference detected "+field.getDeclaringClass().getSimpleName()+"."+getFieldName()+":"+id);
                     }
 
-                    break;
-                case SERIALIZED:
-                    try (InputStream in = rs.getBinaryStream(index);
-                         ObjectInputStream ois = new ObjectInputStream(in)) {
-                         set(obj, ois.readObject());
-                    } catch (ClassNotFoundException | IOException e) {
-                        throw new IllegalStateException(e);
+                    set(obj, object);
+                } else {
+                    set(obj, null);
+                }
+                break;
+            case COLLECTION:
+                try (InputStream in = rs.getBinaryStream(index)) {
+                    MetaData meta = MetaDataHandler.get().getMetaData(collectionClass);
+                    ReferentList list = new ReferentList(collectionClass, meta);
+
+                    ByteBuffer buffer = ByteBuffer.wrap(Util.readInputStream(in));
+
+                    while(buffer.hasRemaining()) {
+                        id = buffer.getLong();
+
+                        list.addId(id);
                     }
-                    break;
-            }
+
+                    set(obj, list);
+                } catch (IOException e) {
+                    throw new IllegalStateException(e);
+                }
+
+                break;
+            case SERIALIZED:
+                try (InputStream in = rs.getBinaryStream(index);
+                     ObjectInputStream ois = new ObjectInputStream(in)) {
+                     set(obj, ois.readObject());
+                } catch (ClassNotFoundException | IOException e) {
+                    throw new IllegalStateException(e);
+                }
+                break;
         }
     }
 

@@ -42,7 +42,7 @@ public class Example {
         }
     }
 
-    public static void main(String [] args) {
+    public static void main(String [] args) throws InterruptedException {
         // Set the database dialect
         DdlMapping.get().setDatabaseType(DdlMapping.DatabaseDefinition.H2);
 
@@ -51,9 +51,10 @@ public class Example {
             @Override
             public Connection getConnection() {
                 try {
+                    Class.forName("nl.astraeus.jdbc.Driver");
                     Class.forName("org.h2.Driver");
 
-                    Connection connection = DriverManager.getConnection("jdbc:h2:mem:Example", "sa", "");
+                    Connection connection = DriverManager.getConnection("jdbc:stat::jdbc:h2:mem:Example", "sa", "");
                     connection.setAutoCommit(false);
 
                     return connection;

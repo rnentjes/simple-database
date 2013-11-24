@@ -4,6 +4,7 @@ import nl.astraeus.database.ColumnInfo;
 import nl.astraeus.template.EscapeMode;
 import nl.astraeus.template.SimpleTemplate;
 import nl.astraeus.util.Util;
+import org.junit.Ignore;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -15,6 +16,7 @@ import java.util.Map;
  * Date: 11/14/13
  * Time: 9:29 PM
  */
+@Ignore
 public class TestCreate {
 
     public static void main (String [] args) throws IOException {

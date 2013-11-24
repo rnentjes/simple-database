@@ -1,6 +1,7 @@
 package nl.astraeus.database;
 
 import nl.astraeus.database.test.model.Person;
+import org.junit.Ignore;
 
 import java.util.List;
 
@@ -8,6 +9,7 @@ import java.util.List;
  * Date: 11/16/13
  * Time: 12:27 AM
  */
+@Ignore
 public class TestSelectFrom {
 
     public static void main(String [] args) {

@@ -1,12 +1,14 @@
 package nl.astraeus.database.test.model;
 
 import nl.astraeus.database.annotations.*;
+import org.junit.Ignore;
 
 /**
  * User: rnentjes
  * Date: 11/13/13
  * Time: 4:09 PM
  */
+@Ignore
 @Table(name="persons")
 @Cache(maxSize = 6, maxAge = 1000 * 60 * 60)
 public class Person {

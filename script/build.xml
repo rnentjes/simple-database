@@ -64,32 +64,6 @@
         </fileset>
     </path>
 
-    <path id="cobertura.class.path">
-        <pathelement location="${test.classes.dir}"/>
-        <fileset dir="${lib.dir}/build/junit">
-            <include name="**/*.jar"/>
-        </fileset>
-        <fileset dir="${build.lib.dir}/cobertura">
-            <include name="cobertura.jar"/>
-        </fileset>
-        <fileset dir="${lib.dir}">
-            <include name="*.jar"/>
-        </fileset>
-        <fileset dir="${lib.dir}/compile">
-            <include name="*.jar"/>
-        </fileset>
-        <pathelement location="${instrumented.classes.dir}"/>
-    </path>
-
-    <path id="cobertura.classpath">
-        <fileset dir="${build.lib.dir}/cobertura">
-            <include name="cobertura.jar"/>
-            <include name="lib/**/*.jar"/>
-        </fileset>
-    </path>
-
-    <taskdef classpathref="cobertura.classpath" resource="tasks.properties"/>
-
     <target name="current-number">
         <echo>Current build number:${build.number}</echo>
     </target>

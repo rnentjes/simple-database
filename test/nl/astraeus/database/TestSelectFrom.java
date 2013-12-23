@@ -13,6 +13,8 @@ import java.util.List;
 public class TestSelectFrom {
 
     public static void main(String [] args) {
+        DdlMapping.get().setExecuteDDLUpdates(true);
+
         Persister.begin();
 
         Persister.insert(new Person("Rien", 40, "Rozendael"));

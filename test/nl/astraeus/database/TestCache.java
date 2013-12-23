@@ -24,6 +24,8 @@ public class TestCache {
 
     @BeforeClass
     public static void createDatabase() {
+        DdlMapping.get().setExecuteDDLUpdates(true);
+
         ConnectionPool.get().setConnectionProvider(new ConnectionProvider() {
             @Override
             public Connection getConnection() {

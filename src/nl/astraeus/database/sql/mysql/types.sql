@@ -1,0 +1,10 @@
+java.lang.String=VARCHAR(${length})
+java.lang.Boolean=TINYINT(1)
+java.lang.Integer=INT
+java.lang.Short=SMALLINT
+java.lang.Byte=TINYINT
+java.lang.Long=BIGINT
+java.lang.Double=DECIMAL(${precision}, ${scale})
+java.math.BigDecimal=DECIMAL(${precision}, ${scale})
+java.util.Date=TIMESTAMP
+java.lang.Object=BLOB

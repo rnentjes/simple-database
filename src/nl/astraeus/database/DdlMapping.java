@@ -31,7 +31,8 @@ public class DdlMapping {
 
     public static enum DatabaseDefinition {
         H2("H2", "h2", true),
-        POSTGRESQL("PostgreSQL", "postgresql", false);
+        POSTGRESQL("PostgreSQL", "postgresql", false),
+        MYSQL("MySql", "mysql", false);
 
         private String name;
         private String packageName;
@@ -81,6 +82,7 @@ public class DdlMapping {
     }
 
     private DatabaseDefinition database;
+    private boolean executeDdlUpdates = false;
 
     public DdlMapping() {
         setDatabaseType(DatabaseDefinition.H2);
@@ -89,6 +91,14 @@ public class DdlMapping {
     public void setDatabaseType(DatabaseDefinition definition) {
         database = definition;
         reload();
+    }
+
+    public void setExecuteDDLUpdates(boolean eddlup) {
+        executeDdlUpdates = eddlup;
+    }
+
+    public boolean isExecuteDdlUpdates() {
+        return executeDdlUpdates;
     }
 
     private String findSqlResource(String name) {

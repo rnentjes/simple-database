@@ -45,6 +45,7 @@ public class Example {
     public static void main(String [] args) throws InterruptedException {
         // Set the database dialect
         DdlMapping.get().setDatabaseType(DdlMapping.DatabaseDefinition.H2);
+        DdlMapping.get().setExecuteDDLUpdates(true);
 
         // Set the connection pool provider
         ConnectionPool.get().setConnectionProvider(new ConnectionProvider() {

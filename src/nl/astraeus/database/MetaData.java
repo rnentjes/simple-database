@@ -94,13 +94,17 @@ public class MetaData<T> {
                         }
                         // check type etc
                         // warn if different
-                    } else {
+                    } else if (DdlMapping.get().isExecuteDdlUpdates()) {
                         // create Column....
                         createColumn(meta);
+                    } else {
+                        throw new IllegalStateException("Column "+cls.getSimpleName()+"."+meta.getFieldName()+" not found in table "+tableName);
                     }
                 }
-            } else {
+            } else if (DdlMapping.get().isExecuteDdlUpdates()) {
                 createTable();
+            } else {
+                throw new IllegalStateException("Table "+tableName+" not found for class "+cls.getSimpleName());
             }
 
             SimpleTemplate insertTemplate = DdlMapping.get().getQueryTemplate(DdlMapping.QueryTemplates.INSERT);
@@ -188,7 +192,7 @@ public class MetaData<T> {
             connection = Persister.getNewConnection();
 
             String sql = createTemplate.render(model);
-            logger.info("Executing:\n" + sql);
+
             statement = connection.prepareStatement(sql);
 
             statement.execute();
@@ -425,8 +429,6 @@ public class MetaData<T> {
                     statement = connection.prepareStatement(whereSql);
                     int index = 1;
 
-                    logger.info("WhereSql: "+whereSql);
-
                     for (Object param : params) {
                         setStatementParameter(statement, index++, param);
                     }
@@ -529,7 +531,13 @@ public class MetaData<T> {
     }
 
     public Long getId(Object object) {
-        return (Long)pk.get(object);
+        Object obj = pk.get(object);
+
+        if (obj instanceof Integer) {
+            obj = ((Integer) obj).longValue();
+        }
+
+        return (Long)obj;
     }
 
     public <T> void reloadReferences(T result) {

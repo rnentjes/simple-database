@@ -1,5 +1,6 @@
 package nl.astraeus.database;
 
+import nl.astraeus.database.annotations.Blob;
 import nl.astraeus.database.annotations.*;
 import nl.astraeus.template.SimpleTemplate;
 import nl.astraeus.util.Util;
@@ -25,7 +26,8 @@ public class FieldMetaData {
         BASIC,
         COLLECTION,
         SERIALIZED,
-        REFERENCE;
+        REFERENCE,
+        BLOB
     }
 
     private MetaData metaData;
@@ -105,10 +107,16 @@ public class FieldMetaData {
 
         String type;
 
+        Blob blob = field.getAnnotation(Blob.class);
         Serialized serialized = field.getAnnotation(Serialized.class);
         Collection collection = field.getAnnotation(Collection.class);
 
-        if (serialized != null) {
+        if (blob != null) {
+            // BLOB
+            type = DdlMapping.get().getBlobType().render(model);
+            sqlType = Types.BLOB;
+            this.type = ColumnType.BLOB;
+        } else if (serialized != null) {
             // BLOB
             type = DdlMapping.get().getBlobType().render(model);
             sqlType = Types.BLOB;
@@ -199,6 +207,7 @@ public class FieldMetaData {
                 case REFERENCE:
                     statement.setNull(index, Types.BIGINT);
                     break;
+                case BLOB:
                 case COLLECTION:
                 case SERIALIZED:
                     statement.setNull(index, Types.BLOB);
@@ -279,6 +288,11 @@ public class FieldMetaData {
                     } catch (IOException e) {
                         throw new IllegalStateException(e);
                     }
+                    break;
+                case BLOB:
+                    byte [] bytes = (byte[])value;
+
+                    statement.setBinaryStream(index, new ByteArrayInputStream(bytes), bytes.length);
                     break;
             }
         }
@@ -364,6 +378,21 @@ public class FieldMetaData {
                      ObjectInputStream ois = new ObjectInputStream(in)) {
                      set(obj, ois.readObject());
                 } catch (ClassNotFoundException | IOException e) {
+                    throw new IllegalStateException(e);
+                }
+                break;
+            case BLOB:
+                try (InputStream in = rs.getBinaryStream(index);
+                     ByteArrayOutputStream out = new ByteArrayOutputStream()) {
+
+                    byte [] buffer = new byte[8196];
+                    int nr;
+                    while((nr = in.read(buffer)) > 0) {
+                        out.write(buffer, 0, nr);
+                    }
+
+                    set(obj, out.toByteArray());
+                } catch (IOException e) {
                     throw new IllegalStateException(e);
                 }
                 break;

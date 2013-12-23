@@ -11,16 +11,28 @@ public class ObjectCache<T> {
 
     private Map<Long, ObjectReference<T>> cache = new ConcurrentHashMap<>();
 
-    private int maxSize = 100;
-    private long maxAge = 0;
+    private int maxSize = 500;
+    private long maxAge = 250;
 
-    public boolean inCache(Long id) {
-        return cache.get(id) != null;
+    protected boolean inCache(Long id) {
+        ObjectReference<T> ref = cache.get(id);
+
+        if (maxAge > 0 && ref != null && ref.getLastAccessTime() < System.currentTimeMillis() - maxAge) {
+            ref = null;
+            cache.remove(id);
+        }
+
+        return ref != null;
     }
 
-    public T getObject(Long id) {
+    protected T getObject(Long id) {
         T result = null;
         ObjectReference<T> ref = cache.get(id);
+
+        if (maxAge > 0 && ref.getLastAccessTime() < System.currentTimeMillis() - maxAge) {
+            ref = null;
+            cache.remove(id);
+        }
 
         if (ref != null) {
             result = ref.get();
@@ -29,7 +41,7 @@ public class ObjectCache<T> {
         return result;
     }
 
-    public void setObject(Long id, T object) {
+    protected void setObject(Long id, T object) {
         ObjectReference<T> ref = cache.get(id);
 
         if (ref == null) {

@@ -10,7 +10,7 @@ import org.junit.Ignore;
  */
 @Ignore
 @Table(name="persons")
-@Cache(maxSize = 6, maxAge = 1000 * 60 * 60)
+@Cache(maxSize = 6)
 public class Person {
 
     @Id

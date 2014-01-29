@@ -359,12 +359,14 @@ public class FieldMetaData {
                     MetaData meta = MetaDataHandler.get().getMetaData(collectionClass);
                     ReferentList list = new ReferentList(collectionClass, meta);
 
-                    ByteBuffer buffer = ByteBuffer.wrap(Util.readInputStream(in));
+                    if (in != null) {
+                        ByteBuffer buffer = ByteBuffer.wrap(Util.readInputStream(in));
 
-                    while(buffer.hasRemaining()) {
-                        id = buffer.getLong();
+                        while(buffer.hasRemaining()) {
+                            id = buffer.getLong();
 
-                        list.addId(id);
+                            list.addId(id);
+                        }
                     }
 
                     set(obj, list);

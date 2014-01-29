@@ -25,11 +25,22 @@ public class Cache {
         return getObjectCache(cls).getObject(id);
     }
 
+    protected <T> ObjectCache<T> createCache(Class<T> cls) {
+        int maxSize = Integer.MAX_VALUE;
+
+        nl.astraeus.database.annotations.Cache cacheAnnotation = cls.getAnnotation(nl.astraeus.database.annotations.Cache.class);
+        if (cacheAnnotation != null) {
+            maxSize = cacheAnnotation.maxSize();
+        }
+
+        return new ObjectCache<T>(maxSize);
+    }
+
     public <T> void set(Class<T> cls, Long id, T object) {
         ObjectCache<T> objectCache = (ObjectCache<T>) cache.get(cls);
 
         if (objectCache == null) {
-            objectCache = new ObjectCache<T>();
+            objectCache = createCache(cls);
 
             cache.put(cls, objectCache);
         }
@@ -41,7 +52,7 @@ public class Cache {
         ObjectCache<T> objectCache = (ObjectCache<T>) cache.get(cls);
 
         if (objectCache == null) {
-            objectCache = new ObjectCache<T>();
+            objectCache = createCache(cls);
 
             cache.put(cls, objectCache);
         }
@@ -51,10 +62,6 @@ public class Cache {
 
     public <T> void setMaxSize(Class<T> cls, int maxSize) {
         getObjectCache(cls).setMaxSize(maxSize);
-    }
-
-    public <T> void setMaxAge(Class<T> cls, long maxAge) {
-        getObjectCache(cls).setMaxAge(maxAge);
     }
 
     public void clear() {

@@ -48,7 +48,6 @@ public class MetaData<T> {
 
         if (cache != null) {
             nl.astraeus.database.cache.Cache.get().setMaxSize(cls, cache.maxSize());
-            nl.astraeus.database.cache.Cache.get().setMaxAge(cls, cache.maxAge());
         }
 
         Field [] fields = cls.getDeclaredFields();

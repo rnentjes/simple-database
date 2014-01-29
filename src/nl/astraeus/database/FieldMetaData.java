@@ -40,6 +40,7 @@ public class FieldMetaData {
 
     private ColumnInfo  columnInfo;
 
+    private Reference reference;
     private Length length;
     private Default defaultValue;
     private Class<?> collectionClass;
@@ -76,6 +77,7 @@ public class FieldMetaData {
         javaType = field.getType();
         type = ColumnType.BASIC;
 
+        reference = field.getAnnotation(Reference.class);
         length = field.getAnnotation(Length.class);
         defaultValue = field.getAnnotation(Default.class);
         Column column = field.getAnnotation(Column.class);
@@ -144,6 +146,10 @@ public class FieldMetaData {
         }
 
         columnInfo = new ColumnInfo(columnName, type);
+    }
+
+    protected Reference getReference() {
+        return reference;
     }
 
     public boolean isPrimaryKey() {

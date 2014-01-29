@@ -2,7 +2,9 @@ package nl.astraeus.database;
 
 import nl.astraeus.database.annotations.Cache;
 import nl.astraeus.database.annotations.Id;
+import nl.astraeus.database.annotations.Reference;
 import nl.astraeus.database.annotations.Table;
+import nl.astraeus.database.util.ReferenceGenerator;
 import nl.astraeus.template.SimpleTemplate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -280,6 +282,11 @@ public class MetaData<T> {
             int index = 1;
 
             for (FieldMetaData meta : fieldsMetaData) {
+                Reference reference = meta.getReference();
+                if (reference != null) {
+                    meta.set(object, ReferenceGenerator.generateRandomReference(reference.length()));
+                }
+
                 if (!meta.isPrimaryKey()) {
                     meta.set(statement, index++, object);
                 }

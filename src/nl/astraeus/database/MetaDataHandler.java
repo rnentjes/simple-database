@@ -1,5 +1,8 @@
 package nl.astraeus.database;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -8,6 +11,7 @@ import java.util.concurrent.ConcurrentHashMap;
  * Time: 10:45 PM
  */
 public class MetaDataHandler {
+    private final static Logger logger = LoggerFactory.getLogger(MetaDataHandler.class);
 
     private static MetaDataHandler instance = new MetaDataHandler();
 
@@ -25,7 +29,11 @@ public class MetaDataHandler {
                 result = metaData.get(cls);
 
                 if (result == null) {
+                    long start = System.nanoTime();
+
                     result = new MetaData<>(cls);
+
+                    logger.info("Getting metadata for class {} took {}ms", cls.getSimpleName(), (System.nanoTime() - start) / 1000000f);
 
                     metaData.put(cls, result);
                 }

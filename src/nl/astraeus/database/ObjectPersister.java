@@ -20,9 +20,6 @@ public class ObjectPersister<T> {
 
     public void insert(Object object) {
         metaData.insert(object);
-
-        Long id = metaData.getId(object);
-        Cache.get().set((Class<Object>) object.getClass(), id, object);
     }
 
     public void update(Object object) {

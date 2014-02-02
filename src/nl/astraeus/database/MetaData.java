@@ -536,6 +536,26 @@ public class MetaData<T> {
         }
     }
 
+    private <T> T executeInCurrentConnection(ExecuteConnectionWithResult<T> es) {
+        Connection connection = null;
+
+        try {
+            connection = Persister.getConnection();
+
+            return es.execute(connection);
+        } catch (SQLException e) {
+            throw new IllegalStateException(e);
+        } finally {
+            if (connection != null) {
+                try {
+                    connection.close();
+                } catch (SQLException e) {
+                    throw new IllegalStateException(e);
+                }
+            }
+        }
+    }
+
     public Long getId(Object object) {
         Object obj = pk.get(object);
 

@@ -382,10 +382,11 @@ public class FieldMetaData {
 
                 break;
             case SERIALIZED:
-                try (InputStream in = rs.getBinaryStream(index);
-                     ObjectInputStream ois = new ObjectInputStream(in)) {
+                try (InputStream in = rs.getBinaryStream(index)) {
                     if (in != null) {
-                         set(obj, ois.readObject());
+                        try (ObjectInputStream ois = new ObjectInputStream(in)) {
+                                 set(obj, ois.readObject());
+                        }
                     } else {
                         set(obj, null);
                     }

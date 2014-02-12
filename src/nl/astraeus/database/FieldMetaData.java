@@ -384,7 +384,11 @@ public class FieldMetaData {
             case SERIALIZED:
                 try (InputStream in = rs.getBinaryStream(index);
                      ObjectInputStream ois = new ObjectInputStream(in)) {
-                     set(obj, ois.readObject());
+                    if (in != null) {
+                         set(obj, ois.readObject());
+                    } else {
+                        set(obj, null);
+                    }
                 } catch (ClassNotFoundException | IOException e) {
                     throw new IllegalStateException(e);
                 }

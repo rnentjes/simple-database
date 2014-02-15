@@ -4,9 +4,7 @@ import nl.astraeus.database.cache.Cache;
 import nl.astraeus.database.jdbc.ConnectionPool;
 import nl.astraeus.database.jdbc.ConnectionProvider;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -242,5 +240,82 @@ public class Persister {
         MetaDataHandler.get().clear();
         objectPersisters.clear();
     }
+
+    public static void execute(String sql, Object ... params) {
+        PreparedStatement statement = null;
+
+            try {
+                statement = Persister.getConnection().prepareStatement(sql);
+                int index = 1;
+
+                for (Object param : params) {
+                    StatementHelper.setStatementParameter(statement, index++, param);
+                }
+
+                statement.execute();
+        } catch (SQLException e) {
+            throw new IllegalStateException(e);
+        } finally {
+            if (statement != null) {
+                try {
+                    statement.close();
+                } catch (SQLException e) {
+                    throw new IllegalStateException(e);
+                }
+            }
+        }
+    }
+
+    public static ResultSet executeQuery(String sql, Object ... params) {
+        PreparedStatement statement = null;
+
+        try {
+            statement = Persister.getConnection().prepareStatement(sql);
+            int index = 1;
+
+            for (Object param : params) {
+                StatementHelper.setStatementParameter(statement, index++, param);
+            }
+
+            return statement.executeQuery();
+        } catch (SQLException e) {
+            throw new IllegalStateException(e);
+        } finally {
+            if (statement != null) {
+                try {
+                    statement.close();
+                } catch (SQLException e) {
+                    throw new IllegalStateException(e);
+                }
+            }
+        }
+    }
+
+    public static int executeUpdate(String sql, Object ... params) {
+        PreparedStatement statement = null;
+
+        try {
+            statement = Persister.getConnection().prepareStatement(sql);
+            int index = 1;
+
+            for (Object param : params) {
+                StatementHelper.setStatementParameter(statement, index++, param);
+            }
+
+            return statement.executeUpdate();
+        } catch (SQLException e) {
+            throw new IllegalStateException(e);
+        } finally {
+            if (statement != null) {
+                try {
+                    statement.close();
+                } catch (SQLException e) {
+                    throw new IllegalStateException(e);
+                }
+            }
+        }
+    }
+
+
 
 }

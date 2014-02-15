@@ -8,10 +8,8 @@ import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
-import java.math.BigDecimal;
 import java.sql.*;
 import java.util.*;
-import java.util.Date;
 
 /**
  * Date: 11/13/13
@@ -391,7 +389,7 @@ public class MetaData<T> {
                     int index = 1;
 
                     for (Object param : params) {
-                        setStatementParameter(statement, index++, param);
+                        StatementHelper.setStatementParameter(statement, index++, param);
                     }
 
                     ResultSet rs = statement.executeQuery();
@@ -436,7 +434,7 @@ public class MetaData<T> {
                     int index = 1;
 
                     for (Object param : params) {
-                        setStatementParameter(statement, index++, param);
+                        StatementHelper.setStatementParameter(statement, index++, param);
                     }
 
                     ResultSet rs = statement.executeQuery();
@@ -470,30 +468,6 @@ public class MetaData<T> {
         }
 
         return result;
-    }
-
-    private void setStatementParameter(PreparedStatement statement, int index, Object param) throws SQLException {
-        if (param.getClass().equals(String.class)) {
-            statement.setString(index, (String) param);
-        } else if (param.getClass().equals(Long.class) || param.getClass().equals(long.class)) {
-            statement.setLong(index, (Long) param);
-        } else if (param.getClass().equals(Integer.class) || param.getClass().equals(int.class)) {
-            statement.setInt(index, (Integer) param);
-        } else if (param.getClass().equals(Short.class) || param.getClass().equals(short.class)) {
-            statement.setShort(index, (Short)param);
-        } else if (param.getClass().equals(Double.class) || param.getClass().equals(double.class)) {
-            statement.setDouble(index, (Double)param);
-        } else if (param.getClass().equals(BigDecimal.class)) {
-            statement.setBigDecimal(index, (BigDecimal) param);
-        } else if (param.getClass().equals(Boolean.class) || param.getClass().equals(boolean.class)) {
-            statement.setBoolean(index, (Boolean) param);
-        } else if (param.getClass().equals(Date.class)) {
-            Timestamp date = new java.sql.Timestamp(((Date)param).getTime());
-
-            statement.setTimestamp(index, date);
-        } else {
-            throw new IllegalStateException("Type "+param.getClass()+" not supported in where queries yet!");
-        }
     }
 
     private void executeInNewConnection(ExecuteConnection es) {

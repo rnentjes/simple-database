@@ -23,7 +23,7 @@ public class ConnectionPool {
     private ConnectionProvider connectionProvider = null;
 
     private List<ConnectionWrapper> connectionPool = new LinkedList<>();
-    private int minimumNumberOfConnections = 2;
+    private int minimumNumberOfConnections = 0;
     private int maximumNumberOfConnections = 10;
     private int used = 0;
 

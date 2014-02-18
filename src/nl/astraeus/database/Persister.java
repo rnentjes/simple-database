@@ -256,12 +256,12 @@ public class Persister {
         } catch (SQLException e) {
             throw new IllegalStateException(e);
         } finally {
-            if (statement != null) {
-                try {
+            try {
+                if (statement != null && !statement.isClosed()) {
                     statement.close();
-                } catch (SQLException e) {
-                    throw new IllegalStateException(e);
                 }
+            } catch (SQLException e) {
+                throw new IllegalStateException(e);
             }
         }
     }
@@ -280,14 +280,6 @@ public class Persister {
             return statement.executeQuery();
         } catch (SQLException e) {
             throw new IllegalStateException(e);
-        } finally {
-            if (statement != null) {
-                try {
-                    statement.close();
-                } catch (SQLException e) {
-                    throw new IllegalStateException(e);
-                }
-            }
         }
     }
 
@@ -306,12 +298,12 @@ public class Persister {
         } catch (SQLException e) {
             throw new IllegalStateException(e);
         } finally {
-            if (statement != null) {
-                try {
+            try {
+                if (statement != null && !statement.isClosed()) {
                     statement.close();
-                } catch (SQLException e) {
-                    throw new IllegalStateException(e);
                 }
+            } catch (SQLException e) {
+                throw new IllegalStateException(e);
             }
         }
     }

@@ -148,6 +148,10 @@ public class Persister {
         }
     }
 
+    public static void init(Class cls) {
+        MetaDataHandler.get().getMetaData(cls);
+    }
+
     public static void store(Object obj) {
         MetaData meta = MetaDataHandler.get().getMetaData(obj.getClass());
 

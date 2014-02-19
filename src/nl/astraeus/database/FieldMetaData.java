@@ -43,6 +43,7 @@ public class FieldMetaData {
     private Reference reference;
     private Length length;
     private Default defaultValue;
+    private Index index;
     private Class<?> collectionClass;
 
     private boolean primaryKey = false;
@@ -80,6 +81,7 @@ public class FieldMetaData {
         reference = field.getAnnotation(Reference.class);
         length = field.getAnnotation(Length.class);
         defaultValue = field.getAnnotation(Default.class);
+        index = field.getAnnotation(Index.class);
         Column column = field.getAnnotation(Column.class);
         Id id = field.getAnnotation(Id.class);
 
@@ -178,6 +180,14 @@ public class FieldMetaData {
 
     public Length getLength() {
         return length;
+    }
+
+    public boolean hasIndex() {
+        return index != null;
+    }
+
+    public boolean hasUniqueIndex() {
+        return index != null && index.unique();
     }
 
     public Default getDefaultValue() {

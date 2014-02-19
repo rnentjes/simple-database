@@ -93,6 +93,9 @@ public class MetaData<T> {
                         }
                         // check type etc
                         // warn if different
+                        if (meta.hasIndex()) {
+                            createIndexes(meta);
+                        }
                     } else if (DdlMapping.get().isExecuteDdlUpdates()) {
                         // create Column....
                         createColumn(meta);
@@ -179,6 +182,18 @@ public class MetaData<T> {
         model.put("column", meta.getColumnInfo());
 
         SimpleTemplate template = DdlMapping.get().getQueryTemplate(DdlMapping.QueryTemplates.CREATE_COLUMN);
+
+        execute(template, model);
+    }
+
+    private void createIndexes(FieldMetaData meta) {
+        Map<String, Object> model = new HashMap<>();
+
+        model.put("tableName", tableName);
+        model.put("column", meta.getColumnInfo());
+        model.put("unique", meta.hasUniqueIndex());
+
+        SimpleTemplate template = DdlMapping.get().getQueryTemplate(DdlMapping.QueryTemplates.CREATE_INDEX);
 
         execute(template, model);
     }

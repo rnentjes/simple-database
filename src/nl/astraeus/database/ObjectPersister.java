@@ -56,6 +56,14 @@ public class ObjectPersister<T> {
         return metaData.selectWhere(query, params);
     }
 
+    public List<T> selectWhere(int from, int max, String query, Object ... params) {
+        return metaData.selectWhere(from, max, query, params);
+    }
+
+    public int selectCount(String query, Object ... params) {
+        return metaData.selectCount(query, params);
+    }
+
     public T findWhere(String query, Object ... params) {
         return (T) metaData.findWhere(query, params);
     }

@@ -214,6 +214,14 @@ public class Persister {
         return getObjectPersister(cls).selectWhere(query, params);
     }
 
+    public static <T>List<T> selectWhere(Class<T> cls, int from, int max, String query, Object ... params) {
+        return getObjectPersister(cls).selectWhere(from, max, query, params);
+    }
+
+    public static <T> int selectCount(Class<T> cls, String query, Object ... params) {
+        return getObjectPersister(cls).selectCount(query, params);
+    }
+
     public static <T> T findWhere(Class<T> cls, String query, Object ... params) {
         return getObjectPersister(cls).findWhere(query, params);
     }

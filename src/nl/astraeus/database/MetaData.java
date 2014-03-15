@@ -472,6 +472,99 @@ public class MetaData<T> {
         return result;
     }
 
+    public <T> List<T> selectWhere(int from, int max, String query, final Object[] params) {
+        List<T> result;
+        SimpleTemplate whereTemplate = DdlMapping.get().getQueryTemplate(DdlMapping.QueryTemplates.SELECT_WHERE_PAGED);
+
+        Map<String, Object> model = new HashMap<>();
+
+        model.put("tableName", tableName);
+        model.put("key", pk.getColumnInfo().getName());
+        model.put("query", query);
+        model.put("order", query);
+        model.put("from", from);
+        model.put("to", from+max);
+        model.put("max", max);
+
+        final String whereSql = whereTemplate.render(model);
+
+        result = executeInNewConnection(new ExecuteConnectionWithResult<List<T>>() {
+            @Override
+            public List<T> execute(Connection connection) throws SQLException {
+                List<T> result = new ArrayList<>();
+                PreparedStatement statement = null;
+
+                try {
+                    statement = connection.prepareStatement(whereSql);
+                    int index = 1;
+
+                    for (Object param : params) {
+                        StatementHelper.setStatementParameter(statement, index++, param);
+                    }
+
+                    ResultSet rs = statement.executeQuery();
+
+                    while (rs.next()) {
+                        Long id = rs.getLong(1);
+
+                        result.add((T) Persister.find(cls, id));
+                    }
+
+                    return result;
+                } finally {
+                    if (statement != null) {
+                        statement.close();
+                    }
+                }
+            }
+        });
+
+        return result;
+    }
+
+    public int selectCount(String query, final Object[] params) {
+        Integer result;
+        SimpleTemplate whereTemplate = DdlMapping.get().getQueryTemplate(DdlMapping.QueryTemplates.SELECT_WHERE);
+
+        Map<String, Object> model = new HashMap<>();
+
+        model.put("tableName", tableName);
+        model.put("key", "COUNT("+pk.getColumnInfo().getName()+")");
+        model.put("query", query);
+        final String whereSql = whereTemplate.render(model);
+
+        result = executeInNewConnection(new ExecuteConnectionWithResult<Integer>() {
+            @Override
+            public Integer execute(Connection connection) throws SQLException {
+                Integer result = 0;
+                PreparedStatement statement = null;
+
+                try {
+                    statement = connection.prepareStatement(whereSql);
+                    int index = 1;
+
+                    for (Object param : params) {
+                        StatementHelper.setStatementParameter(statement, index++, param);
+                    }
+
+                    ResultSet rs = statement.executeQuery();
+
+                    if (rs.next()) {
+                        result = rs.getInt(1);
+                    }
+
+                    return result;
+                } finally {
+                    if (statement != null) {
+                        statement.close();
+                    }
+                }
+            }
+        });
+
+        return result;
+    }
+
     public <T> T findWhere(String query, final Object[] params) {
         List<T> results = selectWhere(query, params);
         T result = null;

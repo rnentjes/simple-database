@@ -27,6 +27,7 @@ public class DdlMapping {
         DELETE,
         SELECT,
         SELECT_WHERE,
+        SELECT_WHERE_PAGED,
         SELECT_FROM
     }
 
@@ -139,15 +140,16 @@ public class DdlMapping {
             throw new IllegalStateException(e);
         }
 
-        queryTemplates.put(QueryTemplates.CREATE,        new SimpleTemplate("${", "}", EscapeMode.NONE, findSqlResource("create.sql")));
-        queryTemplates.put(QueryTemplates.CREATE_COLUMN, new SimpleTemplate("${", "}", EscapeMode.NONE, findSqlResource("createColumn.sql")));
-        queryTemplates.put(QueryTemplates.CREATE_INDEX,  new SimpleTemplate("${", "}", EscapeMode.NONE, findSqlResource("createIndex.sql")));
-        queryTemplates.put(QueryTemplates.INSERT,        new SimpleTemplate("${", "}", EscapeMode.NONE, findSqlResource("insert.sql")));
-        queryTemplates.put(QueryTemplates.UPDATE,        new SimpleTemplate("${", "}", EscapeMode.NONE, findSqlResource("update.sql")));
-        queryTemplates.put(QueryTemplates.DELETE,        new SimpleTemplate("${", "}", EscapeMode.NONE, findSqlResource("delete.sql")));
-        queryTemplates.put(QueryTemplates.SELECT,        new SimpleTemplate("${", "}", EscapeMode.NONE, findSqlResource("select.sql")));
-        queryTemplates.put(QueryTemplates.SELECT_WHERE,  new SimpleTemplate("${", "}", EscapeMode.NONE, findSqlResource("selectWhere.sql")));
-        queryTemplates.put(QueryTemplates.SELECT_FROM,   new SimpleTemplate("${", "}", EscapeMode.NONE, findSqlResource("selectFrom.sql")));
+        queryTemplates.put(QueryTemplates.CREATE,               new SimpleTemplate("${", "}", EscapeMode.NONE, findSqlResource("create.sql")));
+        queryTemplates.put(QueryTemplates.CREATE_COLUMN,        new SimpleTemplate("${", "}", EscapeMode.NONE, findSqlResource("createColumn.sql")));
+        queryTemplates.put(QueryTemplates.CREATE_INDEX,         new SimpleTemplate("${", "}", EscapeMode.NONE, findSqlResource("createIndex.sql")));
+        queryTemplates.put(QueryTemplates.INSERT,               new SimpleTemplate("${", "}", EscapeMode.NONE, findSqlResource("insert.sql")));
+        queryTemplates.put(QueryTemplates.UPDATE,               new SimpleTemplate("${", "}", EscapeMode.NONE, findSqlResource("update.sql")));
+        queryTemplates.put(QueryTemplates.DELETE,               new SimpleTemplate("${", "}", EscapeMode.NONE, findSqlResource("delete.sql")));
+        queryTemplates.put(QueryTemplates.SELECT,               new SimpleTemplate("${", "}", EscapeMode.NONE, findSqlResource("select.sql")));
+        queryTemplates.put(QueryTemplates.SELECT_WHERE,         new SimpleTemplate("${", "}", EscapeMode.NONE, findSqlResource("selectWhere.sql")));
+        queryTemplates.put(QueryTemplates.SELECT_WHERE_PAGED,   new SimpleTemplate("${", "}", EscapeMode.NONE, findSqlResource("selectWherePaged.sql")));
+        queryTemplates.put(QueryTemplates.SELECT_FROM,          new SimpleTemplate("${", "}", EscapeMode.NONE, findSqlResource("selectFrom.sql")));
     }
 
     public SimpleTemplate getDdlTemplateForType(Class<?> type) {

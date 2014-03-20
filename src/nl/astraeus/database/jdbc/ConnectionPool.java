@@ -24,7 +24,7 @@ public class ConnectionPool {
 
     private List<ConnectionWrapper> connectionPool = new LinkedList<>();
     private int minimumNumberOfConnections = 0;
-    private int maximumNumberOfConnections = 10;
+    private int maximumNumberOfConnections = 20;
     private int used = 0;
 
     public ConnectionPool() {

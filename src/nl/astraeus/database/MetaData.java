@@ -241,7 +241,7 @@ public class MetaData<T> {
     }
 
     protected <T> T find(final Long id) {
-        return executeInNewConnection(new ExecuteConnectionWithResult<T>() {
+        return executeInCurrentConnection(new ExecuteConnectionWithResult<T>() {
             @Override
             public T execute(Connection connection) throws SQLException {
                 PreparedStatement statement = null;
@@ -393,7 +393,7 @@ public class MetaData<T> {
 
         final String fromSql = fromTemplate.render(model);
 
-        result = executeInNewConnection(new ExecuteConnectionWithResult<List<T>>() {
+        result = executeInCurrentConnection(new ExecuteConnectionWithResult<List<T>>() {
             @Override
             public List<T> execute(Connection connection) throws SQLException {
                 List<T> result = new ArrayList<>();
@@ -438,7 +438,7 @@ public class MetaData<T> {
         model.put("query", query);
         final String whereSql = whereTemplate.render(model);
 
-        result = executeInNewConnection(new ExecuteConnectionWithResult<List<T>>() {
+        result = executeInCurrentConnection(new ExecuteConnectionWithResult<List<T>>() {
             @Override
             public List<T> execute(Connection connection) throws SQLException {
                 List<T> result = new ArrayList<>();
@@ -488,7 +488,7 @@ public class MetaData<T> {
 
         final String whereSql = whereTemplate.render(model);
 
-        result = executeInNewConnection(new ExecuteConnectionWithResult<List<T>>() {
+        result = executeInCurrentConnection(new ExecuteConnectionWithResult<List<T>>() {
             @Override
             public List<T> execute(Connection connection) throws SQLException {
                 List<T> result = new ArrayList<>();
@@ -533,7 +533,7 @@ public class MetaData<T> {
         model.put("query", query);
         final String whereSql = whereTemplate.render(model);
 
-        result = executeInNewConnection(new ExecuteConnectionWithResult<Integer>() {
+        result = executeInCurrentConnection(new ExecuteConnectionWithResult<Integer>() {
             @Override
             public Integer execute(Connection connection) throws SQLException {
                 Integer result = 0;

@@ -28,7 +28,7 @@ public class TestFind {
                 try {
                     Class.forName("org.h2.Driver");
 
-                    Connection connection = DriverManager.getConnection("jdbc:h2:mem:TestFind", "sa", "");
+                    Connection connection = DriverManager.getConnection("jdbc:h2:mem:TestFind;DB_CLOSE_DELAY=-1", "sa", "");
                     connection.setAutoCommit(false);
 
                     return connection;
@@ -47,7 +47,7 @@ public class TestFind {
     }
 
     @Test
-    public void testFind() {
+    public void testFind() throws InterruptedException {
         Person person = new Person("Rien", 40, "Rozendael");
 
         Persister.begin();

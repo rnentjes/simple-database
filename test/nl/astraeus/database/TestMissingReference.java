@@ -29,7 +29,7 @@ public class TestMissingReference {
                 try {
                     Class.forName("org.h2.Driver");
 
-                    Connection connection = DriverManager.getConnection("jdbc:h2:mem:TestMissingReference", "sa", "");
+                    Connection connection = DriverManager.getConnection("jdbc:h2:mem:TestMissingReference;DB_CLOSE_DELAY=-1", "sa", "");
                     connection.setAutoCommit(false);
 
                     return connection;

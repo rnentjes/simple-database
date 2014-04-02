@@ -61,6 +61,7 @@ public class TestUpdate {
 
         Persister.commit();
 
+        Persister.begin();
 
         List<Person> persons = Persister.selectWhere(Person.class, "age > ?", 30);
 
@@ -74,9 +75,13 @@ public class TestUpdate {
 
         Persister.commit();
 
+        Persister.begin();
+
         persons = Persister.selectWhere(Person.class, "age > ?", 32);
 
         Assert.assertEquals(persons.size(), 2);
+
+        Persister.rollback();
     }
 
 }

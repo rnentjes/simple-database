@@ -58,8 +58,11 @@ public class TestDelete {
 
         Persister.commit();
 
+        Persister.begin();
 
         List<Person> persons = Persister.selectWhere(Person.class, "age > ?", 30);
+
+        Persister.rollback();
 
         Persister.begin();
 
@@ -69,7 +72,11 @@ public class TestDelete {
 
         Persister.commit();
 
+        Persister.begin();
+
         persons = Persister.selectAll(Person.class);
+
+        Persister.rollback();
 
         Assert.assertEquals(persons.size(), 2);
     }

@@ -60,10 +60,14 @@ public class TestCollection {
 
         Persister.commit();
 
+        Persister.begin();
+
         Company found = Persister.find(Company.class, company.getId());
 
         Assert.assertNotNull(found);
         Assert.assertEquals(company.getInfoLines().size(), 2);
+
+        Persister.rollback();
 
         Persister.begin();
 
@@ -73,10 +77,14 @@ public class TestCollection {
 
         Persister.commit();
 
+        Persister.begin();
+
         found = Persister.find(Company.class, company.getId());
 
         Assert.assertNotNull(found);
         Assert.assertEquals(company.getInfoLines().size(), 3);
+
+        Persister.rollback();
 
         Persister.begin();
 
@@ -87,10 +95,14 @@ public class TestCollection {
 
         Persister.commit();
 
+        Persister.begin();
+
         found = Persister.find(Company.class, company.getId());
 
         Assert.assertNotNull(found);
         Assert.assertEquals(company.getInfoLines().size(), 2);
+
+        Persister.rollback();
     }
 
 }

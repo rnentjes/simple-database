@@ -64,7 +64,11 @@ public class TestReference {
 
         Persister.commit();
 
+        Persister.begin();
+
         Person p2 = Persister.find(Person.class, person.getId());
+
+        Persister.rollback();
 
         Assert.assertNotNull(p2);
         Assert.assertNotNull(p2.getCompany());
@@ -88,7 +92,11 @@ public class TestReference {
 
         Persister.commit();
 
+        Persister.begin();
+
         Company found = Persister.find(Company.class, company.getId());
+
+        Persister.rollback();
 
         for (Info info : company.getInfoLines()) {
             Assert.assertNotNull(info.getDescription());

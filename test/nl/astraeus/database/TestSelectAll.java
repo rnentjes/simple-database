@@ -65,11 +65,17 @@ public class TestSelectAll {
 
         Persister.commit();
 
+        Persister.begin();
+
         List<Person> persons = Persister.selectAll(Person.class);
+
+        Persister.rollback();
 
         Assert.assertEquals(persons.size(), 5);
 
         Cache.get().clear();
+
+        Persister.begin();
 
         long start1 = System.nanoTime();
         persons = Persister.selectAll(Person.class);
@@ -90,6 +96,8 @@ public class TestSelectAll {
         long start3 = System.nanoTime();
         persons = Persister.selectAll(Person.class);
         long stop3 = System.nanoTime();
+
+        Persister.rollback();
 
         for (Person person : persons) {
             logger.info("3all Found: "+person.getName());

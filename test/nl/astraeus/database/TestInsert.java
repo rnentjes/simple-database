@@ -59,9 +59,13 @@ public class TestInsert {
             }
         });
 
+        Persister.begin();
+
         List<Person> persons = Persister.selectAll(Person.class);
 
         Assert.assertTrue(persons.size() == 4);
+
+        Persister.rollback();
     }
 
 }

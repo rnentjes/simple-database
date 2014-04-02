@@ -57,7 +57,11 @@ public class TestFind {
 
         Persister.commit();
 
+        Persister.begin();
+
         Person p2 = Persister.find(Person.class, id);
+
+        Persister.rollback();
 
         Assert.assertNotNull(p2);
         Assert.assertEquals("Rien", p2.getName());

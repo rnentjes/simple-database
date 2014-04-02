@@ -73,9 +73,14 @@ public class TestCache {
             }
         });
 
-        List<Person> persons = Persister.selectAll(Person.class);
+        Persister.execute(new Persister.Executor() {
+            @Override
+            public void execute() {
+            List<Person> persons = Persister.selectAll(Person.class);
 
-        Assert.assertEquals(Cache.get().getObjectCache(Person.class).getNumberCached() ,6);
+            Assert.assertEquals(Cache.get().getObjectCache(Person.class).getNumberCached() ,6);
+            }
+        });
     }
 
 }

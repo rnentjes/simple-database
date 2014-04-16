@@ -64,6 +64,14 @@ public class Cache {
         getObjectCache(cls).setMaxSize(maxSize);
     }
 
+    public <T> void clear(Class<T> cls) {
+        ObjectCache<T> objectCache = (ObjectCache<T>) cache.get(cls);
+
+        if (objectCache != null) {
+            objectCache.clear();
+
+        }
+    }
     public void clear() {
         cache.clear();
     }

@@ -320,6 +320,8 @@ public class Persister {
         }
     }
 
-
+    public static void invalidateCache(Class<?> cls) {
+        Cache.get().clear(cls);
+    }
 
 }

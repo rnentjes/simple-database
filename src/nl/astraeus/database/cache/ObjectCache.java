@@ -44,11 +44,11 @@ public class ObjectCache<T> {
 
         if (ref == null) {
             ref = new ObjectReference<T>(id, object);
-
-            cache.put(id, ref);
         } else {
             ref.set(object);
         }
+
+        cache.put(id, ref);
     }
 
     public int getNumberCached() {
@@ -62,4 +62,9 @@ public class ObjectCache<T> {
     public int getMaxSize() {
         return maxSize;
     }
+
+    public void clear() {
+        cache.clear();
+    }
+
 }

@@ -273,7 +273,7 @@ public class Persister {
                     statement.close();
                 }
             } catch (SQLException e) {
-                throw new IllegalStateException(e);
+                e.printStackTrace(System.err);
             }
         }
     }
@@ -315,7 +315,7 @@ public class Persister {
                     statement.close();
                 }
             } catch (SQLException e) {
-                throw new IllegalStateException(e);
+                e.printStackTrace(System.err);
             }
         }
     }

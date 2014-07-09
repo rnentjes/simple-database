@@ -40,6 +40,8 @@ public class TestMissingReference {
                 }
             }
         });
+
+        ConnectionPool.get().clear();
     }
 
     @AfterClass

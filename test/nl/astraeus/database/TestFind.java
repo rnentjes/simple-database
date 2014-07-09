@@ -39,6 +39,8 @@ public class TestFind {
                 }
             }
         });
+
+        ConnectionPool.get().clear();
     }
 
     @AfterClass
@@ -61,10 +63,10 @@ public class TestFind {
 
         Person p2 = Persister.find(Person.class, id);
 
-        Persister.rollback();
-
         Assert.assertNotNull(p2);
         Assert.assertEquals("Rien", p2.getName());
+
+        Persister.rollback();
     }
 
 }

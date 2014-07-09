@@ -23,9 +23,10 @@ public class ConnectionPool {
     private ConnectionProvider connectionProvider = null;
 
     private List<ConnectionWrapper> connectionPool = new LinkedList<>();
+    private List<ConnectionWrapper> usedPool = new LinkedList<>();
+
     private int minimumNumberOfConnections = 0;
     private int maximumNumberOfConnections = 20;
-    private int used = 0;
 
     public ConnectionPool() {
     }
@@ -46,10 +47,10 @@ public class ConnectionPool {
     }
 
     public synchronized Connection getConnection() {
-        if (connectionPool.isEmpty() && used < maximumNumberOfConnections) {
+        if (connectionPool.isEmpty() && usedPool.size() < maximumNumberOfConnections) {
             ConnectionWrapper wrapper = new ConnectionWrapper(this, connectionProvider.getConnection());
 
-            used++;
+            usedPool.add(wrapper);
             return wrapper;
         }
 
@@ -62,14 +63,20 @@ public class ConnectionPool {
             }
         }
 
-        used++;
-        return connectionPool.remove(0);
+        ConnectionWrapper result = connectionPool.remove(0);
+        usedPool.add(result);
+        return result;
     }
 
     protected synchronized void returnConnection(ConnectionWrapper connection) {
-        used--;
-        connectionPool.add(connection);
-        notify();
+        if (usedPool.contains(connection)) {
+            usedPool.remove(connection);
+            connectionPool.add(connection);
+            notify();
+        } else {
+            // discard (clear was probably called)
+            connection.dispose();
+        }
     }
 
     public boolean hasConnectionProvider() {
@@ -77,6 +84,11 @@ public class ConnectionPool {
     }
 
     public synchronized void clear() {
-        connectionPool = new LinkedList<>();
+        connectionPool.clear();
+        usedPool.clear();
+    }
+
+    public ConnectionProvider getProvider() {
+        return connectionProvider;
     }
 }

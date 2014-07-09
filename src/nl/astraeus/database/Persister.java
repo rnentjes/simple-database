@@ -273,7 +273,9 @@ public class Persister {
                     statement.close();
                 }
             } catch (SQLException e) {
-                e.printStackTrace(System.err);
+                if (System.err != null) {
+                    e.printStackTrace(System.err);
+                }
             }
         }
     }
@@ -315,7 +317,9 @@ public class Persister {
                     statement.close();
                 }
             } catch (SQLException e) {
-                e.printStackTrace(System.err);
+                if (System.err != null) {
+                    e.printStackTrace(System.err);
+                }
             }
         }
     }

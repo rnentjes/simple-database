@@ -40,7 +40,7 @@ public class DdlMapping {
         private String packageName;
         private boolean ddlInUppercase;
 
-        private DatabaseDefinition(String name, String packageName, boolean ddlInUppercase) {
+        DatabaseDefinition(String name, String packageName, boolean ddlInUppercase) {
             this.name = name;
             this.packageName = packageName;
             this.ddlInUppercase = ddlInUppercase;

@@ -18,7 +18,7 @@ import java.util.Map;
 public class DdlMapping {
     private final static Logger logger = LoggerFactory.getLogger(DdlMapping.class);
 
-    public static enum QueryTemplates {
+    public enum QueryTemplates {
         CREATE,
         CREATE_COLUMN,
         CREATE_INDEX,
@@ -31,7 +31,7 @@ public class DdlMapping {
         SELECT_FROM
     }
 
-    public static enum DatabaseDefinition {
+    public enum DatabaseDefinition {
         H2("H2", "h2", true),
         POSTGRESQL("PostgreSQL", "postgresql", false),
         MYSQL("MySql", "mysql", false);

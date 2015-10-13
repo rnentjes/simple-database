@@ -15,10 +15,10 @@ import java.util.*;
  * Date: 11/13/13
  * Time: 9:41 PM
  */
-public class MetaData<T> {
+public class MetaData<M> {
     private final static Logger logger = LoggerFactory.getLogger(MetaData.class);
 
-    private Class<T> cls;
+    private Class<M> cls;
     private String tableName;
     private FieldMetaData pk = null;
     private FieldMetaData [] fieldsMetaData;
@@ -29,7 +29,7 @@ public class MetaData<T> {
 
     private ThreadLocal<Map<Class<?>, Map<Long, Object>>> circularReferences = new ThreadLocal<>();
 
-    public MetaData(Class<T> cls) {
+    public MetaData(Class<M> cls) {
         this.cls = cls;
 
         processAnnotation(cls.getAnnotation(Table.class));
@@ -173,7 +173,13 @@ public class MetaData<T> {
         SimpleTemplate template = DdlMapping.get().getQueryTemplate(DdlMapping.QueryTemplates.CREATE);
 
         execute(template, model);
-     }
+
+        for (FieldMetaData meta : fieldsMetaData) {
+            if (meta.hasIndex()) {
+                createIndexes(meta);
+            }
+        }
+    }
 
     private void createColumn(FieldMetaData meta) {
         Map<String, Object> model = new HashMap<>();
@@ -184,6 +190,10 @@ public class MetaData<T> {
         SimpleTemplate template = DdlMapping.get().getQueryTemplate(DdlMapping.QueryTemplates.CREATE_COLUMN);
 
         execute(template, model);
+
+        if (meta.hasIndex()) {
+            createIndexes(meta);
+        }
     }
 
     private void createIndexes(FieldMetaData meta) {

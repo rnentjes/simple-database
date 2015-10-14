@@ -1,19 +1,37 @@
 package nl.astraeus.database;
 
-import nl.astraeus.database.annotations.Blob;
-import nl.astraeus.database.annotations.*;
-import nl.astraeus.template.SimpleTemplate;
-import nl.astraeus.util.Util;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import java.io.*;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.lang.reflect.Field;
 import java.math.BigDecimal;
 import java.nio.ByteBuffer;
-import java.sql.*;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Timestamp;
+import java.sql.Types;
 import java.util.HashMap;
 import java.util.Map;
+
+import nl.astraeus.database.annotations.Blob;
+import nl.astraeus.database.annotations.Collection;
+import nl.astraeus.database.annotations.Column;
+import nl.astraeus.database.annotations.Default;
+import nl.astraeus.database.annotations.Id;
+import nl.astraeus.database.annotations.Index;
+import nl.astraeus.database.annotations.Length;
+import nl.astraeus.database.annotations.Reference;
+import nl.astraeus.database.annotations.Serialized;
+import nl.astraeus.database.annotations.Table;
+import nl.astraeus.template.SimpleTemplate;
+import nl.astraeus.util.Util;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Date: 11/14/13
@@ -22,7 +40,7 @@ import java.util.Map;
 public class FieldMetaData {
     private final static Logger logger = LoggerFactory.getLogger(FieldMetaData.class);
 
-    public static enum ColumnType {
+    public enum ColumnType {
         BASIC,
         COLLECTION,
         SERIALIZED,

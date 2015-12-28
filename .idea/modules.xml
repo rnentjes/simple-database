@@ -2,7 +2,9 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/simple-database.iml" filepath="$PROJECT_DIR$/simple-database.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/simple-database.iml" filepath="$PROJECT_DIR$/.idea/modules/simple-database.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/simple_database_main.iml" filepath="$PROJECT_DIR$/.idea/modules/simple_database_main.iml" group="simple-database" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/simple_database_test.iml" filepath="$PROJECT_DIR$/.idea/modules/simple_database_test.iml" group="simple-database" />
     </modules>
   </component>
 </project>

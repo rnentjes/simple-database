@@ -78,6 +78,8 @@ public class FieldMetaData {
         sqlTypeMapping.put(int.class, Types.INTEGER);
         sqlTypeMapping.put(Short.class, Types.SMALLINT);
         sqlTypeMapping.put(short.class, Types.SMALLINT);
+        sqlTypeMapping.put(Float.class, Types.DECIMAL);
+        sqlTypeMapping.put(float.class, Types.DECIMAL);
         sqlTypeMapping.put(Double.class, Types.DECIMAL);
         sqlTypeMapping.put(double.class, Types.DECIMAL);
         sqlTypeMapping.put(Boolean.class, Types.BOOLEAN);

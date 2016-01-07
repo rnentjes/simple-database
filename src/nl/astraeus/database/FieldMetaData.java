@@ -272,6 +272,8 @@ public class FieldMetaData {
                         case Types.DECIMAL:
                             if (javaType.equals(BigDecimal.class)) {
                                 statement.setBigDecimal(index, (BigDecimal) value);
+                            } else if (javaType.equals(Float.class) || javaType.equals(float.class)) {
+                                statement.setFloat(index, (Float) value);
                             } else {
                                 statement.setDouble(index, (Double) value);
                             }
@@ -358,6 +360,8 @@ public class FieldMetaData {
                     case Types.DECIMAL:
                         if (javaType.equals(BigDecimal.class)) {
                             set(obj, rs.getBigDecimal(index));
+                        } else if (javaType.equals(Float.class) || javaType.equals(float.class)) {
+                            set(obj, rs.getFloat(index));
                         } else {
                             set(obj, rs.getDouble(index));
                         }

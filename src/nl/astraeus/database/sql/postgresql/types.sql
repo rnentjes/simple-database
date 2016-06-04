@@ -5,6 +5,7 @@ java.lang.Short=SMALLINT
 java.lang.Byte=TINYINT
 java.lang.Long=BIGINT
 java.lang.Double=DECIMAL(${precision}, ${scale})
+java.lang.Float=DECIMAL(${precision}, ${scale})
 java.math.BigDecimal=DECIMAL(${precision}, ${scale})
 java.util.Date=TIMESTAMP
 java.lang.Object=BYTEA

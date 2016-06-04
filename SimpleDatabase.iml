@@ -28,6 +28,5 @@
         <jarDirectory url="file://$MODULE_DIR$/lib/build/junit" recursive="false" />
       </library>
     </orderEntry>
-    <orderEntry type="library" name="KotlinJavaRuntime" level="project" />
   </component>
 </module>

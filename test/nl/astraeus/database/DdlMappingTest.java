@@ -1,6 +1,7 @@
 package nl.astraeus.database;
 
-import org.h2.util.New;
+import nl.astraeus.template.SimpleTemplate;
+import org.junit.Assert;
 import org.junit.Test;
 
 /**
@@ -10,9 +11,11 @@ import org.junit.Test;
 public class DdlMappingTest {
 
     @Test
-    public void getInstance() {
+    public void testDdlMapping() {
         DdlMapping ddlMapping = new DdlMapping(DdlMapping.DatabaseDefinition.H2);
 
-        ddlMapping.getDdlTemplateForType(Long.class);
+        SimpleTemplate template = ddlMapping.getDdlTemplateForType(Double.class);
+
+        Assert.assertEquals(2, template.getUsedParamaterNames().size());
     }
 }

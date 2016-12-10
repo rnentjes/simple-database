@@ -3,7 +3,9 @@ package nl.astraeus.database.sql;
 import nl.astraeus.template.EscapeMode;
 import nl.astraeus.template.SimpleTemplate;
 import nl.astraeus.util.Util;
+import org.junit.Assert;
 import org.junit.Ignore;
+import org.junit.Test;
 
 import java.io.IOException;
 import java.util.*;
@@ -12,17 +14,18 @@ import java.util.*;
  * Date: 11/14/13
  * Time: 9:29 PM
  */
-@Ignore
 public class TestUpdate {
 
-    public static void main (String [] args) throws IOException {
-        TestUpdate tct = new TestUpdate();
+/*
+    update ${tableName}
+    set ${each(columns as column)}${column} = ?,
+    ${eachlast}${column} = ?${/each}
+    where ${key} = ?
+*/
 
-        tct.test();
-    }
-
-    public void test() throws IOException {
-        String ct = Util.readAsString(getClass().getResourceAsStream("update.sql"));
+    @Test
+    public void testUpdate() throws IOException {
+        String ct = Util.readAsString(getClass().getResourceAsStream("def/update.sql"));
 
         SimpleTemplate template = new SimpleTemplate("${", "}", EscapeMode.NONE, ct);
 
@@ -35,27 +38,16 @@ public class TestUpdate {
         columns.add("zip");
         columns.add("comment");
 
-        List<String> keys = new ArrayList<>();
-
-        keys.add("name");
-        keys.add("id");
-
         model.put("tableName", "person");
         model.put("columns", columns);
-        model.put("keys", keys);
+        model.put("key", "id");
 
-        String sql;
-
-        for (int i = 0; i < 100000; i++) {
-            sql = template.render(model);
-        }
-
-        long start = System.nanoTime();
-        sql = template.render(model);
-        long end = System.nanoTime();
-
-        System.out.println(sql);
-        System.out.println((end-start)+"ns");
+        Assert.assertEquals("update person\n" +
+                "  set address = ?,\n" +
+                "      age = ?,\n" +
+                "      zip = ?,\n" +
+                "      comment = ?\n" +
+                "  where id = ?\n", template.render(model));
     }
 
 }

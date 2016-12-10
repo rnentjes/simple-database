@@ -26,25 +26,21 @@ public class TestInsert extends BaseTest {
 
     @Test
     public void testInsert() {
-/*
-        Persister.execute(new Persister.Executor() {
+        SimpleDao<Person> dao = new SimpleDao<Person>(Person.class);
+
+        dao.execute(new SimpleDao.Executor<Person>() {
             @Override
-            public void execute() {
-                insert(new Person("Rien", 40, "Rozendael"));
-                insert(new Person("Jan", 32, "Straat"));
-                insert(new Person("Piet", 26, "Weg"));
-                insert(new Person("Klaas", 10, "Pad"));
+            public void execute(SimpleDao<Person> dao) {
+                dao.insert(new Person("Rien", 40, "Rozendael"));
+                dao.insert(new Person("Jan", 32, "Straat"));
+                dao.insert(new Person("Piet", 26, "Weg"));
+                dao.insert(new Person("Klaas", 10, "Pad"));
             }
         });
 
-        Persister.begin();
-
-        List<Person> persons = Persister.selectAll(Person.class);
+        List<Person> persons = dao.selectAll();
 
         Assert.assertTrue(persons.size() == 4);
-
-        Persister.rollback();
-*/
     }
 
 }

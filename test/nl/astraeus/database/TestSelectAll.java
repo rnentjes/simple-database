@@ -32,31 +32,16 @@ public class TestSelectAll extends BaseTest {
 
     @Test
     public void testSelectAll() {
-/*
-        Persister.begin();
+        createPersons();
 
-        Persister.insert(new Person("Rien", 40, "Rozendael"));
-        Persister.insert(new Person("Jan", 32, "Straat"));
-        Persister.insert(new Person("Ronald", 32, "Wherever"));
-        Persister.insert(new Person("Piet", 26, "Weg"));
-        Persister.insert(new Person("Klaas", 10, "Pad"));
-
-        Persister.commit();
-
-        Persister.begin();
-
-        List<Person> persons = Persister.selectAll(Person.class);
-
-        Persister.rollback();
+        List<Person> persons = personDao.selectAll();
 
         Assert.assertEquals(persons.size(), 5);
 
-        Cache.get().clear();
-
-        Persister.begin();
+        db.getCache().clear();
 
         long start1 = System.nanoTime();
-        persons = Persister.selectAll(Person.class);
+        persons = personDao.selectAll();
         long stop1 = System.nanoTime();
 
         for (Person person : persons) {
@@ -64,7 +49,7 @@ public class TestSelectAll extends BaseTest {
         }
 
         long start2 = System.nanoTime();
-        persons = Persister.selectAll(Person.class);
+        persons = personDao.selectAll();
         long stop2 = System.nanoTime();
 
         for (Person person : persons) {
@@ -72,10 +57,8 @@ public class TestSelectAll extends BaseTest {
         }
 
         long start3 = System.nanoTime();
-        persons = Persister.selectAll(Person.class);
+        persons = personDao.selectAll();
         long stop3 = System.nanoTime();
-
-        Persister.rollback();
 
         for (Person person : persons) {
             logger.info("3all Found: "+person.getName());
@@ -85,12 +68,11 @@ public class TestSelectAll extends BaseTest {
         logger.info("time2 "+(stop2-start2));
         logger.info("time3 "+(stop3-start3));
 
-        Map<Class<?>, ObjectCache<?>> cache = Cache.get().getCache();
+        Map<Class<?>, ObjectCache<?>> cache = db.getCache().getCache();
 
         for (Class cls : cache.keySet()) {
             logger.info("# Cached "+cls.getSimpleName()+": " + cache.get(cls).getNumberCached());
         }
-*/
     }
 
 }

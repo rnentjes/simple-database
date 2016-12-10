@@ -1135,7 +1135,7 @@
       <workItem from="1481273548871" duration="226000" />
       <workItem from="1481274277594" duration="990000" />
       <workItem from="1481369293467" duration="1314000" />
-      <workItem from="1481393131531" duration="75000" />
+      <workItem from="1481393131531" duration="95000" />
     </task>
     <task id="LOCAL-00001" summary="Intellij settings">
       <created>1445189967799</created>
@@ -1214,7 +1214,14 @@
       <option name="project" value="LOCAL" />
       <updated>1481393189324</updated>
     </task>
-    <option name="localTasksCounter" value="12" />
+    <task id="LOCAL-00012" summary="Settings">
+      <created>1481393211505</created>
+      <option name="number" value="00012" />
+      <option name="presentableId" value="LOCAL-00012" />
+      <option name="project" value="LOCAL" />
+      <updated>1481393211506</updated>
+    </task>
+    <option name="localTasksCounter" value="13" />
     <servers />
   </component>
   <component name="TestHistory">
@@ -1223,7 +1230,7 @@
     </history-entry>
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="13727000" />
+    <option name="totallyTimeSpent" value="13747000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">

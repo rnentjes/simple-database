@@ -26,7 +26,7 @@ public class TestMetaData {
                 try {
                     Class.forName("org.h2.Driver");
 
-                    Connection connection = DriverManager.getConnection("jdbc:h2:mem:Test", "sa", "");
+                    Connection connection = DriverManager.getConnection("jdbc:h2:mem:Test;DB_CLOSE_DELAY=-1", "sa", "");
                     connection.setAutoCommit(false);
 
                     return connection;

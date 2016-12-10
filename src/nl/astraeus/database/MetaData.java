@@ -84,15 +84,19 @@ public class MetaData<M> {
             ResultSet result = connection.getMetaData().getTables(null, null, tableName, null);
 
             if (result.next()) {
-                for (FieldMetaData meta : fieldsMetaData) {
-                    ResultSet columnMetaData = connection.getMetaData().getColumns(null, null, tableName, meta.getColumnInfo().getName());
+                Map<String, ColumnMetaData> columnMetaData = getColumnMetaData(connection);
 
-                    if (columnMetaData.next()) {
+                for (FieldMetaData meta : fieldsMetaData) {
+                    ColumnMetaData cmd = columnMetaData.get(meta.getColumnInfo().getName());
+                    if (cmd != null) {
                         if (meta.isPrimaryKey()) {
 
                         }
                         // check type etc
-                        // warn if different
+                        if (cmd.getSqlType() != null && !cmd.getSqlType().equals(meta.getSqlType())) {
+                            throw new IllegalStateException("Field " + cls.getSimpleName() + "." + meta.getFieldName() + " doesn't match type for column " + tableName + "." + cmd.getName());
+                        }
+                        // (re)create index
                         if (meta.hasIndex()) {
                             createIndexes(meta);
                         }
@@ -147,6 +151,24 @@ public class MetaData<M> {
                 }
             }
         }
+    }
+
+    private Map<String, ColumnMetaData> getColumnMetaData(Connection connection) throws SQLException {
+        Map<String, ColumnMetaData> result = new HashMap<>();
+        ResultSet columnsMetaData = connection.getMetaData().getColumns(null, null, tableName, null);
+
+        while(columnsMetaData.next()) {
+            ColumnMetaData cmd = new ColumnMetaData(
+                    columnsMetaData.getString("COLUMN_NAME"),
+                    columnsMetaData.getInt("DATA_TYPE"),
+                    columnsMetaData.getInt("COLUMN_SIZE"),
+                    columnsMetaData.getInt("DECIMAL_DIGITS")
+            );
+
+            result.put(cmd.getName(), cmd);
+        }
+
+        return result;
     }
 
     private void processAnnotation(Table table) {
@@ -251,7 +273,7 @@ public class MetaData<M> {
     }
 
     protected <T> T find(final Long id) {
-        return executeInCurrentConnection(new ExecuteConnectionWithResult<T>() {
+        return execute(new ExecuteConnectionWithResult<T>() {
             @Override
             public T execute(Connection connection) throws SQLException {
                 PreparedStatement statement = null;
@@ -403,36 +425,7 @@ public class MetaData<M> {
 
         final String fromSql = fromTemplate.render(model);
 
-        result = executeInCurrentConnection(new ExecuteConnectionWithResult<List<T>>() {
-            @Override
-            public List<T> execute(Connection connection) throws SQLException {
-                List<T> result = new ArrayList<>();
-                PreparedStatement statement = null;
-
-                try {
-                    statement = connection.prepareStatement(fromSql);
-                    int index = 1;
-
-                    for (Object param : params) {
-                        StatementHelper.setStatementParameter(statement, index++, param);
-                    }
-
-                    ResultSet rs = statement.executeQuery();
-
-                    while (rs.next()) {
-                        Long id = rs.getLong(1);
-
-                        result.add((T) Persister.find(cls, id));
-                    }
-
-                    return result;
-                } finally {
-                    if (statement != null) {
-                        statement.close();
-                    }
-                }
-            }
-        });
+        result = execute(new ExecuteSelect<T>(cls, fromSql, params));
 
         return result;
     }
@@ -446,38 +439,10 @@ public class MetaData<M> {
         model.put("tableName", tableName);
         model.put("key", pk.getColumnInfo().getName());
         model.put("query", query);
+
         final String whereSql = whereTemplate.render(model);
 
-        result = executeInCurrentConnection(new ExecuteConnectionWithResult<List<T>>() {
-            @Override
-            public List<T> execute(Connection connection) throws SQLException {
-                List<T> result = new ArrayList<>();
-                PreparedStatement statement = null;
-
-                try {
-                    statement = connection.prepareStatement(whereSql);
-                    int index = 1;
-
-                    for (Object param : params) {
-                        StatementHelper.setStatementParameter(statement, index++, param);
-                    }
-
-                    ResultSet rs = statement.executeQuery();
-
-                    while (rs.next()) {
-                        Long id = rs.getLong(1);
-
-                        result.add((T) Persister.find(cls, id));
-                    }
-
-                    return result;
-                } finally {
-                    if (statement != null) {
-                        statement.close();
-                    }
-                }
-            }
-        });
+        result = execute(new ExecuteSelect<T>(cls, whereSql, params));
 
         return result;
     }
@@ -498,36 +463,7 @@ public class MetaData<M> {
 
         final String whereSql = whereTemplate.render(model);
 
-        result = executeInCurrentConnection(new ExecuteConnectionWithResult<List<T>>() {
-            @Override
-            public List<T> execute(Connection connection) throws SQLException {
-                List<T> result = new ArrayList<>();
-                PreparedStatement statement = null;
-
-                try {
-                    statement = connection.prepareStatement(whereSql);
-                    int index = 1;
-
-                    for (Object param : params) {
-                        StatementHelper.setStatementParameter(statement, index++, param);
-                    }
-
-                    ResultSet rs = statement.executeQuery();
-
-                    while (rs.next()) {
-                        Long id = rs.getLong(1);
-
-                        result.add((T) Persister.find(cls, id));
-                    }
-
-                    return result;
-                } finally {
-                    if (statement != null) {
-                        statement.close();
-                    }
-                }
-            }
-        });
+        result = execute(new ExecuteSelect<T>(cls, whereSql, params));
 
         return result;
     }
@@ -543,7 +479,7 @@ public class MetaData<M> {
         model.put("query", query);
         final String whereSql = whereTemplate.render(model);
 
-        result = executeInCurrentConnection(new ExecuteConnectionWithResult<Integer>() {
+        result = execute(new ExecuteConnectionWithResult<Integer>() {
             @Override
             public Integer execute(Connection connection) throws SQLException {
                 Integer result = 0;
@@ -588,55 +524,29 @@ public class MetaData<M> {
         return result;
     }
 
-    private void executeInNewConnection(ExecuteConnection es) {
+    private <T> T execute(ExecuteConnectionWithResult<T> es) {
         Connection connection = null;
+        boolean close = false;
 
         try {
-            connection = Persister.getNewConnection();
+            if (Persister.transactionActive()) {
+                connection = Persister.getConnection();
+            } else {
+                connection = Persister.getNewConnection();
+                close = true;
+            }
 
-            es.execute(connection);
+            return es.execute(connection);
         } catch (SQLException e) {
             throw new IllegalStateException(e);
         } finally {
-            if (connection != null) {
+            if (close && connection != null) {
                 try {
                     connection.close();
                 } catch (SQLException e) {
                     throw new IllegalStateException(e);
                 }
             }
-        }
-    }
-
-    private <T> T executeInNewConnection(ExecuteConnectionWithResult<T> es) {
-        Connection connection = null;
-
-        try {
-            connection = Persister.getNewConnection();
-
-            return es.execute(connection);
-        } catch (SQLException e) {
-            throw new IllegalStateException(e);
-        } finally {
-            if (connection != null) {
-                try {
-                    connection.close();
-                } catch (SQLException e) {
-                    throw new IllegalStateException(e);
-                }
-            }
-        }
-    }
-
-    private <T> T executeInCurrentConnection(ExecuteConnectionWithResult<T> es) {
-        Connection connection;
-
-        try {
-            connection = Persister.getConnection();
-
-            return es.execute(connection);
-        } catch (SQLException e) {
-            throw new IllegalStateException(e);
         }
     }
 

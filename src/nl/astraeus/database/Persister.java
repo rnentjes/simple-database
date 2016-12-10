@@ -31,9 +31,7 @@ public class Persister {
                         connection.setAutoCommit(false);
 
                         return connection;
-                    } catch (ClassNotFoundException e) {
-                        throw new IllegalStateException(e);
-                    } catch (SQLException e) {
+                    } catch (ClassNotFoundException | SQLException e) {
                         throw new IllegalStateException(e);
                     }
                 }

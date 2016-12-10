@@ -468,4 +468,7 @@ public class FieldMetaData {
         }
     }
 
+    public Integer getSqlType() {
+        return sqlType;
+    }
 }

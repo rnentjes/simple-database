@@ -90,6 +90,10 @@ public class DdlMapping {
         setDatabaseType(DatabaseDefinition.H2);
     }
 
+    public DdlMapping(DatabaseDefinition definition) {
+        setDatabaseType(definition);
+    }
+
     public void setDatabaseType(DatabaseDefinition definition) {
         database = definition;
         reload();

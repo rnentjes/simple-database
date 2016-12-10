@@ -48,7 +48,8 @@ public class FieldMetaData {
         BLOB
     }
 
-    private MetaData metaData;
+    private SimpleDatabase db;
+    private DdlMapping ddlMapping;
     private Field field;
     private String fieldName;
 
@@ -88,8 +89,9 @@ public class FieldMetaData {
         sqlTypeMapping.put(java.util.Date.class, Types.TIMESTAMP);
     }
 
-    public FieldMetaData(MetaData metaData, Field field) {
-        this.metaData = metaData;
+    public FieldMetaData(SimpleDatabase db, Field field) {
+        this.db = db;
+        this.ddlMapping = db.getDdlMapping();
         this.field = field;
         this.field.setAccessible(true);
 
@@ -126,7 +128,7 @@ public class FieldMetaData {
             model.put("scale", length.scale());
         }
 
-        SimpleTemplate template = DdlMapping.get().getDdlTemplateForType(javaType);
+        SimpleTemplate template = ddlMapping.getDdlTemplateForType(javaType);
         sqlType = sqlTypeMapping.get(javaType);
 
         String type;
@@ -137,12 +139,12 @@ public class FieldMetaData {
 
         if (blob != null) {
             // BLOB
-            type = DdlMapping.get().getBlobType().render(model);
+            type = ddlMapping.getBlobType().render(model);
             sqlType = Types.BLOB;
             this.type = ColumnType.BLOB;
         } else if (serialized != null) {
             // BLOB
-            type = DdlMapping.get().getBlobType().render(model);
+            type = ddlMapping.getBlobType().render(model);
             sqlType = Types.BLOB;
             this.type = ColumnType.SERIALIZED;
         } else if (collection != null) {
@@ -150,11 +152,11 @@ public class FieldMetaData {
             this.type = ColumnType.COLLECTION;
 
             // BLOB
-            type = DdlMapping.get().getBlobType().render(model);
+            type = ddlMapping.getBlobType().render(model);
             sqlType = Types.BLOB;
         } else if (javaType.getAnnotation(Table.class) != null) {
             // oneToone
-            type = DdlMapping.get().getIdType().render(model);
+            type = ddlMapping.getIdType().render(model);
             sqlType = Types.BIGINT;
             this.type = ColumnType.REFERENCE;
         } else if (template != null) {
@@ -163,7 +165,7 @@ public class FieldMetaData {
             throw new IllegalStateException("Type "+field.getType().getSimpleName()+" of field "+field.getDeclaringClass().getSimpleName()+"."+field.getName()+" is not supported!");
         }
 
-        if (DdlMapping.get().ddlNamesInUppercase()) {
+        if (ddlMapping.ddlNamesInUppercase()) {
             columnName = columnName.toUpperCase();
         }
 
@@ -284,12 +286,12 @@ public class FieldMetaData {
                     }
                     break;
                 case REFERENCE:
-                    metaData = MetaDataHandler.get().getMetaData(value.getClass());
+                    metaData = db.getMetaData(value.getClass());
 
                     id = metaData.getId(value);
 
                     if (id == null || id == 0) {
-                        Persister.insert(value);
+                        metaData.insert(value);
 
                         id = metaData.getId(value);
                     }
@@ -297,14 +299,14 @@ public class FieldMetaData {
                     statement.setLong(index, id);
                     break;
                 case COLLECTION:
-                    metaData = MetaDataHandler.get().getMetaData(collectionClass);
+                    metaData = db.getMetaData(collectionClass);
                     java.util.Collection c = (java.util.Collection)value;
                     ByteBuffer buffer = ByteBuffer.allocate(c.size() * 8);
                     for (Object o : c) {
                         id = metaData.getId(o);
 
                         if (id == null || id == 0) {
-                            Persister.insert(o);
+                            metaData.insert(o);
 
                             id = metaData.getId(o);
                         }
@@ -383,7 +385,7 @@ public class FieldMetaData {
                 if (id > 0L) {
                     // check for circular references
 
-                    Object object = Persister.find(javaType, id);
+                    Object object = db.getObjectPersister(javaType).find(id);
 
                     if (object == null) {
                         logger.warn("Missing reference detected "+field.getDeclaringClass().getSimpleName()+"."+getFieldName()+":"+id);
@@ -396,7 +398,7 @@ public class FieldMetaData {
                 break;
             case COLLECTION:
                 try (InputStream in = rs.getBinaryStream(index)) {
-                    MetaData meta = MetaDataHandler.get().getMetaData(collectionClass);
+                    MetaData meta = db.getMetaData(collectionClass);
                     ReferentList list = new ReferentList(collectionClass, meta);
 
                     if (in != null) {
@@ -450,12 +452,12 @@ public class FieldMetaData {
         Object current = get(result);
 
         if (current != null) {
-            MetaData meta = MetaDataHandler.get().getMetaData(current.getClass());
+            MetaData meta = db.getMetaData(current.getClass());
 
             Long id = meta.getId(current);
 
             if (id != null && id > 0) {
-                Object object = Persister.find(javaType, id);
+                Object object = db.getObjectPersister(javaType).find(id);
 
                 if (object == null) {
                     logger.warn("Missing reference detected "+field.getDeclaringClass().getSimpleName()+"."+getFieldName()+":"+id);

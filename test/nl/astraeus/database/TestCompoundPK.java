@@ -18,35 +18,12 @@ import java.sql.SQLException;
  * Date: 11/17/13
  * Time: 12:58 PM
  */
-public class TestCompoundPK {
+public class TestCompoundPK extends BaseTest {
     private final static Logger logger = LoggerFactory.getLogger(TestCompoundPK.class);
 
     @BeforeClass
     public static void createDatabase() {
-        DdlMapping.get().setExecuteDDLUpdates(true);
-
-        ConnectionPool.get().setConnectionProvider(new ConnectionProvider() {
-            @Override
-            public Connection getConnection() {
-                try {
-                    Class.forName("org.h2.Driver");
-
-                    Connection connection = DriverManager.getConnection("jdbc:h2:mem:TestCompoundPK", "sa", "");
-                    connection.setAutoCommit(false);
-
-                    return connection;
-                } catch (ClassNotFoundException e) {
-                    throw new IllegalStateException(e);
-                } catch (SQLException e) {
-                    throw new IllegalStateException(e);
-                }
-            }
-        });
-    }
-
-    @AfterClass
-    public static void clearMetaData() {
-        Persister.dispose();
+        BaseTest.createDatabase("jdbc:h2:mem:TestCompoundPK");
     }
 
     @Table(name="test")
@@ -69,24 +46,16 @@ public class TestCompoundPK {
 
     @Test(expected = IllegalStateException.class)
     public void testCompoundError() {
-        Persister.execute(new Persister.Executor() {
-            @Override
-            public void execute() {
-                insert(new CompoundError());
-            }
-        });
+        SimpleDao<CompoundError> dao = new SimpleDao<>(CompoundError.class);
 
+        dao.insert(new CompoundError());
     }
 
 
     @Test(expected = IllegalStateException.class)
     public void testInvalidPrimaryKey() {
-        Persister.execute(new Persister.Executor() {
-            @Override
-            public void execute() {
-                insert(new InvalidPrimaryKeyType());
-            }
-        });
+        SimpleDao<InvalidPrimaryKeyType> dao = new SimpleDao<>(InvalidPrimaryKeyType.class);
 
+        dao.insert(new InvalidPrimaryKeyType());
     }
 }

@@ -14,12 +14,12 @@ import java.util.List;
  */
 public class ExecuteSelect<T> extends ExecuteConnectionWithResult<List<T>> {
 
-    private final Class<?> cls;
+    private final MetaData<T> metaData;
     private final String query;
     private final Object[] params;
 
-    public ExecuteSelect(Class<?> cls, String query, Object[] params) {
-        this.cls = cls;
+    public ExecuteSelect(MetaData<T> metaData, String query, Object[] params) {
+        this.metaData = metaData;
         this.query = query;
         this.params = params;
     }
@@ -42,7 +42,7 @@ public class ExecuteSelect<T> extends ExecuteConnectionWithResult<List<T>> {
             while (rs.next()) {
                 Long id = rs.getLong(1);
 
-                result.add((T) Persister.find(cls, id));
+                result.add((T) metaData.find(id));
             }
 
             return result;

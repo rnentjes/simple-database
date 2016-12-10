@@ -59,12 +59,6 @@ public class DdlMapping {
         }
     }
 
-    private static DdlMapping instance = new DdlMapping();
-
-    public static DdlMapping get() {
-        return instance;
-    }
-
     private static Map<Class<?>, SimpleTemplate> ddlMapping;
     private static Map<Class<?>, Class<?>> primitiveToWrapper;
     private static Map<QueryTemplates, SimpleTemplate> queryTemplates;
@@ -84,7 +78,6 @@ public class DdlMapping {
     }
 
     private DatabaseDefinition database;
-    private boolean executeDdlUpdates = false;
 
     public DdlMapping() {
         setDatabaseType(DatabaseDefinition.H2);
@@ -97,14 +90,6 @@ public class DdlMapping {
     public void setDatabaseType(DatabaseDefinition definition) {
         database = definition;
         reload();
-    }
-
-    public void setExecuteDDLUpdates(boolean eddlup) {
-        executeDdlUpdates = eddlup;
-    }
-
-    public boolean isExecuteDdlUpdates() {
-        return executeDdlUpdates;
     }
 
     private String findSqlResource(String name) {

@@ -1,5 +1,6 @@
 package nl.astraeus.database;
 
+import org.h2.util.New;
 import org.junit.Test;
 
 /**
@@ -10,6 +11,8 @@ public class DdlMappingTest {
 
     @Test
     public void getInstance() {
-        DdlMapping.get().getDdlTemplateForType(Long.class);
+        DdlMapping ddlMapping = new DdlMapping(DdlMapping.DatabaseDefinition.H2);
+
+        ddlMapping.getDdlTemplateForType(Long.class);
     }
 }

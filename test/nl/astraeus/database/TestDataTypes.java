@@ -17,38 +17,17 @@ import java.sql.SQLException;
 import java.util.Date;
 import java.util.List;
 
+import javax.xml.crypto.Data;
+
 /**
  * Date: 11/16/13
  * Time: 12:27 AM
  */
-public class TestDataTypes {
+public class TestDataTypes extends BaseTest {
 
     @BeforeClass
     public static void createDatabase() {
-        DdlMapping.get().setExecuteDDLUpdates(true);
-
-        ConnectionPool.get().setConnectionProvider(new ConnectionProvider() {
-            @Override
-            public Connection getConnection() {
-                try {
-                    Class.forName("org.h2.Driver");
-
-                    Connection connection = DriverManager.getConnection("jdbc:h2:mem:TestCache", "sa", "");
-                    connection.setAutoCommit(false);
-
-                    return connection;
-                } catch (ClassNotFoundException e) {
-                    throw new IllegalStateException(e);
-                } catch (SQLException e) {
-                    throw new IllegalStateException(e);
-                }
-            }
-        });
-    }
-
-    @AfterClass
-    public static void clearMetaData() {
-        Persister.dispose();
+        BaseTest.createDatabase("jdbc:h2:mem:TestDataTypes");
     }
 
     public static class DataTypes {
@@ -79,9 +58,11 @@ public class TestDataTypes {
 
     @Test
     public void testCache() {
-        Persister.execute(new Persister.Executor() {
+        SimpleDao<DataTypes> dao = new SimpleDao<DataTypes>(DataTypes.class);
+
+        dao.execute(new SimpleDao.Executor<DataTypes>() {
             @Override
-            public void execute() {
+            public void execute(SimpleDao<DataTypes> dao) {
                 DataTypes type = new DataTypes();
 
                 type.name = "name";
@@ -93,16 +74,11 @@ public class TestDataTypes {
                 type.blub = "Some serialized string thingy!";
                 type.bit = true;
 
-                insert(type);
-            }
-        });
+                dao.insert(type);
 
-        Persister.execute(new Persister.Executor() {
-            @Override
-            public void execute() {
-                List<DataTypes> types = selectAll (DataTypes.class);
+                List<DataTypes> types = dao.selectAll();
 
-                DataTypes type = types.get(0);
+                type = types.get(0);
 
                 System.out.println("Name: "+type.name);
                 System.out.println("Amount: "+type.amount);
@@ -113,9 +89,9 @@ public class TestDataTypes {
                 System.out.println("Blub: "+type.blub);
                 System.out.println("Bit: "+type.bit);
 
-                Cache.get().clear();
+                db.getCache().clear();
 
-                types = selectAll (DataTypes.class);
+                types = dao.selectAll();
 
                 type = types.get(0);
 
@@ -129,8 +105,6 @@ public class TestDataTypes {
                 System.out.println("Bit: "+type.bit);
             }
         });
-
-
     }
 
 

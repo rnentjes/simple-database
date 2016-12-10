@@ -9,12 +9,6 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public class Cache {
 
-    private static Cache instance = new Cache();
-
-    public static Cache get() {
-        return instance;
-    }
-
     private Map<Class<?>, ObjectCache<?>> cache = new ConcurrentHashMap<>();
 
     public boolean inCache(Class<?> cls, Long id) {

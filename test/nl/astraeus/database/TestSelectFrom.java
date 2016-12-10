@@ -13,6 +13,7 @@ import java.util.List;
 public class TestSelectFrom {
 
     public static void main(String [] args) {
+/*
         DdlMapping.get().setExecuteDDLUpdates(true);
 
         Persister.begin();
@@ -36,6 +37,7 @@ public class TestSelectFrom {
         for (Person person : persons) {
             System.out.println("name = 'R%' Found: "+person.getName());
         }
+*/
     }
 
 }

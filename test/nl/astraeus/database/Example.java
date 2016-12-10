@@ -43,12 +43,8 @@ public class Example {
     }
 
     public static void main(String [] args) throws InterruptedException {
-        // Set the database dialect
-        DdlMapping.get().setDatabaseType(DdlMapping.DatabaseDefinition.H2);
-        DdlMapping.get().setExecuteDDLUpdates(true);
 
-        // Set the connection pool provider
-        ConnectionPool.get().setConnectionProvider(new ConnectionProvider() {
+        SimpleDatabase db = SimpleDatabase.define(new ConnectionProvider() {
             @Override
             public Connection getConnection() {
                 try {
@@ -59,25 +55,27 @@ public class Example {
                     connection.setAutoCommit(false);
 
                     return connection;
-                } catch (ClassNotFoundException e) {
-                    throw new IllegalStateException(e);
-                } catch (SQLException e) {
+                } catch (ClassNotFoundException | SQLException e) {
                     throw new IllegalStateException(e);
                 }
             }
         });
 
-        Persister.execute(new Persister.Executor() {
+        db.setExecuteDDLUpdates(true);
+
+        SimpleDao<Person> dao = new SimpleDao<Person>(Person.class);
+
+        dao.execute(new SimpleDao.Executor<Person>() {
             @Override
-            public void execute() {
-                insert(new Person("John", 40, "Somestreet 25"));
-                insert(new Person("Jane", 32, "Anotherstreet 54"));
-                insert(new Person("Pete", 26, "Roadside 12"));
-                insert(new Person("Linda", 10, "Riverside 4"));
+            public void execute(SimpleDao<Person> dao) {
+                dao.insert(new Person("John", 40, "Somestreet 25"));
+                dao.insert(new Person("Jane", 32, "Anotherstreet 54"));
+                dao.insert(new Person("Pete", 26, "Roadside 12"));
+                dao.insert(new Person("Linda", 10, "Riverside 4"));
             }
         });
 
-        List<Person> persons = Persister.selectAll(Person.class);
+        List<Person> persons = dao.selectAll();
 
         for (Person person : persons) {
             System.out.println("Person name: "+person.getName());

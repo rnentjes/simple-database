@@ -2,7 +2,7 @@
 
 ## Maven, gradle etc:
 
-Maven repository: http://nexus.astraeus.nl/nexus/content/groups/public
+Maven repository: https://nexus.astraeus.nl/nexus/content/groups/public
 
 Pom:
 

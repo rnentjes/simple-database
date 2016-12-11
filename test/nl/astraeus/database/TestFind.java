@@ -19,7 +19,7 @@ public class TestFind extends BaseTest {
 
     @Test
     public void testFind() throws InterruptedException {
-        Person person = new Person("Rien", 40, "Rozendael");
+        Person person = new Person("Rien", 40, "Road");
 
         db.begin();
 

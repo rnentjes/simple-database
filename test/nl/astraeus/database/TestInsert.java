@@ -27,7 +27,7 @@ public class TestInsert extends BaseTest {
         dao.execute(new SimpleDao.Executor<Person>() {
             @Override
             public void execute(SimpleDao<Person> dao) {
-                dao.insert(new Person("Rien", 40, "Rozendael"));
+                dao.insert(new Person("Rien", 40, "Road"));
                 dao.insert(new Person("Jan", 32, "Straat"));
                 dao.insert(new Person("Piet", 26, "Weg"));
                 dao.insert(new Person("Klaas", 10, "Pad"));

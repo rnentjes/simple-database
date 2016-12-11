@@ -11,7 +11,7 @@ import nl.astraeus.database.cache.Cache;
 public class ObjectPersister<T> {
 
     private Class<T>    cls;
-    private MetaData    metaData;
+    private MetaData<T> metaData;
     private Cache       cache;
 
     public ObjectPersister(Class<T> cls, MetaData<T> metaData, Cache cache) {
@@ -31,6 +31,18 @@ public class ObjectPersister<T> {
         metaData.update(object);
 
         Long id = metaData.getId(object);
+        cache.set((Class<Object>) object.getClass(), id, object);
+    }
+
+    public void upsert(T object) {
+        Long id = metaData.getId(object);
+
+        if (id != null && id > 0) {
+            metaData.update(object);
+        } else {
+            metaData.insert(object);
+        }
+
         cache.set((Class<Object>) object.getClass(), id, object);
     }
 

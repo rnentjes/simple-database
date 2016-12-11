@@ -29,6 +29,10 @@ public class SimpleDao<T> {
         persister.update(object);
     }
 
+    public void upsert(T object) {
+        persister.upsert(object);
+    }
+
     public void delete(T object) {
         persister.delete(object);
     }

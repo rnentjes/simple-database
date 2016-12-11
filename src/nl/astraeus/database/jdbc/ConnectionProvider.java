@@ -10,6 +10,8 @@ import nl.astraeus.database.DdlMapping;
  */
 public abstract class ConnectionProvider {
 
+    public void dispose() {}
+
     abstract public Connection getConnection();
 
     public DdlMapping.DatabaseDefinition getDefinition() {

@@ -50,7 +50,7 @@ public class SimpleDatabase {
             throw new IllegalStateException("Database with name '"+name+"' is already defined!");
         }
 
-        SimpleDatabase database = new SimpleDatabase(provider);
+        SimpleDatabase database = new SimpleDatabase(name, provider);
 
         databases.put(name, database);
 
@@ -64,10 +64,12 @@ public class SimpleDatabase {
 
     private DdlMapping ddlMapping;
     private Cache cache;
+    private final String defineName;
 
     private boolean executeDDLUpdates;
 
-    private SimpleDatabase(ConnectionProvider connectionProvider) {
+    private SimpleDatabase(String defineName, ConnectionProvider connectionProvider) {
+        this.defineName = defineName;
         this.connectionProvider = connectionProvider;
         this.executeDDLUpdates = false;
         this.ddlMapping = new DdlMapping(connectionProvider.getDefinition());
@@ -137,7 +139,7 @@ public class SimpleDatabase {
     }
 
     public void begin() {
-        transactions.set(new Transaction(ConnectionPool.get().getConnection()));
+        transactions.set(new Transaction(connectionProvider.getConnection()));
     }
 
     public void commit() {
@@ -256,9 +258,9 @@ public class SimpleDatabase {
     }
 
     public void dispose() {
-        // TODO: cleanup
-        // connectionProvider.clear();
+        connectionProvider.dispose();
         metaData.clear();
         objectPersisters.clear();
+        databases.remove(defineName);
     }
 }

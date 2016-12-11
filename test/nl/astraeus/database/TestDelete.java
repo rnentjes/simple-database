@@ -1,10 +1,10 @@
 package nl.astraeus.database;
 
-import junit.framework.Assert;
 import nl.astraeus.database.jdbc.ConnectionPool;
 import nl.astraeus.database.jdbc.ConnectionProvider;
 import nl.astraeus.database.test.model.Person;
 import org.junit.AfterClass;
+import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -26,36 +26,24 @@ public class TestDelete extends BaseTest {
 
     @Test
     public void testDelete() {
-/*        Persister.begin();
+        createPersons();
 
-        Persister.insert(new Person("Rien", 40, "Rozendael"));
-        Persister.insert(new Person("Jan", 32, "Straat"));
-        Persister.insert(new Person("Piet", 26, "Weg"));
-        Persister.insert(new Person("Klaas", 10, "Pad"));
+        final List<Person> persons = personDao.selectWhere("age > ?", 30);
 
-        Persister.commit();
+        // assert 2
+        Assert.assertEquals(3, persons.size());
 
-        Persister.begin();
+        personDao.execute(new SimpleDao.Executor<Person>() {
+            @Override
+            public void execute(SimpleDao<Person> dao) {
+                for (Person person : persons) {
+                    dao.delete(person);
+                }
+            }
+        });
 
-        List<Person> persons = Persister.selectWhere(Person.class, "age > ?", 30);
-
-        Persister.rollback();
-
-        Persister.begin();
-
-        for (Person person : persons) {
-            Persister.delete(person);
-        }
-
-        Persister.commit();
-
-        Persister.begin();
-
-        persons = Persister.selectAll(Person.class);
-
-        Persister.rollback();
-
-        Assert.assertEquals(persons.size(), 2);*/
+        // assert 2 left
+        Assert.assertEquals(2, personDao.selectAll().size());
     }
 
 }

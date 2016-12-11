@@ -4,8 +4,11 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
+import nl.astraeus.database.jdbc.ConnectionPool;
 import nl.astraeus.database.jdbc.ConnectionProvider;
 
+import nl.astraeus.database.test.model.Company;
+import nl.astraeus.database.test.model.Person;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Ignore;
@@ -20,9 +23,11 @@ public class BaseTest {
 
     protected static SimpleDatabase db;
 
-    @BeforeClass
+    SimpleDao<Person> personDao = new SimpleDao<>(Person.class);
+    SimpleDao<Company> companyDao = new SimpleDao<>(Company.class);
+
     public static void createDatabase(final String url) {
-        db = SimpleDatabase.define(new ConnectionProvider() {
+        db = SimpleDatabase.define(new ConnectionPool(new ConnectionProvider() {
             @Override
             public Connection getConnection() {
                 try {
@@ -38,7 +43,7 @@ public class BaseTest {
                     throw new IllegalStateException(e);
                 }
             }
-        });
+        }));
 
         db.setExecuteDDLUpdates(true);
     }
@@ -48,4 +53,16 @@ public class BaseTest {
         db.dispose();
     }
 
+    void createPersons() {
+        personDao.execute(new SimpleDao.Executor<Person>() {
+            @Override
+            public void execute(SimpleDao<Person> dao) {
+                dao.insert(new Person("Rien", 40, "Rozendael"));
+                dao.insert(new Person("Jan", 32, "Straat"));
+                dao.insert(new Person("Ronald", 31, "Wherever"));
+                dao.insert(new Person("Piet", 26, "Weg"));
+                dao.insert(new Person("Klaas", 10, "Pad"));
+            }
+        });
+    }
 }

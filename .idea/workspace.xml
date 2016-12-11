@@ -1,19 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="17f8d10d-4c97-4aa9-b7ad-cdd73e5a615c" name="Default" comment="Released 2.0.1">
-      <change type="DELETED" beforePath="$PROJECT_DIR$/.idea/libraries/Gradle__com_h2database_h2_1_4_193.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/.idea/libraries/Gradle__nl_astraeus_jdbc_simple_jdbc_stats_1_5_3.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/.idea/libraries/Gradle__nl_astraeus_template_very_simple_templates_1_3.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/.idea/libraries/Gradle__nl_astraeus_web_simple_web_0_3.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/.idea/libraries/Gradle__org_slf4j_slf4j_api_1_7_21.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/.idea/libraries/Gradle__org_slf4j_slf4j_simple_1_7_21.xml" afterPath="" />
+    <list default="true" id="17f8d10d-4c97-4aa9-b7ad-cdd73e5a615c" name="Default" comment="Update readme">
       <change type="DELETED" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/modules/simple-database.iml" afterPath="$PROJECT_DIR$/.idea/modules/simple-database.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/modules/simple-database_main.iml" afterPath="$PROJECT_DIR$/.idea/modules/simple-database_main.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/modules/simple-database_test.iml" afterPath="$PROJECT_DIR$/.idea/modules/simple-database_test.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/build.gradle" afterPath="$PROJECT_DIR$/build.gradle" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/readme.md" afterPath="$PROJECT_DIR$/readme.md" />
     </list>
     <ignored path="$PROJECT_DIR$/.gradle/" />
     <ignored path="$PROJECT_DIR$/build/" />
@@ -152,22 +141,22 @@
         <entry file="file://$PROJECT_DIR$/readme.md">
           <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
             <state split_layout="SPLIT">
-              <first_editor relative-caret-position="270">
-                <caret line="15" column="0" lean-forward="true" selection-start-line="15" selection-start-column="0" selection-end-line="15" selection-end-column="0" />
+              <first_editor relative-caret-position="72">
+                <caret line="4" column="23" lean-forward="false" selection-start-line="4" selection-start-column="23" selection-end-line="4" selection-end-column="23" />
                 <folding>
-                  <marker date="1481472706219" expanded="true" signature="138:255" ph="..." />
-                  <marker date="1481472706219" expanded="true" signature="291:336" ph="@{...}" />
-                  <marker date="1481472706219" expanded="true" signature="357:844" ph="{...}" />
-                  <marker date="1481472706219" expanded="true" signature="394:441" ph="@{...}" />
-                  <marker date="1481472706219" expanded="true" signature="719:808" ph="{...}" />
-                  <marker date="1481472706219" expanded="true" signature="927:3202" ph="{...}" />
-                  <marker date="1481472706219" expanded="true" signature="1132:1385" ph="{...}" />
-                  <marker date="1481472706219" expanded="true" signature="1132:1525" ph="{...}" />
-                  <marker date="1481472706219" expanded="true" signature="1246:1385" ph="{...}" />
-                  <marker date="1481472706219" expanded="true" signature="1880:2290" ph="{...}" />
-                  <marker date="1481472706219" expanded="true" signature="1959:2280" ph="{...}" />
-                  <marker date="1481472706219" expanded="true" signature="3194:3200" ph="{...}" />
-                  <marker date="1481472706219" expanded="true" signature="3194:3202" ph="{...}" />
+                  <marker date="1481472842062" expanded="true" signature="139:256" ph="..." />
+                  <marker date="1481472842062" expanded="true" signature="292:337" ph="@{...}" />
+                  <marker date="1481472842062" expanded="true" signature="358:845" ph="{...}" />
+                  <marker date="1481472842062" expanded="true" signature="395:442" ph="@{...}" />
+                  <marker date="1481472842062" expanded="true" signature="720:809" ph="{...}" />
+                  <marker date="1481472842062" expanded="true" signature="928:3203" ph="{...}" />
+                  <marker date="1481472842062" expanded="true" signature="1133:1386" ph="{...}" />
+                  <marker date="1481472842062" expanded="true" signature="1133:1526" ph="{...}" />
+                  <marker date="1481472842062" expanded="true" signature="1247:1386" ph="{...}" />
+                  <marker date="1481472842062" expanded="true" signature="1881:2291" ph="{...}" />
+                  <marker date="1481472842062" expanded="true" signature="1960:2281" ph="{...}" />
+                  <marker date="1481472842062" expanded="true" signature="3195:3201" ph="{...}" />
+                  <marker date="1481472842062" expanded="true" signature="3195:3203" ph="{...}" />
                 </folding>
               </first_editor>
               <second_editor />
@@ -684,7 +673,7 @@
   </component>
   <component name="PropertiesComponent">
     <property name="WebServerToolWindowFactoryState" value="false" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/../simple-password-manager" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/../Simple-jdbc-statistics" />
     <property name="nodejs_interpreter_path" value="/usr/bin/node" />
     <property name="js.eslint.eslintPackage" value="" />
     <property name="js-jscs-nodeInterpreter" value="/usr/bin/node" />
@@ -1118,7 +1107,7 @@
       <workItem from="1481274277594" duration="990000" />
       <workItem from="1481369293467" duration="1314000" />
       <workItem from="1481393131531" duration="4188000" />
-      <workItem from="1481462404312" duration="6606000" />
+      <workItem from="1481462404312" duration="7397000" />
     </task>
     <task id="LOCAL-00001" summary="Intellij settings">
       <created>1445189967799</created>
@@ -1267,7 +1256,21 @@
       <option name="project" value="LOCAL" />
       <updated>1481471994233</updated>
     </task>
-    <option name="localTasksCounter" value="22" />
+    <task id="LOCAL-00022" summary="Update readme">
+      <created>1481472713888</created>
+      <option name="number" value="00022" />
+      <option name="presentableId" value="LOCAL-00022" />
+      <option name="project" value="LOCAL" />
+      <updated>1481472713888</updated>
+    </task>
+    <task id="LOCAL-00023" summary="Update readme">
+      <created>1481472845176</created>
+      <option name="number" value="00023" />
+      <option name="presentableId" value="LOCAL-00023" />
+      <option name="project" value="LOCAL" />
+      <updated>1481472845176</updated>
+    </task>
+    <option name="localTasksCounter" value="24" />
     <servers />
   </component>
   <component name="TestHistory">
@@ -1303,7 +1306,7 @@
     </history-entry>
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="24446000" />
+    <option name="totallyTimeSpent" value="25237000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -1383,7 +1386,8 @@
     <MESSAGE value="Fix var names" />
     <MESSAGE value="Cleanup and readme" />
     <MESSAGE value="Released 2.0.1" />
-    <option name="LAST_COMMIT_MESSAGE" value="Released 2.0.1" />
+    <MESSAGE value="Update readme" />
+    <option name="LAST_COMMIT_MESSAGE" value="Update readme" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -1857,22 +1861,22 @@
     <entry file="file://$PROJECT_DIR$/readme.md">
       <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
         <state split_layout="SPLIT">
-          <first_editor relative-caret-position="270">
-            <caret line="15" column="0" lean-forward="true" selection-start-line="15" selection-start-column="0" selection-end-line="15" selection-end-column="0" />
+          <first_editor relative-caret-position="72">
+            <caret line="4" column="23" lean-forward="false" selection-start-line="4" selection-start-column="23" selection-end-line="4" selection-end-column="23" />
             <folding>
-              <marker date="1481472706219" expanded="true" signature="138:255" ph="..." />
-              <marker date="1481472706219" expanded="true" signature="291:336" ph="@{...}" />
-              <marker date="1481472706219" expanded="true" signature="357:844" ph="{...}" />
-              <marker date="1481472706219" expanded="true" signature="394:441" ph="@{...}" />
-              <marker date="1481472706219" expanded="true" signature="719:808" ph="{...}" />
-              <marker date="1481472706219" expanded="true" signature="927:3202" ph="{...}" />
-              <marker date="1481472706219" expanded="true" signature="1132:1385" ph="{...}" />
-              <marker date="1481472706219" expanded="true" signature="1132:1525" ph="{...}" />
-              <marker date="1481472706219" expanded="true" signature="1246:1385" ph="{...}" />
-              <marker date="1481472706219" expanded="true" signature="1880:2290" ph="{...}" />
-              <marker date="1481472706219" expanded="true" signature="1959:2280" ph="{...}" />
-              <marker date="1481472706219" expanded="true" signature="3194:3200" ph="{...}" />
-              <marker date="1481472706219" expanded="true" signature="3194:3202" ph="{...}" />
+              <marker date="1481472842062" expanded="true" signature="139:256" ph="..." />
+              <marker date="1481472842062" expanded="true" signature="292:337" ph="@{...}" />
+              <marker date="1481472842062" expanded="true" signature="358:845" ph="{...}" />
+              <marker date="1481472842062" expanded="true" signature="395:442" ph="@{...}" />
+              <marker date="1481472842062" expanded="true" signature="720:809" ph="{...}" />
+              <marker date="1481472842062" expanded="true" signature="928:3203" ph="{...}" />
+              <marker date="1481472842062" expanded="true" signature="1133:1386" ph="{...}" />
+              <marker date="1481472842062" expanded="true" signature="1133:1526" ph="{...}" />
+              <marker date="1481472842062" expanded="true" signature="1247:1386" ph="{...}" />
+              <marker date="1481472842062" expanded="true" signature="1881:2291" ph="{...}" />
+              <marker date="1481472842062" expanded="true" signature="1960:2281" ph="{...}" />
+              <marker date="1481472842062" expanded="true" signature="3195:3201" ph="{...}" />
+              <marker date="1481472842062" expanded="true" signature="3195:3203" ph="{...}" />
             </folding>
           </first_editor>
           <second_editor />

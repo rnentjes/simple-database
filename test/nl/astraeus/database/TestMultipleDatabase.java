@@ -16,7 +16,7 @@ import java.util.List;
  * Date: 11/16/13
  * Time: 12:27 AM
  */
-public class TestMultipleDatabase extends BaseTest {
+public class TestMultipleDatabase {
 
     private static SimpleDatabase first;
     private static SimpleDatabase second;
@@ -64,23 +64,35 @@ public class TestMultipleDatabase extends BaseTest {
         SimpleDao<Person> firstDao = new SimpleDao<Person>(Person.class, "first");
         SimpleDao<Person> secondDao = new SimpleDao<Person>(Person.class, "second");
 
-        createPersons();
+        firstDao.execute(new SimpleDao.Executor<Person>() {
+            @Override
+            public void execute(SimpleDao<Person> dao) {
+                dao.insert(new Person("Jan", 32, "Straat"));
+                dao.insert(new Person("Ronald", 31, "Wherever"));
+                dao.insert(new Person("Piet", 26, "Weg"));
+                dao.insert(new Person("Klaas", 10, "Pad"));
+            }
+        });
 
-        List<Person> persons = personDao.selectWhere("age > ?", 30);
+        List<Person> persons = firstDao.where("age > ?", 30);
 
-        db.begin();
+        first.begin();
 
         for (Person person : persons) {
             person.setAge(person.getAge() + 1);
 
-            personDao.update(person);
+            firstDao.update(person);
         }
 
-        db.commit();
+        first.commit();
 
-        persons = personDao.selectWhere("age > ?", 32);
+        persons = firstDao.where("age > ?", 32);
 
         Assert.assertEquals(persons.size(), 2);
+
+        persons = secondDao.where("age > ?", 32);
+
+        Assert.assertEquals(persons.size(), 0);
     }
 
 }

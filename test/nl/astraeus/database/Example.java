@@ -1,14 +1,14 @@
 package nl.astraeus.database;
 
-import nl.astraeus.database.annotations.Id;
-import nl.astraeus.database.jdbc.ConnectionPool;
-import nl.astraeus.database.jdbc.ConnectionProvider;
-import org.junit.Ignore;
-
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.List;
+
+import nl.astraeus.database.annotations.Id;
+import nl.astraeus.database.jdbc.ConnectionProvider;
+
+import org.junit.Ignore;
 
 /**
  * User: rnentjes

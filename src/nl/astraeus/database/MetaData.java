@@ -1,15 +1,28 @@
 package nl.astraeus.database;
 
-import nl.astraeus.database.annotations.*;
-import nl.astraeus.database.util.ReferenceGenerator;
-import nl.astraeus.template.SimpleTemplate;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
-import java.sql.*;
-import java.util.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+
+import nl.astraeus.database.annotations.Cache;
+import nl.astraeus.database.annotations.Id;
+import nl.astraeus.database.annotations.Reference;
+import nl.astraeus.database.annotations.Table;
+import nl.astraeus.database.annotations.Transient;
+import nl.astraeus.database.util.ReferenceGenerator;
+import nl.astraeus.template.SimpleTemplate;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Date: 11/13/13

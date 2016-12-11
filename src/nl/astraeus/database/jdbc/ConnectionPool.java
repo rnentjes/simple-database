@@ -1,12 +1,13 @@
 package nl.astraeus.database.jdbc;
 
-import nl.astraeus.database.DdlMapping;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.sql.Connection;
 import java.util.LinkedList;
 import java.util.List;
+
+import nl.astraeus.database.DdlMapping;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Date: 11/15/13

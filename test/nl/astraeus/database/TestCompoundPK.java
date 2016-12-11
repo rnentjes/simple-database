@@ -2,17 +2,11 @@ package nl.astraeus.database;
 
 import nl.astraeus.database.annotations.Id;
 import nl.astraeus.database.annotations.Table;
-import nl.astraeus.database.jdbc.ConnectionPool;
-import nl.astraeus.database.jdbc.ConnectionProvider;
-import org.junit.AfterClass;
+
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
 
 /**
  * Date: 11/17/13

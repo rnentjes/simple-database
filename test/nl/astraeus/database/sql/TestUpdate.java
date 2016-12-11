@@ -1,14 +1,17 @@
 package nl.astraeus.database.sql;
 
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import nl.astraeus.template.EscapeMode;
 import nl.astraeus.template.SimpleTemplate;
 import nl.astraeus.util.Util;
-import org.junit.Assert;
-import org.junit.Ignore;
-import org.junit.Test;
 
-import java.io.IOException;
-import java.util.*;
+import org.junit.Assert;
+import org.junit.Test;
 
 /**
  * Date: 11/14/13

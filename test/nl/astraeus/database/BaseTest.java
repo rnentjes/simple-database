@@ -6,13 +6,11 @@ import java.sql.SQLException;
 
 import nl.astraeus.database.jdbc.ConnectionPool;
 import nl.astraeus.database.jdbc.ConnectionProvider;
-
 import nl.astraeus.database.test.model.Company;
 import nl.astraeus.database.test.model.Person;
+
 import org.junit.AfterClass;
-import org.junit.BeforeClass;
 import org.junit.Ignore;
-import org.junit.Test;
 
 /**
  * Date: 11/16/13

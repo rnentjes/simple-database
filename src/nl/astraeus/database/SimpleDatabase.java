@@ -9,7 +9,6 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 import nl.astraeus.database.cache.Cache;
-import nl.astraeus.database.jdbc.ConnectionPool;
 import nl.astraeus.database.jdbc.ConnectionProvider;
 
 import org.slf4j.Logger;

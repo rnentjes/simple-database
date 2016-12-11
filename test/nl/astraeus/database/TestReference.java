@@ -3,6 +3,7 @@ package nl.astraeus.database;
 import nl.astraeus.database.test.model.Company;
 import nl.astraeus.database.test.model.Info;
 import nl.astraeus.database.test.model.Person;
+
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;

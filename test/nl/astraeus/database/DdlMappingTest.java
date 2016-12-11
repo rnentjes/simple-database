@@ -1,6 +1,7 @@
 package nl.astraeus.database;
 
 import nl.astraeus.template.SimpleTemplate;
+
 import org.junit.Assert;
 import org.junit.Test;
 

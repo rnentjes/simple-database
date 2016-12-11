@@ -1,9 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="17f8d10d-4c97-4aa9-b7ad-cdd73e5a615c" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
+    <list default="true" id="17f8d10d-4c97-4aa9-b7ad-cdd73e5a615c" name="Default" comment="Released 2.0.1">
+      <change type="DELETED" beforePath="$PROJECT_DIR$/.idea/libraries/Gradle__com_h2database_h2_1_4_193.xml" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/.idea/libraries/Gradle__nl_astraeus_jdbc_simple_jdbc_stats_1_5_3.xml" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/.idea/libraries/Gradle__nl_astraeus_template_very_simple_templates_1_3.xml" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/.idea/libraries/Gradle__nl_astraeus_web_simple_web_0_3.xml" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/.idea/libraries/Gradle__org_slf4j_slf4j_api_1_7_21.xml" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/.idea/libraries/Gradle__org_slf4j_slf4j_simple_1_7_21.xml" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/modules/simple-database.iml" afterPath="$PROJECT_DIR$/.idea/modules/simple-database.iml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/modules/simple-database_main.iml" afterPath="$PROJECT_DIR$/.idea/modules/simple-database_main.iml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/modules/simple-database_test.iml" afterPath="$PROJECT_DIR$/.idea/modules/simple-database_test.iml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/build.gradle" afterPath="$PROJECT_DIR$/build.gradle" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/readme.md" afterPath="$PROJECT_DIR$/readme.md" />
     </list>
     <ignored path="$PROJECT_DIR$/.gradle/" />
     <ignored path="$PROJECT_DIR$/build/" />
@@ -128,126 +138,39 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="TestMissingReference.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/test/nl/astraeus/database/TestMissingReference.java">
+      <file leaf-file-name="build.gradle" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/build.gradle">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="216">
-              <caret line="17" column="83" lean-forward="false" selection-start-line="17" selection-start-column="65" selection-end-line="17" selection-end-column="83" />
+            <state relative-caret-position="468">
+              <caret line="26" column="0" lean-forward="false" selection-start-line="26" selection-start-column="0" selection-end-line="26" selection-end-column="0" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="TestDataTypes.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/test/nl/astraeus/database/TestDataTypes.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1296">
-              <caret line="85" column="34" lean-forward="false" selection-start-line="85" selection-start-column="34" selection-end-line="85" selection-end-column="34" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="TestDelete.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/test/nl/astraeus/database/TestDelete.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="72">
-              <caret line="10" column="3" lean-forward="false" selection-start-line="10" selection-start-column="3" selection-end-line="10" selection-end-column="3" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="TestFind.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/test/nl/astraeus/database/TestFind.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="392">
-              <caret line="34" column="29" lean-forward="false" selection-start-line="34" selection-start-column="29" selection-end-line="34" selection-end-column="29" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name=".gitignore" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/.gitignore">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="144">
-              <caret line="8" column="0" lean-forward="false" selection-start-line="8" selection-start-column="0" selection-end-line="8" selection-end-column="0" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="TestInsert.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/test/nl/astraeus/database/TestInsert.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="168">
-              <caret line="14" column="13" lean-forward="false" selection-start-line="14" selection-start-column="13" selection-end-line="14" selection-end-column="13" />
-              <folding>
-                <element signature="imports" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="MinimalExample.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/test/nl/astraeus/database/example/MinimalExample.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="563">
-              <caret line="83" column="1" lean-forward="false" selection-start-line="16" selection-start-column="3" selection-end-line="83" selection-end-column="1" />
-              <folding>
-                <element signature="imports" expanded="true" />
-                <element signature="e#596#1014#0" expanded="true" />
-                <element signature="e#1013#1014#0" expanded="true" />
-                <element signature="e#1336#1779#0" expanded="true" />
-                <element signature="e#1778#1779#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="Person.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/test/nl/astraeus/database/test/model/Person.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-98">
-              <caret line="31" column="0" lean-forward="false" selection-start-line="31" selection-start-column="0" selection-end-line="31" selection-end-column="0" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="readme.md" pinned="false" current-in-tab="false">
+      <file leaf-file-name="readme.md" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/readme.md">
           <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
             <state split_layout="SPLIT">
-              <first_editor relative-caret-position="395">
-                <caret line="34" column="0" lean-forward="false" selection-start-line="33" selection-start-column="0" selection-end-line="34" selection-end-column="0" />
+              <first_editor relative-caret-position="270">
+                <caret line="15" column="0" lean-forward="true" selection-start-line="15" selection-start-column="0" selection-end-line="15" selection-end-column="0" />
                 <folding>
-                  <marker date="1481470844819" expanded="true" signature="48:93" ph="@{...}" />
-                  <marker date="1481470844819" expanded="true" signature="114:601" ph="{...}" />
-                  <marker date="1481470844819" expanded="true" signature="151:198" ph="@{...}" />
-                  <marker date="1481470844819" expanded="true" signature="476:565" ph="{...}" />
-                  <marker date="1481470844819" expanded="true" signature="684:2959" ph="{...}" />
-                  <marker date="1481470844819" expanded="true" signature="889:1142" ph="{...}" />
-                  <marker date="1481470844819" expanded="true" signature="889:1282" ph="{...}" />
-                  <marker date="1481470844819" expanded="true" signature="1003:1142" ph="{...}" />
-                  <marker date="1481470844819" expanded="true" signature="1637:2047" ph="{...}" />
-                  <marker date="1481470844819" expanded="true" signature="1716:2037" ph="{...}" />
-                  <marker date="1481470844819" expanded="true" signature="2951:2957" ph="{...}" />
-                  <marker date="1481470844819" expanded="true" signature="2951:2959" ph="{...}" />
+                  <marker date="1481472706219" expanded="true" signature="138:255" ph="..." />
+                  <marker date="1481472706219" expanded="true" signature="291:336" ph="@{...}" />
+                  <marker date="1481472706219" expanded="true" signature="357:844" ph="{...}" />
+                  <marker date="1481472706219" expanded="true" signature="394:441" ph="@{...}" />
+                  <marker date="1481472706219" expanded="true" signature="719:808" ph="{...}" />
+                  <marker date="1481472706219" expanded="true" signature="927:3202" ph="{...}" />
+                  <marker date="1481472706219" expanded="true" signature="1132:1385" ph="{...}" />
+                  <marker date="1481472706219" expanded="true" signature="1132:1525" ph="{...}" />
+                  <marker date="1481472706219" expanded="true" signature="1246:1385" ph="{...}" />
+                  <marker date="1481472706219" expanded="true" signature="1880:2290" ph="{...}" />
+                  <marker date="1481472706219" expanded="true" signature="1959:2280" ph="{...}" />
+                  <marker date="1481472706219" expanded="true" signature="3194:3200" ph="{...}" />
+                  <marker date="1481472706219" expanded="true" signature="3194:3202" ph="{...}" />
                 </folding>
               </first_editor>
               <second_editor />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="build.gradle" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/build.gradle">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="18">
-              <caret line="1" column="23" lean-forward="false" selection-start-line="1" selection-start-column="23" selection-end-line="1" selection-end-column="23" />
-              <folding />
             </state>
           </provider>
         </entry>
@@ -504,7 +427,7 @@
     </option>
     <option name="modificationStamps">
       <map>
-        <entry key="$PROJECT_DIR$" value="2926568570652" />
+        <entry key="$PROJECT_DIR$" value="2926569304753" />
       </map>
     </option>
     <option name="projectBuildClasspath">
@@ -703,9 +626,9 @@
         <option value="$PROJECT_DIR$/src/nl/astraeus/database/jdbc/ConnectionPool.java" />
         <option value="$PROJECT_DIR$/src/nl/astraeus/database/SimpleDatabase.java" />
         <option value="$PROJECT_DIR$/test/nl/astraeus/database/example/MinimalExample.java" />
-        <option value="$PROJECT_DIR$/readme.md" />
         <option value="$PROJECT_DIR$/.gitignore" />
         <option value="$PROJECT_DIR$/build.gradle" />
+        <option value="$PROJECT_DIR$/readme.md" />
       </list>
     </option>
   </component>
@@ -749,38 +672,6 @@
             </PATH_ELEMENT>
             <PATH_ELEMENT>
               <option name="myItemId" value="SimpleDatabase" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="simple-database" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="SimpleDatabase" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="build" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="simple-database" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="SimpleDatabase" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="build" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="libs" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -1227,7 +1118,7 @@
       <workItem from="1481274277594" duration="990000" />
       <workItem from="1481369293467" duration="1314000" />
       <workItem from="1481393131531" duration="4188000" />
-      <workItem from="1481462404312" duration="5886000" />
+      <workItem from="1481462404312" duration="6606000" />
     </task>
     <task id="LOCAL-00001" summary="Intellij settings">
       <created>1445189967799</created>
@@ -1369,7 +1260,14 @@
       <option name="project" value="LOCAL" />
       <updated>1481470926043</updated>
     </task>
-    <option name="localTasksCounter" value="21" />
+    <task id="LOCAL-00021" summary="Released 2.0.1">
+      <created>1481471994233</created>
+      <option name="number" value="00021" />
+      <option name="presentableId" value="LOCAL-00021" />
+      <option name="project" value="LOCAL" />
+      <updated>1481471994233</updated>
+    </task>
+    <option name="localTasksCounter" value="22" />
     <servers />
   </component>
   <component name="TestHistory">
@@ -1405,7 +1303,7 @@
     </history-entry>
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="23726000" />
+    <option name="totallyTimeSpent" value="24446000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -1439,8 +1337,8 @@
       <window_info id="Capture Analysis" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
       <window_info id="PsiViewer" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.22885571" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
-      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32935324" sideWeight="0.4940429" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.22885571" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.32935324" sideWeight="0.4940429" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Project" active="true" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.16684435" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.22288558" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Gradle" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.122068234" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
@@ -1484,7 +1382,8 @@
     <MESSAGE value="Released 2.0.0" />
     <MESSAGE value="Fix var names" />
     <MESSAGE value="Cleanup and readme" />
-    <option name="LAST_COMMIT_MESSAGE" value="Cleanup and readme" />
+    <MESSAGE value="Released 2.0.1" />
+    <option name="LAST_COMMIT_MESSAGE" value="Released 2.0.1" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -1917,14 +1816,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/.gitignore">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="144">
-          <caret line="8" column="0" lean-forward="false" selection-start-line="8" selection-start-column="0" selection-end-line="8" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/test/nl/astraeus/database/example/MinimalExample.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="563">
@@ -1941,8 +1832,24 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/test/nl/astraeus/database/test/model/Person.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-98">
+        <state relative-caret-position="3">
           <caret line="31" column="0" lean-forward="false" selection-start-line="31" selection-start-column="0" selection-end-line="31" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/.gitignore">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="144">
+          <caret line="8" column="0" lean-forward="false" selection-start-line="8" selection-start-column="0" selection-end-line="8" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/build.gradle">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="468">
+          <caret line="26" column="0" lean-forward="false" selection-start-line="26" selection-start-column="0" selection-end-line="26" selection-end-column="0" />
           <folding />
         </state>
       </provider>
@@ -1950,32 +1857,25 @@
     <entry file="file://$PROJECT_DIR$/readme.md">
       <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
         <state split_layout="SPLIT">
-          <first_editor relative-caret-position="395">
-            <caret line="34" column="0" lean-forward="false" selection-start-line="33" selection-start-column="0" selection-end-line="34" selection-end-column="0" />
+          <first_editor relative-caret-position="270">
+            <caret line="15" column="0" lean-forward="true" selection-start-line="15" selection-start-column="0" selection-end-line="15" selection-end-column="0" />
             <folding>
-              <marker date="1481470844819" expanded="true" signature="48:93" ph="@{...}" />
-              <marker date="1481470844819" expanded="true" signature="114:601" ph="{...}" />
-              <marker date="1481470844819" expanded="true" signature="151:198" ph="@{...}" />
-              <marker date="1481470844819" expanded="true" signature="476:565" ph="{...}" />
-              <marker date="1481470844819" expanded="true" signature="684:2959" ph="{...}" />
-              <marker date="1481470844819" expanded="true" signature="889:1142" ph="{...}" />
-              <marker date="1481470844819" expanded="true" signature="889:1282" ph="{...}" />
-              <marker date="1481470844819" expanded="true" signature="1003:1142" ph="{...}" />
-              <marker date="1481470844819" expanded="true" signature="1637:2047" ph="{...}" />
-              <marker date="1481470844819" expanded="true" signature="1716:2037" ph="{...}" />
-              <marker date="1481470844819" expanded="true" signature="2951:2957" ph="{...}" />
-              <marker date="1481470844819" expanded="true" signature="2951:2959" ph="{...}" />
+              <marker date="1481472706219" expanded="true" signature="138:255" ph="..." />
+              <marker date="1481472706219" expanded="true" signature="291:336" ph="@{...}" />
+              <marker date="1481472706219" expanded="true" signature="357:844" ph="{...}" />
+              <marker date="1481472706219" expanded="true" signature="394:441" ph="@{...}" />
+              <marker date="1481472706219" expanded="true" signature="719:808" ph="{...}" />
+              <marker date="1481472706219" expanded="true" signature="927:3202" ph="{...}" />
+              <marker date="1481472706219" expanded="true" signature="1132:1385" ph="{...}" />
+              <marker date="1481472706219" expanded="true" signature="1132:1525" ph="{...}" />
+              <marker date="1481472706219" expanded="true" signature="1246:1385" ph="{...}" />
+              <marker date="1481472706219" expanded="true" signature="1880:2290" ph="{...}" />
+              <marker date="1481472706219" expanded="true" signature="1959:2280" ph="{...}" />
+              <marker date="1481472706219" expanded="true" signature="3194:3200" ph="{...}" />
+              <marker date="1481472706219" expanded="true" signature="3194:3202" ph="{...}" />
             </folding>
           </first_editor>
           <second_editor />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/build.gradle">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="18">
-          <caret line="1" column="23" lean-forward="false" selection-start-line="1" selection-start-column="23" selection-end-line="1" selection-end-column="23" />
-          <folding />
         </state>
       </provider>
     </entry>

@@ -1,5 +1,19 @@
 # Simple database
 
+## Maven, gradle etc:
+
+Maven repository: http://nexus.astraeus.nl/nexus/content/groups/public
+
+Pom:
+
+```xml
+<dependency>
+  <groupId>nl.astraeus</groupId>
+  <artifactId>simple-database</artifactId>
+  <version>2.0.1</version>
+</dependency>
+```
+
 ## Minimal example:
 
 ```java

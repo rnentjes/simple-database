@@ -1,11 +1,12 @@
 package nl.astraeus.database;
 
+import java.util.List;
+
 import nl.astraeus.database.test.model.Person;
+
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
-
-import java.util.List;
 
 /**
  * Date: 11/16/13
@@ -24,7 +25,7 @@ public class TestSimpleDatabaseInsert extends BaseTest {
 
         createPersons();
 
-        List<Person> persons = personDao.selectAll();
+        List<Person> persons = personDao.all();
 
         Assert.assertTrue(persons.size() == 5);
     }

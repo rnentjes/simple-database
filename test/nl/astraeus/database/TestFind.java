@@ -1,6 +1,7 @@
 package nl.astraeus.database;
 
 import nl.astraeus.database.test.model.Person;
+
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -18,7 +19,7 @@ public class TestFind extends BaseTest {
 
     @Test
     public void testFind() throws InterruptedException {
-        Person person = new Person("Rien", 40, "Rozendael");
+        Person person = new Person("Rien", 40, "Road");
 
         db.begin();
 

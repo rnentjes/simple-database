@@ -1,23 +1,15 @@
 package nl.astraeus.database;
 
-import nl.astraeus.database.annotations.Id;
-import nl.astraeus.database.annotations.Length;
-import nl.astraeus.database.annotations.Serialized;
-import nl.astraeus.database.cache.Cache;
-import nl.astraeus.database.jdbc.ConnectionPool;
-import nl.astraeus.database.jdbc.ConnectionProvider;
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
-import org.junit.Test;
-
 import java.math.BigDecimal;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
 import java.util.Date;
 import java.util.List;
 
-import javax.xml.crypto.Data;
+import nl.astraeus.database.annotations.Id;
+import nl.astraeus.database.annotations.Length;
+import nl.astraeus.database.annotations.Serialized;
+
+import org.junit.BeforeClass;
+import org.junit.Test;
 
 /**
  * Date: 11/16/13
@@ -76,7 +68,7 @@ public class TestDataTypes extends BaseTest {
 
                 dao.insert(type);
 
-                List<DataTypes> types = dao.selectAll();
+                List<DataTypes> types = dao.all();
 
                 type = types.get(0);
 
@@ -91,7 +83,7 @@ public class TestDataTypes extends BaseTest {
 
                 db.getCache().clear();
 
-                types = dao.selectAll();
+                types = dao.all();
 
                 type = types.get(0);
 

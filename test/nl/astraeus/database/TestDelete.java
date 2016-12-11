@@ -1,17 +1,12 @@
 package nl.astraeus.database;
 
-import nl.astraeus.database.jdbc.ConnectionPool;
-import nl.astraeus.database.jdbc.ConnectionProvider;
+import java.util.List;
+
 import nl.astraeus.database.test.model.Person;
-import org.junit.AfterClass;
+
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
-
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
-import java.util.List;
 
 /**
  * Date: 11/16/13
@@ -28,7 +23,7 @@ public class TestDelete extends BaseTest {
     public void testDelete() {
         createPersons();
 
-        final List<Person> persons = personDao.selectWhere("age > ?", 30);
+        final List<Person> persons = personDao.where("age > ?", 30);
 
         // assert 2
         Assert.assertEquals(3, persons.size());
@@ -43,7 +38,7 @@ public class TestDelete extends BaseTest {
         });
 
         // assert 2 left
-        Assert.assertEquals(2, personDao.selectAll().size());
+        Assert.assertEquals(2, personDao.all().size());
     }
 
 }

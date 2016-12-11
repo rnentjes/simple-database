@@ -9,7 +9,6 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 import nl.astraeus.database.cache.Cache;
-import nl.astraeus.database.jdbc.ConnectionPool;
 import nl.astraeus.database.jdbc.ConnectionProvider;
 
 import org.slf4j.Logger;
@@ -123,7 +122,11 @@ public class SimpleDatabase {
     }
 
     public Connection getNewConnection() {
-        return connectionProvider.getConnection();
+        try {
+            return connectionProvider.getConnection();
+        } catch(SQLException | ClassNotFoundException e) {
+            throw new IllegalStateException(e);
+        }
     }
 
     protected Connection getConnection() {
@@ -139,7 +142,7 @@ public class SimpleDatabase {
     }
 
     public void begin() {
-        transactions.set(new Transaction(connectionProvider.getConnection()));
+        transactions.set(new Transaction(getNewConnection()));
     }
 
     public void commit() {

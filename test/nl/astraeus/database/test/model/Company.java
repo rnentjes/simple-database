@@ -1,12 +1,13 @@
 package nl.astraeus.database.test.model;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import nl.astraeus.database.annotations.Collection;
 import nl.astraeus.database.annotations.Id;
 import nl.astraeus.database.annotations.Table;
-import org.junit.Ignore;
 
-import java.util.ArrayList;
-import java.util.List;
+import org.junit.Ignore;
 
 /**
  * User: rnentjes

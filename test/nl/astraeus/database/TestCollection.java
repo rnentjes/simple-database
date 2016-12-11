@@ -1,17 +1,11 @@
 package nl.astraeus.database;
 
-import junit.framework.Assert;
-import nl.astraeus.database.jdbc.ConnectionPool;
-import nl.astraeus.database.jdbc.ConnectionProvider;
 import nl.astraeus.database.test.model.Company;
 import nl.astraeus.database.test.model.Info;
-import org.junit.AfterClass;
+
+import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
-
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
 
 /**
  * Date: 11/16/13

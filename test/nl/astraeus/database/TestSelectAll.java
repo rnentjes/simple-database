@@ -1,22 +1,16 @@
 package nl.astraeus.database;
 
-import junit.framework.Assert;
-import nl.astraeus.database.cache.Cache;
+import java.util.List;
+import java.util.Map;
+
 import nl.astraeus.database.cache.ObjectCache;
-import nl.astraeus.database.jdbc.ConnectionPool;
-import nl.astraeus.database.jdbc.ConnectionProvider;
 import nl.astraeus.database.test.model.Person;
-import org.junit.AfterClass;
+
+import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
-import java.util.List;
-import java.util.Map;
 
 /**
  * Date: 11/16/13
@@ -34,14 +28,14 @@ public class TestSelectAll extends BaseTest {
     public void testSelectAll() {
         createPersons();
 
-        List<Person> persons = personDao.selectAll();
+        List<Person> persons = personDao.all();
 
         Assert.assertEquals(persons.size(), 5);
 
         db.getCache().clear();
 
         long start1 = System.nanoTime();
-        persons = personDao.selectAll();
+        persons = personDao.all();
         long stop1 = System.nanoTime();
 
         for (Person person : persons) {
@@ -49,7 +43,7 @@ public class TestSelectAll extends BaseTest {
         }
 
         long start2 = System.nanoTime();
-        persons = personDao.selectAll();
+        persons = personDao.all();
         long stop2 = System.nanoTime();
 
         for (Person person : persons) {
@@ -57,7 +51,7 @@ public class TestSelectAll extends BaseTest {
         }
 
         long start3 = System.nanoTime();
-        persons = personDao.selectAll();
+        persons = personDao.all();
         long stop3 = System.nanoTime();
 
         for (Person person : persons) {

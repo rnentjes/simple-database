@@ -1,17 +1,12 @@
 package nl.astraeus.database;
 
-import junit.framework.Assert;
-import nl.astraeus.database.jdbc.ConnectionPool;
-import nl.astraeus.database.jdbc.ConnectionProvider;
+import java.util.List;
+
 import nl.astraeus.database.test.model.Person;
-import org.junit.AfterClass;
+
+import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
-
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
-import java.util.List;
 
 /**
  * Date: 11/16/13
@@ -31,14 +26,14 @@ public class TestInsert extends BaseTest {
         dao.execute(new SimpleDao.Executor<Person>() {
             @Override
             public void execute(SimpleDao<Person> dao) {
-                dao.insert(new Person("Rien", 40, "Rozendael"));
+                dao.insert(new Person("Rien", 40, "Road"));
                 dao.insert(new Person("Jan", 32, "Straat"));
                 dao.insert(new Person("Piet", 26, "Weg"));
                 dao.insert(new Person("Klaas", 10, "Pad"));
             }
         });
 
-        List<Person> persons = dao.selectAll();
+        List<Person> persons = dao.all();
 
         Assert.assertTrue(persons.size() == 4);
     }

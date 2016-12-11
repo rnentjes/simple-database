@@ -1,12 +1,13 @@
 package nl.astraeus.database;
 
+import java.util.List;
+
 import nl.astraeus.database.test.model.Person;
+
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Ignore;
 import org.junit.Test;
-
-import java.util.List;
 
 /**
  * Date: 11/16/13
@@ -24,11 +25,11 @@ public class TestSelectFrom extends BaseTest {
     public void testSelectFrom() {
         createPersons();
 
-        List<Person> persons = personDao.selectFrom("where age > ?", 30);
+        List<Person> persons = personDao.from("where age > ?", 30);
 
         Assert.assertEquals(3, persons.size());
 
-        persons = personDao.selectWhere("name like ?", "R%");
+        persons = personDao.where("name like ?", "R%");
 
         Assert.assertEquals(2, persons.size());
     }

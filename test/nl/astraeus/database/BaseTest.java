@@ -6,13 +6,11 @@ import java.sql.SQLException;
 
 import nl.astraeus.database.jdbc.ConnectionPool;
 import nl.astraeus.database.jdbc.ConnectionProvider;
-
 import nl.astraeus.database.test.model.Company;
 import nl.astraeus.database.test.model.Person;
+
 import org.junit.AfterClass;
-import org.junit.BeforeClass;
 import org.junit.Ignore;
-import org.junit.Test;
 
 /**
  * Date: 11/16/13
@@ -57,7 +55,7 @@ public class BaseTest {
         personDao.execute(new SimpleDao.Executor<Person>() {
             @Override
             public void execute(SimpleDao<Person> dao) {
-                dao.insert(new Person("Rien", 40, "Rozendael"));
+                dao.insert(new Person("Rien", 40, "Road"));
                 dao.insert(new Person("Jan", 32, "Straat"));
                 dao.insert(new Person("Ronald", 31, "Wherever"));
                 dao.insert(new Person("Piet", 26, "Weg"));

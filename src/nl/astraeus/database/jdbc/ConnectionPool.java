@@ -1,6 +1,7 @@
 package nl.astraeus.database.jdbc;
 
 import java.sql.Connection;
+import java.sql.SQLException;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -27,9 +28,13 @@ public class ConnectionPool extends ConnectionProvider {
     public ConnectionPool(ConnectionProvider connectionProvider) {
         this.connectionProvider = connectionProvider;
 
-        for (int index = 0; index < minimumNumberOfConnections; index++) {
-            ConnectionWrapper wrapper = new ConnectionWrapper(this, connectionProvider.getConnection());
-            connectionPool.add(wrapper);
+        try {
+            for (int index = 0; index < minimumNumberOfConnections; index++) {
+                ConnectionWrapper wrapper = new ConnectionWrapper(this, connectionProvider.getConnection());
+                connectionPool.add(wrapper);
+            }
+        } catch(SQLException | ClassNotFoundException e) {
+            throw new IllegalStateException(e);
         }
     }
 
@@ -40,10 +45,15 @@ public class ConnectionPool extends ConnectionProvider {
 
     public synchronized Connection getConnection() {
         if (connectionPool.isEmpty() && usedPool.size() < maximumNumberOfConnections) {
-            ConnectionWrapper wrapper = new ConnectionWrapper(this, connectionProvider.getConnection());
+            try {
+                ConnectionWrapper wrapper = new ConnectionWrapper(this, connectionProvider.getConnection());
 
-            usedPool.add(wrapper);
-            return wrapper;
+                usedPool.add(wrapper);
+
+                return wrapper;
+            } catch(SQLException | ClassNotFoundException e) {
+                throw new IllegalStateException(e);
+            }
         }
 
         while(connectionPool.isEmpty()) {

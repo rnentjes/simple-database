@@ -1,6 +1,7 @@
 package nl.astraeus.database.jdbc;
 
 import java.sql.Connection;
+import java.sql.SQLException;
 
 import nl.astraeus.database.DdlMapping;
 
@@ -12,7 +13,7 @@ public abstract class ConnectionProvider {
 
     public void dispose() {}
 
-    abstract public Connection getConnection();
+    abstract public Connection getConnection() throws SQLException, ClassNotFoundException;
 
     public DdlMapping.DatabaseDefinition getDefinition() {
         return DdlMapping.DatabaseDefinition.H2;

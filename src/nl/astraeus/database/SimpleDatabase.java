@@ -122,7 +122,11 @@ public class SimpleDatabase {
     }
 
     public Connection getNewConnection() {
-        return connectionProvider.getConnection();
+        try {
+            return connectionProvider.getConnection();
+        } catch(SQLException | ClassNotFoundException e) {
+            throw new IllegalStateException(e);
+        }
     }
 
     protected Connection getConnection() {
@@ -138,7 +142,7 @@ public class SimpleDatabase {
     }
 
     public void begin() {
-        transactions.set(new Transaction(connectionProvider.getConnection()));
+        transactions.set(new Transaction(getNewConnection()));
     }
 
     public void commit() {

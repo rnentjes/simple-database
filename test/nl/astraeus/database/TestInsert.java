@@ -1,11 +1,10 @@
 package nl.astraeus.database;
 
-import junit.framework.Assert;
-
 import java.util.List;
 
 import nl.astraeus.database.test.model.Person;
 
+import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
 

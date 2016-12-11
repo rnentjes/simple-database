@@ -2,8 +2,6 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="17f8d10d-4c97-4aa9-b7ad-cdd73e5a615c" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/sqldialects.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.gitignore" afterPath="$PROJECT_DIR$/.gitignore" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="$PROJECT_DIR$/.gradle/" />
@@ -195,8 +193,8 @@
       <file leaf-file-name="MetaData.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/nl/astraeus/database/MetaData.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="313">
-              <caret line="256" column="56" lean-forward="true" selection-start-line="256" selection-start-column="56" selection-end-line="256" selection-end-column="56" />
+            <state relative-caret-position="4446">
+              <caret line="256" column="56" lean-forward="false" selection-start-line="256" selection-start-column="56" selection-end-line="256" selection-end-column="56" />
               <folding />
             </state>
           </provider>
@@ -729,6 +727,7 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
+      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <PATH>
@@ -768,7 +767,6 @@
         </subPane>
       </pane>
       <pane id="PackagesPane" />
-      <pane id="Scope" />
       <pane id="Scratches" />
     </panes>
   </component>
@@ -1212,6 +1210,7 @@
       <workItem from="1481369293467" duration="7371000" />
       <workItem from="1481379875049" duration="7738000" />
       <workItem from="1481462156407" duration="34000" />
+      <workItem from="1481462238904" duration="22000" />
     </task>
     <task id="LOCAL-00001" summary="Intellij settings">
       <created>1445189967799</created>
@@ -1334,7 +1333,7 @@
     </history-entry>
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="27481000" />
+    <option name="totallyTimeSpent" value="27503000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -1665,7 +1664,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="162">
           <caret line="22" column="0" lean-forward="false" selection-start-line="22" selection-start-column="0" selection-end-line="22" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1796,8 +1794,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/nl/astraeus/database/MetaData.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="313">
-          <caret line="256" column="56" lean-forward="true" selection-start-line="256" selection-start-column="56" selection-end-line="256" selection-end-column="56" />
+        <state relative-caret-position="4446">
+          <caret line="256" column="56" lean-forward="false" selection-start-line="256" selection-start-column="56" selection-end-line="256" selection-end-column="56" />
           <folding />
         </state>
       </provider>

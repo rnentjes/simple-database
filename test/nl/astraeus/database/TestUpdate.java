@@ -23,7 +23,7 @@ public class TestUpdate extends BaseTest {
     public void testUpdate() {
         createPersons();
 
-        List<Person> persons = personDao.selectWhere("age > ?", 30);
+        List<Person> persons = personDao.where("age > ?", 30);
 
         db.begin();
 
@@ -35,7 +35,7 @@ public class TestUpdate extends BaseTest {
 
         db.commit();
 
-        persons = personDao.selectWhere("age > ?", 32);
+        persons = personDao.where("age > ?", 32);
 
         Assert.assertEquals(persons.size(), 2);
     }

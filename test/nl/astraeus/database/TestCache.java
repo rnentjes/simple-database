@@ -51,7 +51,7 @@ public class TestCache extends BaseTest {
         dao.execute(new SimpleDao.Executor<Person>() {
             @Override
             public void execute(SimpleDao<Person> dao) {
-                List<Person> persons = dao.selectAll();
+                List<Person> persons = dao.all();
 
                 Assert.assertEquals(db.getCache().getObjectCache(Person.class).getNumberCached() ,6);
             }

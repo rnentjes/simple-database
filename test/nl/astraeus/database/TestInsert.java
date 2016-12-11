@@ -34,7 +34,7 @@ public class TestInsert extends BaseTest {
             }
         });
 
-        List<Person> persons = dao.selectAll();
+        List<Person> persons = dao.all();
 
         Assert.assertTrue(persons.size() == 4);
     }

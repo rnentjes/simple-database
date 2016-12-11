@@ -25,11 +25,11 @@ public class TestSelectFrom extends BaseTest {
     public void testSelectFrom() {
         createPersons();
 
-        List<Person> persons = personDao.selectFrom("where age > ?", 30);
+        List<Person> persons = personDao.from("where age > ?", 30);
 
         Assert.assertEquals(3, persons.size());
 
-        persons = personDao.selectWhere("name like ?", "R%");
+        persons = personDao.where("name like ?", "R%");
 
         Assert.assertEquals(2, persons.size());
     }

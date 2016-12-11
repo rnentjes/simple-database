@@ -37,28 +37,28 @@ public class SimpleDao<T> {
         return persister.find(id);
     }
 
-    public List<T> selectAll() {
+    public T find(String query, Object ... params) {
+        return (T) persister.findWhere(query, params);
+    }
+
+    public List<T> all() {
         return persister.selectAll();
     }
 
-    public List<T> selectFrom(String query, Object... params) {
+    public List<T> from(String query, Object... params) {
         return persister.selectFrom(query, params);
     }
 
-    public List<T> selectWhere(String query, Object ... params) {
+    public List<T> where(String query, Object ... params) {
         return persister.selectWhere(query, params);
     }
 
-    public List<T> selectWhere(int from, int max, String query, Object ... params) {
+    public List<T> where(int from, int max, String query, Object ... params) {
         return persister.selectWhere(from, max, query, params);
     }
 
-    public int selectCount(String query, Object ... params) {
+    public int count(String query, Object ... params) {
         return persister.selectCount(query, params);
-    }
-
-    public T findWhere(String query, Object ... params) {
-        return (T) persister.findWhere(query, params);
     }
 
     public interface Executor<T> {

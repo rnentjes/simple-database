@@ -68,7 +68,7 @@ public class TestDataTypes extends BaseTest {
 
                 dao.insert(type);
 
-                List<DataTypes> types = dao.selectAll();
+                List<DataTypes> types = dao.all();
 
                 type = types.get(0);
 
@@ -83,7 +83,7 @@ public class TestDataTypes extends BaseTest {
 
                 db.getCache().clear();
 
-                types = dao.selectAll();
+                types = dao.all();
 
                 type = types.get(0);
 

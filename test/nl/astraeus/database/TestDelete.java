@@ -23,7 +23,7 @@ public class TestDelete extends BaseTest {
     public void testDelete() {
         createPersons();
 
-        final List<Person> persons = personDao.selectWhere("age > ?", 30);
+        final List<Person> persons = personDao.where("age > ?", 30);
 
         // assert 2
         Assert.assertEquals(3, persons.size());
@@ -38,7 +38,7 @@ public class TestDelete extends BaseTest {
         });
 
         // assert 2 left
-        Assert.assertEquals(2, personDao.selectAll().size());
+        Assert.assertEquals(2, personDao.all().size());
     }
 
 }

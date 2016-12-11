@@ -25,7 +25,7 @@ public class TestSimpleDatabaseInsert extends BaseTest {
 
         createPersons();
 
-        List<Person> persons = personDao.selectAll();
+        List<Person> persons = personDao.all();
 
         Assert.assertTrue(persons.size() == 5);
     }

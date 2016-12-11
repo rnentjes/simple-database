@@ -75,7 +75,7 @@ public class Example {
             }
         });
 
-        List<Person> persons = dao.selectAll();
+        List<Person> persons = dao.all();
 
         for (Person person : persons) {
             System.out.println("Person name: "+person.getName());

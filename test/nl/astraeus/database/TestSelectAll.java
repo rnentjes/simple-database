@@ -29,14 +29,14 @@ public class TestSelectAll extends BaseTest {
     public void testSelectAll() {
         createPersons();
 
-        List<Person> persons = personDao.selectAll();
+        List<Person> persons = personDao.all();
 
         Assert.assertEquals(persons.size(), 5);
 
         db.getCache().clear();
 
         long start1 = System.nanoTime();
-        persons = personDao.selectAll();
+        persons = personDao.all();
         long stop1 = System.nanoTime();
 
         for (Person person : persons) {
@@ -44,7 +44,7 @@ public class TestSelectAll extends BaseTest {
         }
 
         long start2 = System.nanoTime();
-        persons = personDao.selectAll();
+        persons = personDao.all();
         long stop2 = System.nanoTime();
 
         for (Person person : persons) {
@@ -52,7 +52,7 @@ public class TestSelectAll extends BaseTest {
         }
 
         long start3 = System.nanoTime();
-        persons = personDao.selectAll();
+        persons = personDao.all();
         long stop3 = System.nanoTime();
 
         for (Person person : persons) {

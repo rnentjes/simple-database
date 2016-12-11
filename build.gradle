@@ -1,5 +1,5 @@
 group 'nl.astraeus'
-version '2.0.0-SNAPSHOT'
+version '2.0.1-SNAPSHOT'
 
 apply plugin: 'java'
 apply plugin: 'idea'
@@ -19,6 +19,7 @@ sourceCompatibility = 1.7
 targetCompatibility = 1.7
 
 repositories {
+    mavenLocal()
     maven {
         url "http://nexus.astraeus.nl/nexus/content/groups/public"
     }

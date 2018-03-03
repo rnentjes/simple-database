@@ -1,12 +1,11 @@
 package nl.astraeus.database;
 
-import java.util.List;
-
 import nl.astraeus.database.test.model.Person;
-
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
+
+import java.util.List;
 
 /**
  * Date: 11/16/13
@@ -30,12 +29,21 @@ public class TestInsert extends BaseTest {
                 dao.insert(new Person("Jan", 32, "Straat"));
                 dao.insert(new Person("Piet", 26, "Weg"));
                 dao.insert(new Person("Klaas", 10, "Pad"));
+
+                Person p = new Person("Klaas 2", 50, "bla");
+
+                p.setNewColumnTest("Very long test we hope...");
+                dao.insert(p);
             }
         });
 
         List<Person> persons = dao.all();
 
-        Assert.assertTrue(persons.size() == 4);
+        Assert.assertTrue(persons.size() == 5);
+
+        Person p = dao.find("name = ?", "Klaas 2");
+
+        Assert.assertEquals("Very long test we hope...", p.getNewColumnTest());
     }
 
 }

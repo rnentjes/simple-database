@@ -1,16 +1,15 @@
 package nl.astraeus.database;
 
+import nl.astraeus.template.EscapeMode;
+import nl.astraeus.template.SimpleTemplate;
+import nl.astraeus.util.Util;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
-
-import nl.astraeus.template.EscapeMode;
-import nl.astraeus.template.SimpleTemplate;
-import nl.astraeus.util.Util;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * Date: 11/19/13
@@ -154,6 +153,10 @@ public class DdlMapping {
 
     public SimpleTemplate getBlobType() {
         return getDdlTemplateForType(Object.class);
+    }
+
+    public SimpleTemplate getClobType() {
+        return getDdlTemplateForType(StringBuilder.class);
     }
 
     public SimpleTemplate getIdType() {

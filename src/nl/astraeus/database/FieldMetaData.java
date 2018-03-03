@@ -1,23 +1,7 @@
 package nl.astraeus.database;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-import java.lang.reflect.Field;
-import java.math.BigDecimal;
-import java.nio.ByteBuffer;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Timestamp;
-import java.sql.Types;
-import java.util.HashMap;
-import java.util.Map;
-
 import nl.astraeus.database.annotations.Blob;
+import nl.astraeus.database.annotations.Clob;
 import nl.astraeus.database.annotations.Collection;
 import nl.astraeus.database.annotations.Column;
 import nl.astraeus.database.annotations.Default;
@@ -29,9 +13,26 @@ import nl.astraeus.database.annotations.Serialized;
 import nl.astraeus.database.annotations.Table;
 import nl.astraeus.template.SimpleTemplate;
 import nl.astraeus.util.Util;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.UnsupportedEncodingException;
+import java.lang.reflect.Field;
+import java.math.BigDecimal;
+import java.nio.ByteBuffer;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Timestamp;
+import java.sql.Types;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Date: 11/14/13
@@ -45,7 +46,8 @@ public class FieldMetaData {
         COLLECTION,
         SERIALIZED,
         REFERENCE,
-        BLOB
+        BLOB,
+        CLOB
     }
 
     private SimpleDatabase db;
@@ -134,6 +136,7 @@ public class FieldMetaData {
         String type;
 
         Blob blob = field.getAnnotation(Blob.class);
+        Clob clob = field.getAnnotation(Clob.class);
         Serialized serialized = field.getAnnotation(Serialized.class);
         Collection collection = field.getAnnotation(Collection.class);
 
@@ -142,6 +145,14 @@ public class FieldMetaData {
             type = ddlMapping.getBlobType().render(model);
             sqlType = Types.BLOB;
             this.type = ColumnType.BLOB;
+        } else if (clob != null) {
+            if (!field.getType().equals(String.class)) {
+                throw new IllegalStateException("Clob is only allowed on String objects.");
+            }
+            // CLOB
+            type = ddlMapping.getClobType().render(model);
+            sqlType = Types.CLOB;
+            this.type = ColumnType.CLOB;
         } else if (serialized != null) {
             // BLOB
             type = ddlMapping.getBlobType().render(model);
@@ -246,13 +257,15 @@ public class FieldMetaData {
                     statement.setNull(index, Types.BIGINT);
                     break;
                 case BLOB:
+                case CLOB:
                 case COLLECTION:
                 case SERIALIZED:
                     statement.setNull(index, Types.BLOB);
                     break;
-
             }
         } else {
+            byte [] bytes;
+
             switch(type) {
                 case BASIC:
                     switch(sqlType) {
@@ -322,7 +335,7 @@ public class FieldMetaData {
 
                         out.writeObject(value);
 
-                        byte [] bytes = objectStreamBuffer.toByteArray();
+                        bytes = objectStreamBuffer.toByteArray();
 
                         statement.setBinaryStream(index, new ByteArrayInputStream(bytes), bytes.length);
                     } catch (IOException e) {
@@ -330,9 +343,18 @@ public class FieldMetaData {
                     }
                     break;
                 case BLOB:
-                    byte [] bytes = (byte[])value;
+                    bytes = (byte[])value;
 
                     statement.setBinaryStream(index, new ByteArrayInputStream(bytes), bytes.length);
+                    break;
+                case CLOB:
+                    try {
+                        bytes = ((String)value).getBytes("UTF-8");
+
+                        statement.setBinaryStream(index, new ByteArrayInputStream(bytes), bytes.length);
+                    } catch (UnsupportedEncodingException e) {
+                        throw new IllegalStateException(e);
+                    }
                     break;
             }
         }
@@ -434,13 +456,32 @@ public class FieldMetaData {
                 try (InputStream in = rs.getBinaryStream(index);
                      ByteArrayOutputStream out = new ByteArrayOutputStream()) {
 
-                    byte [] buffer = new byte[8196];
-                    int nr;
-                    while((nr = in.read(buffer)) > 0) {
-                        out.write(buffer, 0, nr);
-                    }
+                    if (in != null) {
+                        byte[] buffer = new byte[8196];
+                        int nr;
+                        while ((nr = in.read(buffer)) > 0) {
+                            out.write(buffer, 0, nr);
+                        }
 
-                    set(obj, out.toByteArray());
+                        set(obj, out.toByteArray());
+                    }
+                } catch (IOException e) {
+                    throw new IllegalStateException(e);
+                }
+                break;
+            case CLOB:
+                try (InputStream in = rs.getBinaryStream(index);
+                     ByteArrayOutputStream out = new ByteArrayOutputStream()) {
+
+                    if (in != null) {
+                        byte[] buffer = new byte[8196];
+                        int nr;
+                        while ((nr = in.read(buffer)) > 0) {
+                            out.write(buffer, 0, nr);
+                        }
+
+                        set(obj, new String(out.toByteArray(), "UTF-8"));
+                    }
                 } catch (IOException e) {
                     throw new IllegalStateException(e);
                 }

@@ -19,19 +19,19 @@ sourceCompatibility = 1.7
 targetCompatibility = 1.7
 
 repositories {
-    mavenLocal()
+    mavenCentral()
     maven {
-        url "https://nexus.astraeus.nl/nexus/content/groups/public"
+        url "http://nexus.astraeus.nl/nexus/content/groups/public"
     }
 }
 
 dependencies {
     testCompile group: 'junit', name: 'junit', version: '4.11'
-    testCompile "org.slf4j:slf4j-simple:1.7.21"
+    testCompile "org.slf4j:slf4j-simple:1.7.23"
     testCompile "com.h2database:h2:1.4.+"
-    testCompile "nl.astraeus.jdbc:simple-jdbc-stats:1.5.3"
+    testCompile "nl.astraeus:simple-jdbc-stats:1.6.0"
 
-    compile "nl.astraeus.template:very-simple-templates:1.3"
+    compile "nl.astraeus:very-simple-templates:1.4"
     compile "org.slf4j:slf4j-api:1.7.21"
 }
 

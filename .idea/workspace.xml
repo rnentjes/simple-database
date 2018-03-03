@@ -1,28 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="17f8d10d-4c97-4aa9-b7ad-cdd73e5a615c" name="Default" comment="">
-      <change beforePath="" afterPath="$PROJECT_DIR$/.idea/checkstyle-idea.xml" />
-      <change beforePath="" afterPath="$PROJECT_DIR$/.idea/hotswap_agent.xml" />
-      <change beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__com_h2database_h2_1_4_196.xml" />
-      <change beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__nl_astraeus_simple_jdbc_stats_1_6_0.xml" />
-      <change beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__nl_astraeus_template_very_simple_templates_1_3.xml" />
-      <change beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__nl_astraeus_web_simple_web_0_3.xml" />
-      <change beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__org_slf4j_slf4j_api_1_7_21.xml" />
-      <change beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__org_slf4j_slf4j_api_1_7_23.xml" />
-      <change beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__org_slf4j_slf4j_simple_1_7_23.xml" />
-      <change beforePath="" afterPath="$PROJECT_DIR$/src/nl/astraeus/database/annotations/Clob.java" />
-      <change beforePath="$PROJECT_DIR$/.idea/libraries/Gradle__junit_junit_4_11.xml" afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__junit_junit_4_11.xml" />
-      <change beforePath="$PROJECT_DIR$/.idea/libraries/Gradle__org_hamcrest_hamcrest_core_1_3.xml" afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__org_hamcrest_hamcrest_core_1_3.xml" />
-      <change beforePath="$PROJECT_DIR$/.idea/modules/simple-database_main.iml" afterPath="$PROJECT_DIR$/.idea/modules/simple-database_main.iml" />
-      <change beforePath="$PROJECT_DIR$/.idea/modules/simple-database_test.iml" afterPath="$PROJECT_DIR$/.idea/modules/simple-database_test.iml" />
+    <list default="true" id="17f8d10d-4c97-4aa9-b7ad-cdd73e5a615c" name="Default" comment="Added Clob for String fields">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
       <change beforePath="$PROJECT_DIR$/build.gradle" afterPath="$PROJECT_DIR$/build.gradle" />
-      <change beforePath="$PROJECT_DIR$/src/nl/astraeus/database/DdlMapping.java" afterPath="$PROJECT_DIR$/src/nl/astraeus/database/DdlMapping.java" />
-      <change beforePath="$PROJECT_DIR$/src/nl/astraeus/database/FieldMetaData.java" afterPath="$PROJECT_DIR$/src/nl/astraeus/database/FieldMetaData.java" />
-      <change beforePath="$PROJECT_DIR$/src/nl/astraeus/database/sql/h2/types.sql" afterPath="$PROJECT_DIR$/src/nl/astraeus/database/sql/h2/types.sql" />
-      <change beforePath="$PROJECT_DIR$/test/nl/astraeus/database/TestInsert.java" afterPath="$PROJECT_DIR$/test/nl/astraeus/database/TestInsert.java" />
-      <change beforePath="$PROJECT_DIR$/test/nl/astraeus/database/test/model/Person.java" afterPath="$PROJECT_DIR$/test/nl/astraeus/database/test/model/Person.java" />
     </list>
     <ignored path="$PROJECT_DIR$/.gradle/" />
     <ignored path="$PROJECT_DIR$/build/" />
@@ -101,6 +82,17 @@
                 <item name="test" type="396b929e:GradleViewContributor$SourceSetNode" />
                 <item name="Dependencies" type="6de06a37:ExternalSystemViewDefaultContributor$MyDependenciesNode" />
               </path>
+              <path>
+                <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
+                <item name="simple-database" type="f1a62948:ProjectNode" />
+                <item name="Tasks" type="e4a08cd1:TasksNode" />
+              </path>
+              <path>
+                <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
+                <item name="simple-database" type="f1a62948:ProjectNode" />
+                <item name="Tasks" type="e4a08cd1:TasksNode" />
+                <item name="upload" type="c8890929:TasksNode$1" />
+              </path>
             </expand>
             <select />
           </tree_state>
@@ -163,11 +155,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="FieldMetaData.java" pinned="false" current-in-tab="true">
+      <file leaf-file-name="FieldMetaData.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/nl/astraeus/database/FieldMetaData.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="266">
-              <caret line="464" column="0" lean-forward="true" selection-start-line="464" selection-start-column="0" selection-end-line="464" selection-end-column="0" />
+            <state relative-caret-position="356">
+              <caret line="469" column="17" lean-forward="false" selection-start-line="469" selection-start-column="17" selection-end-line="469" selection-end-column="17" />
               <folding>
                 <element signature="e#6297#6298#0" expanded="true" />
                 <element signature="e#6329#6330#0" expanded="true" />
@@ -198,6 +190,26 @@
           </provider>
         </entry>
       </file>
+      <file leaf-file-name="build.gradle" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/build.gradle">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="180">
+              <caret line="10" column="30" lean-forward="true" selection-start-line="10" selection-start-column="30" selection-end-line="10" selection-end-column="30" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="settings.gradle" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/settings.gradle">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="18">
+              <caret line="1" column="0" lean-forward="false" selection-start-line="1" selection-start-column="0" selection-end-line="1" selection-end-column="0" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
       <file leaf-file-name="RunBefores.java" pinned="false" current-in-tab="false">
         <entry file="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/junit/junit/4.11/28e0ad201304e4a4abf999ca0570b7cffc352c3c/junit-4.11-sources.jar!/org/junit/internal/runners/statements/RunBefores.java">
           <provider selected="true" editor-type-id="text-editor">
@@ -223,31 +235,6 @@
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="194">
               <caret line="71" column="0" lean-forward="false" selection-start-line="71" selection-start-column="0" selection-end-line="71" selection-end-column="0" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="SimpleDao.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/nl/astraeus/database/SimpleDao.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="398">
-              <caret line="83" column="0" lean-forward="false" selection-start-line="83" selection-start-column="0" selection-end-line="83" selection-end-column="0" />
-              <folding>
-                <element signature="e#509#510#0" expanded="true" />
-                <element signature="e#549#550#0" expanded="true" />
-                <element signature="e#902#903#0" expanded="true" />
-                <element signature="e#963#964#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="ObjectPersister.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/nl/astraeus/database/ObjectPersister.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="450">
-              <caret line="27" column="0" lean-forward="false" selection-start-line="27" selection-start-column="0" selection-end-line="27" selection-end-column="0" />
               <folding />
             </state>
           </provider>
@@ -506,7 +493,7 @@
     <option name="modificationStamps">
       <map>
         <entry key="$USER_HOME$/.gradle/gradle.properties" value="3259524921" />
-        <entry key="$PROJECT_DIR$" value="5907717663000" />
+        <entry key="$PROJECT_DIR$" value="5907718742000" />
         <entry key="$PROJECT_DIR$/build.gradle" value="560316016" />
         <entry key="$PROJECT_DIR$/gradle/wrapper/gradle-wrapper.properties" value="3826364912" />
         <entry key="$PROJECT_DIR$/settings.gradle" value="2704942662" />
@@ -715,10 +702,10 @@
         <option value="$PROJECT_DIR$/readme.md" />
         <option value="$PROJECT_DIR$/src/nl/astraeus/database/DdlMapping.java" />
         <option value="$PROJECT_DIR$/src/nl/astraeus/database/sql/h2/types.sql" />
-        <option value="$PROJECT_DIR$/build.gradle" />
         <option value="$PROJECT_DIR$/test/nl/astraeus/database/test/model/Person.java" />
         <option value="$PROJECT_DIR$/test/nl/astraeus/database/TestInsert.java" />
         <option value="$PROJECT_DIR$/src/nl/astraeus/database/FieldMetaData.java" />
+        <option value="$PROJECT_DIR$/build.gradle" />
       </list>
     </option>
   </component>
@@ -774,7 +761,7 @@
   </component>
   <component name="PropertiesComponent">
     <property name="WebServerToolWindowFactoryState" value="false" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/../simple-database-kotlin" />
     <property name="nodejs_interpreter_path" value="/usr/bin/node" />
     <property name="js.eslint.eslintPackage" value="" />
     <property name="js-jscs-nodeInterpreter" value="/usr/bin/node" />
@@ -809,7 +796,7 @@
       </list>
     </option>
   </component>
-  <component name="RunManager" selected="JUnit.TestInsert.testInsert">
+  <component name="RunManager" selected="Gradle.SimpleDatabase [uploadArchives]">
     <configuration default="true" type="Applet" factoryName="Applet">
       <option name="HTML_USED" value="false" />
       <option name="WIDTH" value="400" />
@@ -849,7 +836,7 @@
       </ExternalSystemSettings>
       <extension name="coverage" enabled="false" merge="false" sample_coverage="true" runner="idea" />
     </configuration>
-    <configuration name="SimpleDatabase [fatJar]" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
+    <configuration name="SimpleDatabase [uploadArchives]" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
       <ExternalSystemSettings>
         <option name="executionName" />
         <option name="externalProjectPath" value="$PROJECT_DIR$" />
@@ -860,7 +847,7 @@
         </option>
         <option name="taskNames">
           <list>
-            <option value="fatJar" />
+            <option value="uploadArchives" />
           </list>
         </option>
         <option name="vmOptions" />
@@ -1213,19 +1200,19 @@
       <envs />
     </configuration>
     <list size="5">
-      <item index="0" class="java.lang.String" itemvalue="Gradle.SimpleDatabase [fatJar]" />
-      <item index="1" class="java.lang.String" itemvalue="Gradle.SimpleDatabase [clean]" />
-      <item index="2" class="java.lang.String" itemvalue="JUnit.TestUpdate" />
-      <item index="3" class="java.lang.String" itemvalue="JUnit.TestUpdate.testUpdate" />
-      <item index="4" class="java.lang.String" itemvalue="JUnit.TestInsert.testInsert" />
+      <item index="0" class="java.lang.String" itemvalue="Gradle.SimpleDatabase [clean]" />
+      <item index="1" class="java.lang.String" itemvalue="JUnit.TestUpdate" />
+      <item index="2" class="java.lang.String" itemvalue="JUnit.TestUpdate.testUpdate" />
+      <item index="3" class="java.lang.String" itemvalue="JUnit.TestInsert.testInsert" />
+      <item index="4" class="java.lang.String" itemvalue="Gradle.SimpleDatabase [uploadArchives]" />
     </list>
     <recent_temporary>
       <list size="5">
-        <item index="0" class="java.lang.String" itemvalue="JUnit.TestInsert.testInsert" />
-        <item index="1" class="java.lang.String" itemvalue="JUnit.TestUpdate.testUpdate" />
-        <item index="2" class="java.lang.String" itemvalue="JUnit.TestUpdate" />
-        <item index="3" class="java.lang.String" itemvalue="Gradle.SimpleDatabase [clean]" />
-        <item index="4" class="java.lang.String" itemvalue="Gradle.SimpleDatabase [fatJar]" />
+        <item index="0" class="java.lang.String" itemvalue="Gradle.SimpleDatabase [uploadArchives]" />
+        <item index="1" class="java.lang.String" itemvalue="JUnit.TestInsert.testInsert" />
+        <item index="2" class="java.lang.String" itemvalue="JUnit.TestUpdate.testUpdate" />
+        <item index="3" class="java.lang.String" itemvalue="JUnit.TestUpdate" />
+        <item index="4" class="java.lang.String" itemvalue="Gradle.SimpleDatabase [clean]" />
       </list>
     </recent_temporary>
   </component>
@@ -1271,7 +1258,7 @@
       <workItem from="1481462404312" duration="7534000" />
       <workItem from="1481713856619" duration="9000" />
       <workItem from="1513934064419" duration="2619000" />
-      <workItem from="1520094213557" duration="2307000" />
+      <workItem from="1520094213557" duration="3677000" />
     </task>
     <task id="LOCAL-00001" summary="Intellij settings">
       <created>1445189967799</created>
@@ -1441,7 +1428,14 @@
       <option name="project" value="LOCAL" />
       <updated>1481474559550</updated>
     </task>
-    <option name="localTasksCounter" value="25" />
+    <task id="LOCAL-00025" summary="Added Clob for String fields">
+      <created>1520099907330</created>
+      <option name="number" value="00025" />
+      <option name="presentableId" value="LOCAL-00025" />
+      <option name="project" value="LOCAL" />
+      <updated>1520099907330</updated>
+    </task>
+    <option name="localTasksCounter" value="26" />
     <servers />
   </component>
   <component name="TestHistory">
@@ -1477,7 +1471,7 @@
     </history-entry>
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="30309000" />
+    <option name="totallyTimeSpent" value="31679000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -1500,7 +1494,7 @@
       <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Code Outline" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.2287415" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.2287415" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="CheckStyle" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.19897959" sideWeight="0.4940429" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Designer" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
@@ -1512,7 +1506,7 @@
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.24982053" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
-      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.3180272" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3180272" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Nl-Palette" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
@@ -1562,7 +1556,8 @@
     <MESSAGE value="Released 2.0.1" />
     <MESSAGE value="Update readme" />
     <MESSAGE value="Remove workspace" />
-    <option name="LAST_COMMIT_MESSAGE" value="Remove workspace" />
+    <MESSAGE value="Added Clob for String fields" />
+    <option name="LAST_COMMIT_MESSAGE" value="Added Clob for String fields" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -1804,10 +1799,10 @@
         <state relative-caret-position="624">
           <caret line="158" column="50" lean-forward="false" selection-start-line="158" selection-start-column="50" selection-end-line="158" selection-end-column="50" />
           <folding>
-            <element signature="e#5521#5522#0" expanded="true" />
-            <element signature="e#5579#5580#0" expanded="true" />
-            <element signature="e#5622#5623#0" expanded="true" />
-            <element signature="e#5687#5688#0" expanded="true" />
+            <element signature="e#5521#5522#0" expanded="false" />
+            <element signature="e#5579#5580#0" expanded="false" />
+            <element signature="e#5622#5623#0" expanded="false" />
+            <element signature="e#5687#5688#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -1833,7 +1828,7 @@
         <state relative-caret-position="360">
           <caret line="20" column="0" lean-forward="false" selection-start-line="20" selection-start-column="0" selection-end-line="20" selection-end-column="0" />
           <folding>
-            <element signature="imports" expanded="true" />
+            <element signature="imports" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -1843,24 +1838,8 @@
         <state relative-caret-position="468">
           <caret line="28" column="0" lean-forward="false" selection-start-line="28" selection-start-column="0" selection-end-line="28" selection-end-column="0" />
           <folding>
-            <element signature="imports" expanded="true" />
+            <element signature="imports" expanded="false" />
           </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/settings.gradle">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="18">
-          <caret line="1" column="0" lean-forward="false" selection-start-line="1" selection-start-column="0" selection-end-line="1" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/build.gradle">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="450">
-          <caret line="31" column="4" lean-forward="false" selection-start-line="31" selection-start-column="4" selection-end-line="31" selection-end-column="4" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1877,9 +1856,9 @@
         <state relative-caret-position="727">
           <caret line="84" column="38" lean-forward="false" selection-start-line="84" selection-start-column="38" selection-end-line="84" selection-end-column="38" />
           <folding>
-            <element signature="e#1682#1683#0" expanded="true" />
-            <element signature="e#1740#1741#0" expanded="true" />
-            <element signature="e#1790#1791#0" expanded="true" />
+            <element signature="e#1682#1683#0" expanded="false" />
+            <element signature="e#1740#1741#0" expanded="false" />
+            <element signature="e#1790#1791#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -1889,7 +1868,7 @@
         <state relative-caret-position="330">
           <caret line="375" column="0" lean-forward="false" selection-start-line="375" selection-start-column="0" selection-end-line="375" selection-end-column="0" />
           <folding>
-            <element signature="imports" expanded="true" />
+            <element signature="imports" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -1907,10 +1886,10 @@
         <state relative-caret-position="398">
           <caret line="83" column="0" lean-forward="false" selection-start-line="83" selection-start-column="0" selection-end-line="83" selection-end-column="0" />
           <folding>
-            <element signature="e#509#510#0" expanded="true" />
-            <element signature="e#549#550#0" expanded="true" />
-            <element signature="e#902#903#0" expanded="true" />
-            <element signature="e#963#964#0" expanded="true" />
+            <element signature="e#509#510#0" expanded="false" />
+            <element signature="e#549#550#0" expanded="false" />
+            <element signature="e#902#903#0" expanded="false" />
+            <element signature="e#963#964#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -1983,8 +1962,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/nl/astraeus/database/FieldMetaData.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="266">
-          <caret line="464" column="0" lean-forward="true" selection-start-line="464" selection-start-column="0" selection-end-line="464" selection-end-column="0" />
+        <state relative-caret-position="356">
+          <caret line="469" column="17" lean-forward="false" selection-start-line="469" selection-start-column="17" selection-end-line="469" selection-end-column="17" />
           <folding>
             <element signature="e#6297#6298#0" expanded="true" />
             <element signature="e#6329#6330#0" expanded="true" />
@@ -2011,6 +1990,22 @@
             <element signature="e#17758#17759#0" expanded="true" />
             <element signature="e#17788#17789#0" expanded="true" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/settings.gradle">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="18">
+          <caret line="1" column="0" lean-forward="false" selection-start-line="1" selection-start-column="0" selection-end-line="1" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/build.gradle">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="180">
+          <caret line="10" column="30" lean-forward="true" selection-start-line="10" selection-start-column="30" selection-end-line="10" selection-end-column="30" />
+          <folding />
         </state>
       </provider>
     </entry>

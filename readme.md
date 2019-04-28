@@ -10,7 +10,21 @@ Pom:
 <dependency>
   <groupId>nl.astraeus</groupId>
   <artifactId>simple-database</artifactId>
-  <version>2.0.1</version>
+  <version>2.0.5</version>
+</dependency>
+```
+
+### Jitpack
+
+Maven repository: https://jitpack.io
+
+Pom:
+
+```xml
+<dependency>
+  <groupId>com.github.rnentjes</groupId>
+  <artifactId>simple-database</artifactId>
+  <version>2.0.5</version>
 </dependency>
 ```
 

@@ -2,6 +2,9 @@
 <project version="4">
   <component name="CppTools.Loader" reportImplicitCastToBool="false" reportNameReferencedOnce="false" version="3" compilerSelect="AUTO" />
   <component name="IdProvider" IDEtalkID="08288B9D4E29EF8D737DE065B33ED36A" />
+  <component name="MacroExpansionManager">
+    <option name="directoryName" value="fIbdBzfu" />
+  </component>
   <component name="ProjectRootManager" version="2" languageLevel="JDK_1_7" default="false" project-jdk-name="1.8" project-jdk-type="JavaSDK">
     <output url="file://$PROJECT_DIR$/out" />
   </component>

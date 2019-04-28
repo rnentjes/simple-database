@@ -20,6 +20,7 @@ targetCompatibility = 1.7
 
 repositories {
     mavenCentral()
+    maven { url 'https://jitpack.io' }
     maven {
         url "http://nexus.astraeus.nl/nexus/content/groups/public"
     }
@@ -31,6 +32,8 @@ dependencies {
     testCompile "com.h2database:h2:1.4.+"
     testCompile "nl.astraeus:simple-jdbc-stats:1.6.0"
 
+    implementation 'com.github.User:Repo:Tag'
+    
     compile "nl.astraeus:very-simple-templates:1.4"
     compile "org.slf4j:slf4j-api:1.7.21"
 }

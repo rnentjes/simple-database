@@ -274,7 +274,7 @@
       </list>
     </option>
   </component>
-  <component name="RunManager" selected="Gradle.SimpleDatabase [install]">
+  <component name="RunManager" selected="Gradle.SimpleDatabase [build]">
     <configuration default="true" type="AndroidRunConfigurationType" factoryName="Android App">
       <module name="" />
       <option name="DEPLOY" value="true" />
@@ -385,6 +385,46 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
+    <configuration name="SimpleDatabase [build]" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
+      <ExternalSystemSettings>
+        <option name="executionName" />
+        <option name="externalProjectPath" value="$PROJECT_DIR$" />
+        <option name="externalSystemIdString" value="GRADLE" />
+        <option name="scriptParameters" />
+        <option name="taskDescriptions">
+          <list />
+        </option>
+        <option name="taskNames">
+          <list>
+            <option value="build" />
+          </list>
+        </option>
+        <option name="vmOptions" />
+      </ExternalSystemSettings>
+      <extension name="recording" autostart="false" />
+      <GradleScriptDebugEnabled>true</GradleScriptDebugEnabled>
+      <method v="2" />
+    </configuration>
+    <configuration name="SimpleDatabase [clean]" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
+      <ExternalSystemSettings>
+        <option name="executionName" />
+        <option name="externalProjectPath" value="$PROJECT_DIR$" />
+        <option name="externalSystemIdString" value="GRADLE" />
+        <option name="scriptParameters" />
+        <option name="taskDescriptions">
+          <list />
+        </option>
+        <option name="taskNames">
+          <list>
+            <option value="clean" />
+          </list>
+        </option>
+        <option name="vmOptions" />
+      </ExternalSystemSettings>
+      <extension name="recording" autostart="false" />
+      <GradleScriptDebugEnabled>true</GradleScriptDebugEnabled>
+      <method v="2" />
+    </configuration>
     <configuration name="SimpleDatabase [install]" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
       <ExternalSystemSettings>
         <option name="executionName" />
@@ -443,41 +483,6 @@
       <option name="PACKAGE_NAME" value="nl.astraeus.database" />
       <option name="MAIN_CLASS_NAME" value="nl.astraeus.database.TestInsert" />
       <option name="METHOD_NAME" value="testInsert" />
-      <option name="TEST_OBJECT" value="method" />
-      <option name="WORKING_DIRECTORY" value="file://$PROJECT_DIR$" />
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
-    <configuration name="TestUpdate" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
-      <module name="simple-database_test" />
-      <extension name="coverage">
-        <pattern>
-          <option name="PATTERN" value="nl.astraeus.database.*" />
-          <option name="ENABLED" value="true" />
-        </pattern>
-      </extension>
-      <extension name="recording" autostart="true" />
-      <option name="PACKAGE_NAME" value="nl.astraeus.database" />
-      <option name="MAIN_CLASS_NAME" value="nl.astraeus.database.TestUpdate" />
-      <option name="TEST_OBJECT" value="class" />
-      <option name="WORKING_DIRECTORY" value="file://$PROJECT_DIR$" />
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
-    <configuration name="TestUpdate.testUpdate" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
-      <module name="simple-database_test" />
-      <extension name="coverage">
-        <pattern>
-          <option name="PATTERN" value="nl.astraeus.database.*" />
-          <option name="ENABLED" value="true" />
-        </pattern>
-      </extension>
-      <extension name="recording" autostart="true" />
-      <option name="PACKAGE_NAME" value="nl.astraeus.database" />
-      <option name="MAIN_CLASS_NAME" value="nl.astraeus.database.TestUpdate" />
-      <option name="METHOD_NAME" value="testUpdate" />
       <option name="TEST_OBJECT" value="method" />
       <option name="WORKING_DIRECTORY" value="file://$PROJECT_DIR$" />
       <method v="2">
@@ -558,18 +563,18 @@
     </configuration>
     <list>
       <item itemvalue="Gradle.SimpleDatabase [uploadArchives]" />
-      <item itemvalue="JUnit.TestUpdate" />
-      <item itemvalue="JUnit.TestUpdate.testUpdate" />
-      <item itemvalue="JUnit.TestInsert.testInsert" />
       <item itemvalue="Gradle.SimpleDatabase [install]" />
+      <item itemvalue="JUnit.TestInsert.testInsert" />
+      <item itemvalue="Gradle.SimpleDatabase [clean]" />
+      <item itemvalue="Gradle.SimpleDatabase [build]" />
     </list>
     <recent_temporary>
       <list>
+        <item itemvalue="Gradle.SimpleDatabase [build]" />
+        <item itemvalue="Gradle.SimpleDatabase [clean]" />
         <item itemvalue="Gradle.SimpleDatabase [install]" />
         <item itemvalue="Gradle.SimpleDatabase [uploadArchives]" />
         <item itemvalue="JUnit.TestInsert.testInsert" />
-        <item itemvalue="JUnit.TestUpdate.testUpdate" />
-        <item itemvalue="JUnit.TestUpdate" />
       </list>
     </recent_temporary>
   </component>

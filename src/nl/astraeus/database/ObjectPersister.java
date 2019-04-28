@@ -1,8 +1,8 @@
 package nl.astraeus.database;
 
-import nl.astraeus.database.cache.Cache;
-
 import java.util.List;
+
+import nl.astraeus.database.cache.Cache;
 
 /**
  * Date: 11/13/13
@@ -10,39 +10,53 @@ import java.util.List;
  */
 public class ObjectPersister<T> {
 
-    private Class<T> cls;
-    private MetaData metaData;
+    private Class<T>    cls;
+    private MetaData<T> metaData;
+    private Cache       cache;
 
-    public ObjectPersister(Class<T> cls) {
+    public ObjectPersister(Class<T> cls, MetaData<T> metaData, Cache cache) {
         this.cls = cls;
-        this.metaData = MetaDataHandler.get().getMetaData(cls);
+        this.metaData = metaData;
+        this.cache = cache;
     }
 
-    public void insert(Object object) {
+    public void insert(T object) {
         metaData.insert(object);
 
         Long id = metaData.getId(object);
-        Cache.get().set((Class<Object>) object.getClass(), id, object);
+        cache.set((Class<Object>) object.getClass(), id, object);
     }
 
-    public void update(Object object) {
+    public void update(T object) {
         metaData.update(object);
 
         Long id = metaData.getId(object);
-        Cache.get().set((Class<Object>) object.getClass(), id, object);
+        cache.set((Class<Object>) object.getClass(), id, object);
     }
 
-    public void delete(Object object) {
+    public void upsert(T object) {
+        Long id = metaData.getId(object);
+
+        if (id != null && id > 0) {
+            metaData.update(object);
+        } else {
+            metaData.insert(object);
+        }
+
+        cache.set((Class<Object>) object.getClass(), id, object);
+    }
+
+    public void delete(T object) {
         Long id = metaData.getId(object);
 
         metaData.delete(id);
-        Cache.get().set(object.getClass(), id, null);
+        cache.set(object.getClass(), id, null);
     }
 
     public T find(long id) {
         T result = (T) metaData.find(id);
 
-        Cache.get().set(cls, id, result);
+        cache.set(cls, id, result);
 
         return result;
     }

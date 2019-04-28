@@ -2,6 +2,7 @@ package nl.astraeus.database.test.model;
 
 import nl.astraeus.database.annotations.Id;
 import nl.astraeus.database.annotations.Table;
+
 import org.junit.Ignore;
 
 /**

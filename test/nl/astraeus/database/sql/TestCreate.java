@@ -1,32 +1,36 @@
 package nl.astraeus.database.sql;
 
-import nl.astraeus.database.ColumnInfo;
-import nl.astraeus.template.EscapeMode;
-import nl.astraeus.template.SimpleTemplate;
-import nl.astraeus.util.Util;
-import org.junit.Ignore;
-
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import nl.astraeus.database.ColumnInfo;
+import nl.astraeus.template.EscapeMode;
+import nl.astraeus.template.SimpleTemplate;
+import nl.astraeus.util.Util;
+
+import org.junit.Assert;
+import org.junit.Test;
+
 /**
  * Date: 11/14/13
  * Time: 9:29 PM
  */
-@Ignore
 public class TestCreate {
 
-    public static void main (String [] args) throws IOException {
-        TestCreate tct = new TestCreate();
+/*
+    create table ${tableName} (${key} BIGINT AUTO_INCREMENT,${each(columns as column)}
+    ${column.name} ${column.type},${/each}
+    primary key(${key})
+            )
+*/
 
-        tct.test();
-    }
 
-    public void test() throws IOException {
-        String ct = Util.readAsString(getClass().getResourceAsStream("create.sql"));
+    @Test
+    public void testCreate() throws IOException {
+        String ct = Util.readAsString(getClass().getResourceAsStream("def/create.sql"));
 
         SimpleTemplate template = new SimpleTemplate("${", "}", EscapeMode.NONE, ct);
 
@@ -41,10 +45,14 @@ public class TestCreate {
         keys.add("name");
 
         model.put("tableName", "person");
+        model.put("key", "name");
         model.put("columns", columns);
         model.put("keys", keys);
 
-        System.out.println(template.render(model));
-
+        Assert.assertEquals("create table person (name BIGINT AUTO_INCREMENT,\n" +
+                "    name VARCHAR(255),\n" +
+                "    age SMALLINT,\n" +
+                "    primary key(name)\n" +
+                ")\n", template.render(model));
     }
 }

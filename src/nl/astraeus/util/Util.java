@@ -11,20 +11,9 @@ import java.nio.charset.Charset;
  */
 public class Util {
 
-    // assumes UTF-8 compatable stream content
+    // assumes UTF-8 compatible stream content
     public static String readAsString(InputStream in) throws IOException {
-        ByteArrayOutputStream out = new ByteArrayOutputStream();
-
-        byte [] buffer = new byte[8196];
-        int nr = 0;
-
-        while((nr = in.read(buffer)) > 0) {
-            out.write(buffer, 0, nr);
-        }
-
-        in.close();
-
-        return new String(out.toByteArray(), Charset.forName("UTF-8"));
+        return new String(readInputStream(in), Charset.forName("UTF-8"));
     }
 
     public static byte [] readInputStream(InputStream in) {

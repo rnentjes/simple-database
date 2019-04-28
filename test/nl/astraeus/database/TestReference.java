@@ -1,86 +1,56 @@
 package nl.astraeus.database;
 
-import junit.framework.Assert;
-import nl.astraeus.database.cache.Cache;
-import nl.astraeus.database.jdbc.ConnectionPool;
-import nl.astraeus.database.jdbc.ConnectionProvider;
 import nl.astraeus.database.test.model.Company;
 import nl.astraeus.database.test.model.Info;
 import nl.astraeus.database.test.model.Person;
-import org.junit.AfterClass;
+
+import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
-
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
 
 /**
  * Date: 11/16/13
  * Time: 12:27 AM
  */
-public class TestReference {
+public class TestReference extends BaseTest {
 
     @BeforeClass
     public static void createDatabase() {
-        DdlMapping.get().setExecuteDDLUpdates(true);
-
-        ConnectionPool.get().setConnectionProvider(new ConnectionProvider() {
-            @Override
-            public Connection getConnection() {
-                try {
-                    Class.forName("org.h2.Driver");
-
-                    Connection connection = DriverManager.getConnection("jdbc:h2:mem:TestReference", "sa", "");
-                    connection.setAutoCommit(false);
-
-                    return connection;
-                } catch (ClassNotFoundException e) {
-                    throw new IllegalStateException(e);
-                } catch (SQLException e) {
-                    throw new IllegalStateException(e);
-                }
-            }
-        });
-    }
-
-    @AfterClass
-    public static void clearMetaData() {
-        Persister.dispose();
+        BaseTest.createDatabase("jdbc:h2:mem:TestReference");
     }
 
     @Test
     public void testReference() {
-        Cache.get().clear();
+        db.getCache().clear();
 
-        Persister.begin();
+        db.begin();
 
         Person person = new Person("Name", 40, "Street");
         Company company = new Company("Company name");
         person.setCompany(company);
 
-        Persister.insert(company);
-        Persister.insert(person);
+        companyDao.insert(company);
+        personDao.insert(person);
 
-        Persister.commit();
+        db.commit();
 
-        Persister.begin();
+        db.begin();
 
-        Person p2 = Persister.find(Person.class, person.getId());
+        Person p2 = personDao.find(person.getId());
 
-        Persister.rollback();
+        db.rollback();
 
         Assert.assertNotNull(p2);
         Assert.assertNotNull(p2.getCompany());
         Assert.assertEquals(p2.getCompany().getName(), "Company name");
 
-        Assert.assertEquals(Cache.get().getObjectCache(Person.class).getNumberCached(), 1);
-        Assert.assertEquals(Cache.get().getObjectCache(Company.class).getNumberCached(), 1);
+        Assert.assertEquals(1, db.getCache().getObjectCache(Person.class).getNumberCached());
+        Assert.assertEquals(1, db.getCache().getObjectCache(Company.class).getNumberCached());
     }
 
     @Test
     public void testReferentList() {
-        Persister.begin();
+        db.begin();
 
         Company company = new Company("Company name");
         company.addInfo(new Info("description", "info"));
@@ -88,15 +58,15 @@ public class TestReference {
         company.addInfo(new Info("description", "info"));
         company.addInfo(new Info("description", "info"));
 
-        Persister.insert(company);
+        companyDao.insert(company);
 
-        Persister.commit();
+        db.commit();
 
-        Persister.begin();
+        db.begin();
 
-        Company found = Persister.find(Company.class, company.getId());
+        Company found = companyDao.find(company.getId());
 
-        Persister.rollback();
+        db.rollback();
 
         for (Info info : company.getInfoLines()) {
             Assert.assertNotNull(info.getDescription());

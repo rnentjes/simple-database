@@ -1,84 +1,58 @@
 package nl.astraeus.database;
 
-import junit.framework.Assert;
-import nl.astraeus.database.cache.Cache;
-import nl.astraeus.database.cache.ObjectCache;
-import nl.astraeus.database.jdbc.ConnectionPool;
-import nl.astraeus.database.jdbc.ConnectionProvider;
-import nl.astraeus.database.test.model.Person;
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
-import org.junit.Test;
-
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
+
+import nl.astraeus.database.cache.ObjectCache;
+import nl.astraeus.database.test.model.Person;
+
+import org.junit.Assert;
+import org.junit.BeforeClass;
+import org.junit.Test;
 
 /**
  * Date: 11/16/13
  * Time: 12:27 AM
  */
-public class TestCache {
+public class TestCache extends BaseTest {
 
     @BeforeClass
     public static void createDatabase() {
-        DdlMapping.get().setExecuteDDLUpdates(true);
-
-        ConnectionPool.get().setConnectionProvider(new ConnectionProvider() {
-            @Override
-            public Connection getConnection() {
-                try {
-                    Class.forName("org.h2.Driver");
-
-                    Connection connection = DriverManager.getConnection("jdbc:h2:mem:TestCache", "sa", "");
-                    connection.setAutoCommit(false);
-
-                    return connection;
-                } catch (ClassNotFoundException e) {
-                    throw new IllegalStateException(e);
-                } catch (SQLException e) {
-                    throw new IllegalStateException(e);
-                }
-            }
-        });
-    }
-
-    @AfterClass
-    public static void clearMetaData() {
-        Persister.dispose();
+        BaseTest.createDatabase("jdbc:h2:mem:TestCache");
     }
 
     @Test
     public void testCache() {
-        Map<Class<?>, ObjectCache<?>> cache = Cache.get().getCache();
+        Map<Class<?>, ObjectCache<?>> cache = db.getCache().getCache();
 
         Assert.assertNotNull(cache);
-        Assert.assertNotNull(Cache.get().getObjectCache(Person.class));
+        Assert.assertNotNull(db.getCache().getObjectCache(Person.class));
 
-        Cache.get().getObjectCache(Person.class).setMaxSize(6);
+        db.getCache().getObjectCache(Person.class).setMaxSize(6);
 
-        Persister.execute(new Persister.Executor() {
+        SimpleDao<Person> dao = new SimpleDao<>(Person.class);
+
+        dao.execute(new SimpleDao.Executor<Person>() {
             @Override
-            public void execute() {
-                insert(new Person("Rien", 40, "Rozendael"));
-                insert(new Person("Jan", 32, "Straat"));
-                insert(new Person("Piet", 26, "Weg"));
-                insert(new Person("Klaas", 10, "Pad"));
-                insert(new Person("Rien", 40, "Rozendael"));
-                insert(new Person("Jan", 32, "Straat"));
-                insert(new Person("Piet", 26, "Weg"));
-                insert(new Person("Klaas", 10, "Pad"));
+            public void execute(SimpleDao<Person> dao) {
+                dao.insert(new Person("Rien", 40, "Road"));
+                dao.insert(new Person("Jan", 32, "Straat"));
+                dao.insert(new Person("Piet", 26, "Weg"));
+                dao.insert(new Person("Klaas", 10, "Pad"));
+                dao.insert(new Person("Rien", 40, "Road"));
+                dao.insert(new Person("Jan", 32, "Straat"));
+                dao.insert(new Person("Piet", 26, "Weg"));
+                dao.insert(new Person("Klaas", 10, "Pad"));
             }
         });
 
-        Persister.execute(new Persister.Executor() {
-            @Override
-            public void execute() {
-            List<Person> persons = Persister.selectAll(Person.class);
 
-            Assert.assertEquals(Cache.get().getObjectCache(Person.class).getNumberCached() ,6);
+        dao.execute(new SimpleDao.Executor<Person>() {
+            @Override
+            public void execute(SimpleDao<Person> dao) {
+                List<Person> persons = dao.all();
+
+                Assert.assertEquals(db.getCache().getObjectCache(Person.class).getNumberCached() ,6);
             }
         });
     }

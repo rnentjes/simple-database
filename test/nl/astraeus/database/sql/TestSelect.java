@@ -1,41 +1,36 @@
 package nl.astraeus.database.sql;
 
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
+
 import nl.astraeus.template.EscapeMode;
 import nl.astraeus.template.SimpleTemplate;
 import nl.astraeus.util.Util;
-import org.junit.Ignore;
 
-import java.io.IOException;
-import java.util.*;
+import org.junit.Assert;
+import org.junit.Test;
 
 /**
  * Date: 11/14/13
  * Time: 9:29 PM
  */
-@Ignore
 public class TestSelect {
 
-    public static void main (String [] args) throws IOException {
-        TestSelect tct = new TestSelect();
-
-        tct.test();
-    }
-
-    public void test() throws IOException {
-        String ct = Util.readAsString(getClass().getResourceAsStream("select.sql"));
+    @Test
+    public void testSelect() throws IOException {
+        String ct = Util.readAsString(getClass().getResourceAsStream("def/select.sql"));
 
         SimpleTemplate template = new SimpleTemplate("${", "}", EscapeMode.NONE, ct);
 
         Map<String, Object> model = new HashMap<>();
 
-        List<String> keys = new ArrayList<>();
-
-        keys.add("name");
-
         model.put("tableName", "person");
-        model.put("keys", keys);
+        model.put("key", "id");
 
-        System.out.println(template.render(model));
+        Assert.assertEquals("select \n" +
+                "  from person\n" +
+                "  where id = ?\n", template.render(model));
     }
 
 }

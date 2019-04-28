@@ -1,23 +1,7 @@
 package nl.astraeus.database;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-import java.lang.reflect.Field;
-import java.math.BigDecimal;
-import java.nio.ByteBuffer;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Timestamp;
-import java.sql.Types;
-import java.util.HashMap;
-import java.util.Map;
-
 import nl.astraeus.database.annotations.Blob;
+import nl.astraeus.database.annotations.Clob;
 import nl.astraeus.database.annotations.Collection;
 import nl.astraeus.database.annotations.Column;
 import nl.astraeus.database.annotations.Default;
@@ -29,9 +13,26 @@ import nl.astraeus.database.annotations.Serialized;
 import nl.astraeus.database.annotations.Table;
 import nl.astraeus.template.SimpleTemplate;
 import nl.astraeus.util.Util;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.UnsupportedEncodingException;
+import java.lang.reflect.Field;
+import java.math.BigDecimal;
+import java.nio.ByteBuffer;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Timestamp;
+import java.sql.Types;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Date: 11/14/13
@@ -45,10 +46,12 @@ public class FieldMetaData {
         COLLECTION,
         SERIALIZED,
         REFERENCE,
-        BLOB
+        BLOB,
+        CLOB
     }
 
-    private MetaData metaData;
+    private SimpleDatabase db;
+    private DdlMapping ddlMapping;
     private Field field;
     private String fieldName;
 
@@ -88,8 +91,9 @@ public class FieldMetaData {
         sqlTypeMapping.put(java.util.Date.class, Types.TIMESTAMP);
     }
 
-    public FieldMetaData(MetaData metaData, Field field) {
-        this.metaData = metaData;
+    public FieldMetaData(SimpleDatabase db, Field field) {
+        this.db = db;
+        this.ddlMapping = db.getDdlMapping();
         this.field = field;
         this.field.setAccessible(true);
 
@@ -126,23 +130,32 @@ public class FieldMetaData {
             model.put("scale", length.scale());
         }
 
-        SimpleTemplate template = DdlMapping.get().getDdlTemplateForType(javaType);
+        SimpleTemplate template = ddlMapping.getDdlTemplateForType(javaType);
         sqlType = sqlTypeMapping.get(javaType);
 
         String type;
 
         Blob blob = field.getAnnotation(Blob.class);
+        Clob clob = field.getAnnotation(Clob.class);
         Serialized serialized = field.getAnnotation(Serialized.class);
         Collection collection = field.getAnnotation(Collection.class);
 
         if (blob != null) {
             // BLOB
-            type = DdlMapping.get().getBlobType().render(model);
+            type = ddlMapping.getBlobType().render(model);
             sqlType = Types.BLOB;
             this.type = ColumnType.BLOB;
+        } else if (clob != null) {
+            if (!field.getType().equals(String.class)) {
+                throw new IllegalStateException("Clob is only allowed on String objects.");
+            }
+            // CLOB
+            type = ddlMapping.getClobType().render(model);
+            sqlType = Types.CLOB;
+            this.type = ColumnType.CLOB;
         } else if (serialized != null) {
             // BLOB
-            type = DdlMapping.get().getBlobType().render(model);
+            type = ddlMapping.getBlobType().render(model);
             sqlType = Types.BLOB;
             this.type = ColumnType.SERIALIZED;
         } else if (collection != null) {
@@ -150,11 +163,11 @@ public class FieldMetaData {
             this.type = ColumnType.COLLECTION;
 
             // BLOB
-            type = DdlMapping.get().getBlobType().render(model);
+            type = ddlMapping.getBlobType().render(model);
             sqlType = Types.BLOB;
         } else if (javaType.getAnnotation(Table.class) != null) {
             // oneToone
-            type = DdlMapping.get().getIdType().render(model);
+            type = ddlMapping.getIdType().render(model);
             sqlType = Types.BIGINT;
             this.type = ColumnType.REFERENCE;
         } else if (template != null) {
@@ -163,7 +176,7 @@ public class FieldMetaData {
             throw new IllegalStateException("Type "+field.getType().getSimpleName()+" of field "+field.getDeclaringClass().getSimpleName()+"."+field.getName()+" is not supported!");
         }
 
-        if (DdlMapping.get().ddlNamesInUppercase()) {
+        if (ddlMapping.ddlNamesInUppercase()) {
             columnName = columnName.toUpperCase();
         }
 
@@ -244,13 +257,15 @@ public class FieldMetaData {
                     statement.setNull(index, Types.BIGINT);
                     break;
                 case BLOB:
+                case CLOB:
                 case COLLECTION:
                 case SERIALIZED:
                     statement.setNull(index, Types.BLOB);
                     break;
-
             }
         } else {
+            byte [] bytes;
+
             switch(type) {
                 case BASIC:
                     switch(sqlType) {
@@ -284,12 +299,12 @@ public class FieldMetaData {
                     }
                     break;
                 case REFERENCE:
-                    metaData = MetaDataHandler.get().getMetaData(value.getClass());
+                    metaData = db.getMetaData(value.getClass());
 
                     id = metaData.getId(value);
 
                     if (id == null || id == 0) {
-                        Persister.insert(value);
+                        metaData.insert(value);
 
                         id = metaData.getId(value);
                     }
@@ -297,14 +312,14 @@ public class FieldMetaData {
                     statement.setLong(index, id);
                     break;
                 case COLLECTION:
-                    metaData = MetaDataHandler.get().getMetaData(collectionClass);
+                    metaData = db.getMetaData(collectionClass);
                     java.util.Collection c = (java.util.Collection)value;
                     ByteBuffer buffer = ByteBuffer.allocate(c.size() * 8);
                     for (Object o : c) {
                         id = metaData.getId(o);
 
                         if (id == null || id == 0) {
-                            Persister.insert(o);
+                            metaData.insert(o);
 
                             id = metaData.getId(o);
                         }
@@ -320,7 +335,7 @@ public class FieldMetaData {
 
                         out.writeObject(value);
 
-                        byte [] bytes = objectStreamBuffer.toByteArray();
+                        bytes = objectStreamBuffer.toByteArray();
 
                         statement.setBinaryStream(index, new ByteArrayInputStream(bytes), bytes.length);
                     } catch (IOException e) {
@@ -328,9 +343,18 @@ public class FieldMetaData {
                     }
                     break;
                 case BLOB:
-                    byte [] bytes = (byte[])value;
+                    bytes = (byte[])value;
 
                     statement.setBinaryStream(index, new ByteArrayInputStream(bytes), bytes.length);
+                    break;
+                case CLOB:
+                    try {
+                        bytes = ((String)value).getBytes("UTF-8");
+
+                        statement.setBinaryStream(index, new ByteArrayInputStream(bytes), bytes.length);
+                    } catch (UnsupportedEncodingException e) {
+                        throw new IllegalStateException(e);
+                    }
                     break;
             }
         }
@@ -383,7 +407,7 @@ public class FieldMetaData {
                 if (id > 0L) {
                     // check for circular references
 
-                    Object object = Persister.find(javaType, id);
+                    Object object = db.getObjectPersister(javaType).find(id);
 
                     if (object == null) {
                         logger.warn("Missing reference detected "+field.getDeclaringClass().getSimpleName()+"."+getFieldName()+":"+id);
@@ -396,7 +420,7 @@ public class FieldMetaData {
                 break;
             case COLLECTION:
                 try (InputStream in = rs.getBinaryStream(index)) {
-                    MetaData meta = MetaDataHandler.get().getMetaData(collectionClass);
+                    MetaData meta = db.getMetaData(collectionClass);
                     ReferentList list = new ReferentList(collectionClass, meta);
 
                     if (in != null) {
@@ -432,13 +456,32 @@ public class FieldMetaData {
                 try (InputStream in = rs.getBinaryStream(index);
                      ByteArrayOutputStream out = new ByteArrayOutputStream()) {
 
-                    byte [] buffer = new byte[8196];
-                    int nr;
-                    while((nr = in.read(buffer)) > 0) {
-                        out.write(buffer, 0, nr);
-                    }
+                    if (in != null) {
+                        byte[] buffer = new byte[8196];
+                        int nr;
+                        while ((nr = in.read(buffer)) > 0) {
+                            out.write(buffer, 0, nr);
+                        }
 
-                    set(obj, out.toByteArray());
+                        set(obj, out.toByteArray());
+                    }
+                } catch (IOException e) {
+                    throw new IllegalStateException(e);
+                }
+                break;
+            case CLOB:
+                try (InputStream in = rs.getBinaryStream(index);
+                     ByteArrayOutputStream out = new ByteArrayOutputStream()) {
+
+                    if (in != null) {
+                        byte[] buffer = new byte[8196];
+                        int nr;
+                        while ((nr = in.read(buffer)) > 0) {
+                            out.write(buffer, 0, nr);
+                        }
+
+                        set(obj, new String(out.toByteArray(), "UTF-8"));
+                    }
                 } catch (IOException e) {
                     throw new IllegalStateException(e);
                 }
@@ -450,12 +493,12 @@ public class FieldMetaData {
         Object current = get(result);
 
         if (current != null) {
-            MetaData meta = MetaDataHandler.get().getMetaData(current.getClass());
+            MetaData meta = db.getMetaData(current.getClass());
 
             Long id = meta.getId(current);
 
             if (id != null && id > 0) {
-                Object object = Persister.find(javaType, id);
+                Object object = db.getObjectPersister(javaType).find(id);
 
                 if (object == null) {
                     logger.warn("Missing reference detected "+field.getDeclaringClass().getSimpleName()+"."+getFieldName()+":"+id);
@@ -468,4 +511,7 @@ public class FieldMetaData {
         }
     }
 
+    public Integer getSqlType() {
+        return sqlType;
+    }
 }

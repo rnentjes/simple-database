@@ -1,15 +1,28 @@
 package nl.astraeus.database;
 
-import nl.astraeus.database.annotations.*;
-import nl.astraeus.database.util.ReferenceGenerator;
-import nl.astraeus.template.SimpleTemplate;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
-import java.sql.*;
-import java.util.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+
+import nl.astraeus.database.annotations.Cache;
+import nl.astraeus.database.annotations.Id;
+import nl.astraeus.database.annotations.Reference;
+import nl.astraeus.database.annotations.Table;
+import nl.astraeus.database.annotations.Transient;
+import nl.astraeus.database.util.ReferenceGenerator;
+import nl.astraeus.template.SimpleTemplate;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Date: 11/13/13
@@ -19,6 +32,9 @@ public class MetaData<M> {
     private final static Logger logger = LoggerFactory.getLogger(MetaData.class);
 
     private Class<M> cls;
+    private SimpleDatabase db;
+    private DdlMapping ddlMapping;
+
     private String tableName;
     private FieldMetaData pk = null;
     private FieldMetaData [] fieldsMetaData;
@@ -29,8 +45,10 @@ public class MetaData<M> {
 
     private ThreadLocal<Map<Class<?>, Map<Long, Object>>> circularReferences = new ThreadLocal<>();
 
-    public MetaData(Class<M> cls) {
+    public MetaData(Class<M> cls, SimpleDatabase database) {
         this.cls = cls;
+        this.db = database;
+        this.ddlMapping = database.getDdlMapping();
 
         processAnnotation(cls.getAnnotation(Table.class));
 
@@ -38,14 +56,14 @@ public class MetaData<M> {
             tableName = cls.getSimpleName();
         }
 
-        if (DdlMapping.get().ddlNamesInUppercase()) {
+        if (ddlMapping.ddlNamesInUppercase()) {
             tableName = tableName.toUpperCase();
         }
 
         Cache cache = cls.getAnnotation(Cache.class);
 
         if (cache != null) {
-            nl.astraeus.database.cache.Cache.get().setMaxSize(cls, cache.maxSize());
+            db.getCache().setMaxSize(cls, cache.maxSize());
         }
 
         Field [] fields = cls.getDeclaredFields();
@@ -55,7 +73,7 @@ public class MetaData<M> {
             int modifiers = field.getModifiers();
             Transient trans = field.getAnnotation(Transient.class);
             if (!field.getName().contains("jacoco") && trans == null && !Modifier.isStatic(modifiers)) {
-                FieldMetaData info = new FieldMetaData(this, field);
+                FieldMetaData info = new FieldMetaData(database, field);
 
                 fieldMeta.add(info);
 
@@ -80,39 +98,43 @@ public class MetaData<M> {
         Connection connection = null;
         try {
             // get metadata from database
-            connection = Persister.getNewConnection();
+            connection = db.getNewConnection();
             ResultSet result = connection.getMetaData().getTables(null, null, tableName, null);
 
             if (result.next()) {
-                for (FieldMetaData meta : fieldsMetaData) {
-                    ResultSet columnMetaData = connection.getMetaData().getColumns(null, null, tableName, meta.getColumnInfo().getName());
+                Map<String, ColumnMetaData> columnMetaData = getColumnMetaData(connection);
 
-                    if (columnMetaData.next()) {
+                for (FieldMetaData meta : fieldsMetaData) {
+                    ColumnMetaData cmd = columnMetaData.get(meta.getColumnInfo().getName());
+                    if (cmd != null) {
                         if (meta.isPrimaryKey()) {
 
                         }
                         // check type etc
-                        // warn if different
+                        if (cmd.getSqlType() != null && !cmd.getSqlType().equals(meta.getSqlType())) {
+                            throw new IllegalStateException("Field " + cls.getSimpleName() + "." + meta.getFieldName() + " doesn't match type for column " + tableName + "." + cmd.getName());
+                        }
+                        // (re)create index
                         if (meta.hasIndex()) {
                             createIndexes(meta);
                         }
-                    } else if (DdlMapping.get().isExecuteDdlUpdates()) {
+                    } else if (db.isExecuteDdlUpdates()) {
                         // create Column....
                         createColumn(meta);
                     } else {
                         throw new IllegalStateException("Column "+cls.getSimpleName()+"."+meta.getFieldName()+" not found in table "+tableName);
                     }
                 }
-            } else if (DdlMapping.get().isExecuteDdlUpdates()) {
+            } else if (db.isExecuteDdlUpdates()) {
                 createTable();
             } else {
                 throw new IllegalStateException("Table "+tableName+" not found for class "+cls.getSimpleName());
             }
 
-            SimpleTemplate insertTemplate = DdlMapping.get().getQueryTemplate(DdlMapping.QueryTemplates.INSERT);
-            SimpleTemplate selectTemplate = DdlMapping.get().getQueryTemplate(DdlMapping.QueryTemplates.SELECT);
-            SimpleTemplate updateTemplate = DdlMapping.get().getQueryTemplate(DdlMapping.QueryTemplates.UPDATE);
-            SimpleTemplate deleteTemplate = DdlMapping.get().getQueryTemplate(DdlMapping.QueryTemplates.DELETE);
+            SimpleTemplate insertTemplate = ddlMapping.getQueryTemplate(DdlMapping.QueryTemplates.INSERT);
+            SimpleTemplate selectTemplate = ddlMapping.getQueryTemplate(DdlMapping.QueryTemplates.SELECT);
+            SimpleTemplate updateTemplate = ddlMapping.getQueryTemplate(DdlMapping.QueryTemplates.UPDATE);
+            SimpleTemplate deleteTemplate = ddlMapping.getQueryTemplate(DdlMapping.QueryTemplates.DELETE);
 
             Map<String, Object> model = new HashMap<>();
 
@@ -149,6 +171,24 @@ public class MetaData<M> {
         }
     }
 
+    private Map<String, ColumnMetaData> getColumnMetaData(Connection connection) throws SQLException {
+        Map<String, ColumnMetaData> result = new HashMap<>();
+        ResultSet columnsMetaData = connection.getMetaData().getColumns(null, null, tableName, null);
+
+        while(columnsMetaData.next()) {
+            ColumnMetaData cmd = new ColumnMetaData(
+                    columnsMetaData.getString("COLUMN_NAME"),
+                    columnsMetaData.getInt("DATA_TYPE"),
+                    columnsMetaData.getInt("COLUMN_SIZE"),
+                    columnsMetaData.getInt("DECIMAL_DIGITS")
+            );
+
+            result.put(cmd.getName(), cmd);
+        }
+
+        return result;
+    }
+
     private void processAnnotation(Table table) {
         if (table != null && !table.name().isEmpty() ) {
             tableName = table.name();
@@ -170,7 +210,7 @@ public class MetaData<M> {
         model.put("columns", columns);
         model.put("key", pk.getColumnInfo().getName());
 
-        SimpleTemplate template = DdlMapping.get().getQueryTemplate(DdlMapping.QueryTemplates.CREATE);
+        SimpleTemplate template = ddlMapping.getQueryTemplate(DdlMapping.QueryTemplates.CREATE);
 
         execute(template, model);
 
@@ -187,7 +227,7 @@ public class MetaData<M> {
         model.put("tableName", tableName);
         model.put("column", meta.getColumnInfo());
 
-        SimpleTemplate template = DdlMapping.get().getQueryTemplate(DdlMapping.QueryTemplates.CREATE_COLUMN);
+        SimpleTemplate template = ddlMapping.getQueryTemplate(DdlMapping.QueryTemplates.CREATE_COLUMN);
 
         execute(template, model);
 
@@ -203,7 +243,7 @@ public class MetaData<M> {
         model.put("column", meta.getColumnInfo());
         model.put("unique", meta.hasUniqueIndex());
 
-        SimpleTemplate template = DdlMapping.get().getQueryTemplate(DdlMapping.QueryTemplates.CREATE_INDEX);
+        SimpleTemplate template = ddlMapping.getQueryTemplate(DdlMapping.QueryTemplates.CREATE_INDEX);
 
         execute(template, model);
     }
@@ -213,7 +253,7 @@ public class MetaData<M> {
         PreparedStatement statement = null;
 
         try {
-            connection = Persister.getNewConnection();
+            connection = db.getNewConnection();
 
             String sql = createTemplate.render(model);
 
@@ -250,14 +290,14 @@ public class MetaData<M> {
         }
     }
 
-    protected <T> T find(final Long id) {
-        return executeInCurrentConnection(new ExecuteConnectionWithResult<T>() {
+    protected M find(final Long id) {
+        return execute(new ExecuteConnectionWithResult<M>() {
             @Override
-            public T execute(Connection connection) throws SQLException {
+            public M execute(Connection connection) throws SQLException {
                 PreparedStatement statement = null;
 
                 try {
-                    T result = null;
+                    M result = null;
                     statement = connection.prepareStatement(selectSql);
 
                     statement.setLong(1, id);
@@ -280,11 +320,11 @@ public class MetaData<M> {
         });
     }
 
-    private <T> T getFromResultSet(ResultSet rs) {
-        T result;
+    private M getFromResultSet(ResultSet rs) {
+        M result;
 
         try {
-            result = (T)cls.newInstance();
+            result = cls.newInstance();
             int index = 1;
 
             for (FieldMetaData meta : fieldsMetaData) {
@@ -297,11 +337,11 @@ public class MetaData<M> {
         }
     }
 
-    protected <T> void insert(T object) {
+    protected void insert(M object) {
         PreparedStatement statement = null;
 
         try {
-            statement = Persister.getConnection().prepareStatement(insertSql, Statement.RETURN_GENERATED_KEYS);
+            statement = db.getConnection().prepareStatement(insertSql, Statement.RETURN_GENERATED_KEYS);
             int index = 1;
 
             for (FieldMetaData meta : fieldsMetaData) {
@@ -335,11 +375,11 @@ public class MetaData<M> {
         }
     }
 
-    protected <T> void update(T object) {
+    protected void update(M object) {
         PreparedStatement statement = null;
 
         try {
-            statement = Persister.getConnection().prepareStatement(updateSql);
+            statement = db.getConnection().prepareStatement(updateSql);
             int index = 1;
 
             for (FieldMetaData meta : fieldsMetaData) {
@@ -368,7 +408,7 @@ public class MetaData<M> {
         PreparedStatement statement = null;
 
         try {
-            statement = Persister.getConnection().prepareStatement(deleteSql);
+            statement = db.getConnection().prepareStatement(deleteSql);
 
             statement.setLong(1, id);
 
@@ -386,14 +426,14 @@ public class MetaData<M> {
         }
     }
 
-    public <T> List<T> selectAll() {
+    public List<M> selectAll() {
         return selectFrom("order by "+pk.getColumnInfo().getName(), new Object [0]);
     }
 
 
-    public <T> List<T> selectFrom(String query, final Object[] params) {
-        List<T> result;
-        SimpleTemplate fromTemplate = DdlMapping.get().getQueryTemplate(DdlMapping.QueryTemplates.SELECT_FROM);
+    public List<M> selectFrom(String query, final Object[] params) {
+        List<M> result;
+        SimpleTemplate fromTemplate = ddlMapping.getQueryTemplate(DdlMapping.QueryTemplates.SELECT_FROM);
 
         Map<String, Object> model = new HashMap<>();
 
@@ -403,88 +443,31 @@ public class MetaData<M> {
 
         final String fromSql = fromTemplate.render(model);
 
-        result = executeInCurrentConnection(new ExecuteConnectionWithResult<List<T>>() {
-            @Override
-            public List<T> execute(Connection connection) throws SQLException {
-                List<T> result = new ArrayList<>();
-                PreparedStatement statement = null;
-
-                try {
-                    statement = connection.prepareStatement(fromSql);
-                    int index = 1;
-
-                    for (Object param : params) {
-                        StatementHelper.setStatementParameter(statement, index++, param);
-                    }
-
-                    ResultSet rs = statement.executeQuery();
-
-                    while (rs.next()) {
-                        Long id = rs.getLong(1);
-
-                        result.add((T) Persister.find(cls, id));
-                    }
-
-                    return result;
-                } finally {
-                    if (statement != null) {
-                        statement.close();
-                    }
-                }
-            }
-        });
+        result = execute(new ExecuteSelect<>(this, fromSql, params));
 
         return result;
     }
 
-    public <T> List<T> selectWhere(String query, final Object[] params) {
-        List<T> result;
-        SimpleTemplate whereTemplate = DdlMapping.get().getQueryTemplate(DdlMapping.QueryTemplates.SELECT_WHERE);
+    public List<M> selectWhere(String query, final Object[] params) {
+        List<M> result;
+        SimpleTemplate whereTemplate = ddlMapping.getQueryTemplate(DdlMapping.QueryTemplates.SELECT_WHERE);
 
         Map<String, Object> model = new HashMap<>();
 
         model.put("tableName", tableName);
         model.put("key", pk.getColumnInfo().getName());
         model.put("query", query);
+
         final String whereSql = whereTemplate.render(model);
 
-        result = executeInCurrentConnection(new ExecuteConnectionWithResult<List<T>>() {
-            @Override
-            public List<T> execute(Connection connection) throws SQLException {
-                List<T> result = new ArrayList<>();
-                PreparedStatement statement = null;
-
-                try {
-                    statement = connection.prepareStatement(whereSql);
-                    int index = 1;
-
-                    for (Object param : params) {
-                        StatementHelper.setStatementParameter(statement, index++, param);
-                    }
-
-                    ResultSet rs = statement.executeQuery();
-
-                    while (rs.next()) {
-                        Long id = rs.getLong(1);
-
-                        result.add((T) Persister.find(cls, id));
-                    }
-
-                    return result;
-                } finally {
-                    if (statement != null) {
-                        statement.close();
-                    }
-                }
-            }
-        });
+        result = execute(new ExecuteSelect<M>(this, whereSql, params));
 
         return result;
     }
 
-    public <T> List<T> selectWhere(int from, int max, String query, final Object[] params) {
-        List<T> result;
-        SimpleTemplate whereTemplate = DdlMapping.get().getQueryTemplate(DdlMapping.QueryTemplates.SELECT_WHERE_PAGED);
+    public List<M> selectWhere(int from, int max, String query, final Object[] params) {
+        List<M> result;
+        SimpleTemplate whereTemplate = ddlMapping.getQueryTemplate(DdlMapping.QueryTemplates.SELECT_WHERE_PAGED);
 
         Map<String, Object> model = new HashMap<>();
 
@@ -498,43 +481,14 @@ public class MetaData<M> {
 
         final String whereSql = whereTemplate.render(model);
 
-        result = executeInCurrentConnection(new ExecuteConnectionWithResult<List<T>>() {
-            @Override
-            public List<T> execute(Connection connection) throws SQLException {
-                List<T> result = new ArrayList<>();
-                PreparedStatement statement = null;
-
-                try {
-                    statement = connection.prepareStatement(whereSql);
-                    int index = 1;
-
-                    for (Object param : params) {
-                        StatementHelper.setStatementParameter(statement, index++, param);
-                    }
-
-                    ResultSet rs = statement.executeQuery();
-
-                    while (rs.next()) {
-                        Long id = rs.getLong(1);
-
-                        result.add((T) Persister.find(cls, id));
-                    }
-
-                    return result;
-                } finally {
-                    if (statement != null) {
-                        statement.close();
-                    }
-                }
-            }
-        });
+        result = execute(new ExecuteSelect<M>(this, whereSql, params));
 
         return result;
     }
 
     public int selectCount(String query, final Object[] params) {
         Integer result;
-        SimpleTemplate whereTemplate = DdlMapping.get().getQueryTemplate(DdlMapping.QueryTemplates.SELECT_WHERE);
+        SimpleTemplate whereTemplate = ddlMapping.getQueryTemplate(DdlMapping.QueryTemplates.SELECT_WHERE);
 
         Map<String, Object> model = new HashMap<>();
 
@@ -543,7 +497,7 @@ public class MetaData<M> {
         model.put("query", query);
         final String whereSql = whereTemplate.render(model);
 
-        result = executeInCurrentConnection(new ExecuteConnectionWithResult<Integer>() {
+        result = execute(new ExecuteConnectionWithResult<Integer>() {
             @Override
             public Integer execute(Connection connection) throws SQLException {
                 Integer result = 0;
@@ -575,9 +529,9 @@ public class MetaData<M> {
         return result;
     }
 
-    public <T> T findWhere(String query, final Object[] params) {
-        List<T> results = selectWhere(query, params);
-        T result = null;
+    public M findWhere(String query, final Object[] params) {
+        List<M> results = selectWhere(query, params);
+        M result = null;
 
         if (results.size() == 1) {
             result = results.get(0);
@@ -588,55 +542,29 @@ public class MetaData<M> {
         return result;
     }
 
-    private void executeInNewConnection(ExecuteConnection es) {
+    private <T> T execute(ExecuteConnectionWithResult<T> es) {
         Connection connection = null;
+        boolean close = false;
 
         try {
-            connection = Persister.getNewConnection();
+            if (db.transactionActive()) {
+                connection = db.getConnection();
+            } else {
+                connection = db.getNewConnection();
+                close = true;
+            }
 
-            es.execute(connection);
+            return es.execute(connection);
         } catch (SQLException e) {
             throw new IllegalStateException(e);
         } finally {
-            if (connection != null) {
+            if (close && connection != null) {
                 try {
                     connection.close();
                 } catch (SQLException e) {
                     throw new IllegalStateException(e);
                 }
             }
-        }
-    }
-
-    private <T> T executeInNewConnection(ExecuteConnectionWithResult<T> es) {
-        Connection connection = null;
-
-        try {
-            connection = Persister.getNewConnection();
-
-            return es.execute(connection);
-        } catch (SQLException e) {
-            throw new IllegalStateException(e);
-        } finally {
-            if (connection != null) {
-                try {
-                    connection.close();
-                } catch (SQLException e) {
-                    throw new IllegalStateException(e);
-                }
-            }
-        }
-    }
-
-    private <T> T executeInCurrentConnection(ExecuteConnectionWithResult<T> es) {
-        Connection connection;
-
-        try {
-            connection = Persister.getConnection();
-
-            return es.execute(connection);
-        } catch (SQLException e) {
-            throw new IllegalStateException(e);
         }
     }
 

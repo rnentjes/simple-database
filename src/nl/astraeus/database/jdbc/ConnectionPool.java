@@ -1,26 +1,23 @@
 package nl.astraeus.database.jdbc;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.sql.Connection;
+import java.sql.SQLException;
 import java.util.LinkedList;
 import java.util.List;
+
+import nl.astraeus.database.DdlMapping;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Date: 11/15/13
  * Time: 9:44 PM
  */
-public class ConnectionPool {
+public class ConnectionPool extends ConnectionProvider {
     private final static Logger logger = LoggerFactory.getLogger(ConnectionPool.class);
 
-    private static ConnectionPool instance = new ConnectionPool();
-
-    public static ConnectionPool get() {
-        return instance;
-    }
-
-    private ConnectionProvider connectionProvider = null;
+    private ConnectionProvider connectionProvider;
 
     private List<ConnectionWrapper> connectionPool = new LinkedList<>();
     private List<ConnectionWrapper> usedPool = new LinkedList<>();
@@ -28,30 +25,35 @@ public class ConnectionPool {
     private int minimumNumberOfConnections = 0;
     private int maximumNumberOfConnections = 20;
 
-    public ConnectionPool() {
-    }
-
-    public synchronized void setConnectionProvider(ConnectionProvider connectionProvider) {
+    public ConnectionPool(ConnectionProvider connectionProvider) {
         this.connectionProvider = connectionProvider;
 
-        for (ConnectionWrapper conn : connectionPool) {
-            conn.dispose();
+        try {
+            for (int index = 0; index < minimumNumberOfConnections; index++) {
+                ConnectionWrapper wrapper = new ConnectionWrapper(this, connectionProvider.getConnection());
+                connectionPool.add(wrapper);
+            }
+        } catch(SQLException | ClassNotFoundException e) {
+            throw new IllegalStateException(e);
         }
+    }
 
-        connectionPool.clear();
-
-        for (int index = 0; index < minimumNumberOfConnections; index++) {
-            ConnectionWrapper wrapper = new ConnectionWrapper(this, connectionProvider.getConnection());
-            connectionPool.add(wrapper);
-        }
+    @Override
+    public DdlMapping.DatabaseDefinition getDefinition() {
+        return connectionProvider.getDefinition();
     }
 
     public synchronized Connection getConnection() {
         if (connectionPool.isEmpty() && usedPool.size() < maximumNumberOfConnections) {
-            ConnectionWrapper wrapper = new ConnectionWrapper(this, connectionProvider.getConnection());
+            try {
+                ConnectionWrapper wrapper = new ConnectionWrapper(this, connectionProvider.getConnection());
 
-            usedPool.add(wrapper);
-            return wrapper;
+                usedPool.add(wrapper);
+
+                return wrapper;
+            } catch(SQLException | ClassNotFoundException e) {
+                throw new IllegalStateException(e);
+            }
         }
 
         while(connectionPool.isEmpty()) {
@@ -68,7 +70,7 @@ public class ConnectionPool {
         return result;
     }
 
-    protected synchronized void returnConnection(ConnectionWrapper connection) {
+    synchronized void returnConnection(ConnectionWrapper connection) {
         if (usedPool.contains(connection)) {
             usedPool.remove(connection);
             connectionPool.add(connection);
@@ -79,11 +81,15 @@ public class ConnectionPool {
         }
     }
 
-    public boolean hasConnectionProvider() {
-        return connectionProvider != null;
-    }
+    public synchronized void dispose() {
+        if (!usedPool.isEmpty()) {
+            logger.warn("There are still connections being used while ConnectionPool is being disposed!");
+        }
 
-    public synchronized void clear() {
+        for (ConnectionWrapper wrapper : connectionPool) {
+            wrapper.dispose();
+        }
+
         connectionPool.clear();
         usedPool.clear();
     }

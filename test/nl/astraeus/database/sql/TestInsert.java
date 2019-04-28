@@ -1,28 +1,27 @@
 package nl.astraeus.database.sql;
 
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import nl.astraeus.template.EscapeMode;
 import nl.astraeus.template.SimpleTemplate;
 import nl.astraeus.util.Util;
-import org.junit.Ignore;
 
-import java.io.IOException;
-import java.util.*;
+import org.junit.Assert;
+import org.junit.Test;
 
 /**
  * Date: 11/14/13
  * Time: 9:29 PM
  */
-@Ignore
 public class TestInsert {
 
-    public static void main (String [] args) throws IOException {
-        TestInsert tct = new TestInsert();
-
-        tct.test();
-    }
-
-    public void test() throws IOException {
-        String ct = Util.readAsString(getClass().getResourceAsStream("insert.sql"));
+    @Test
+    public void testInsert() throws IOException {
+        String ct = Util.readAsString(getClass().getResourceAsStream("def/insert.sql"));
 
         SimpleTemplate template = new SimpleTemplate("${", "}", EscapeMode.NONE, ct);
 
@@ -36,7 +35,9 @@ public class TestInsert {
         model.put("tableName", "person");
         model.put("columns", columns);
 
-        System.out.println(template.render(model));
+        Assert.assertEquals("insert into person\n" +
+                "  (name, age) values\n" +
+                "  (?, ?)\n", template.render(model));
     }
 
 }

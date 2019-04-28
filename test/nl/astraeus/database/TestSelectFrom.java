@@ -1,41 +1,37 @@
 package nl.astraeus.database;
 
-import nl.astraeus.database.test.model.Person;
-import org.junit.Ignore;
-
 import java.util.List;
+
+import nl.astraeus.database.test.model.Person;
+
+import org.junit.Assert;
+import org.junit.BeforeClass;
+import org.junit.Ignore;
+import org.junit.Test;
 
 /**
  * Date: 11/16/13
  * Time: 12:27 AM
  */
 @Ignore
-public class TestSelectFrom {
+public class TestSelectFrom extends BaseTest {
 
-    public static void main(String [] args) {
-        DdlMapping.get().setExecuteDDLUpdates(true);
+    @BeforeClass
+    public static void createDatabase() {
+        BaseTest.createDatabase("jdbc:h2:mem:TestSelectFrom");
+    }
 
-        Persister.begin();
+    @Test
+    public void testSelectFrom() {
+        createPersons();
 
-        Persister.insert(new Person("Rien", 40, "Rozendael"));
-        Persister.insert(new Person("Jan", 32, "Straat"));
-        Persister.insert(new Person("Ronald", 32, "Wherever"));
-        Persister.insert(new Person("Piet", 26, "Weg"));
-        Persister.insert(new Person("Klaas", 10, "Pad"));
+        List<Person> persons = personDao.from("where age > ?", 30);
 
-        Persister.commit();
+        Assert.assertEquals(3, persons.size());
 
-        List<Person> persons = Persister.selectFrom(Person.class, "where age > ?", 30);
+        persons = personDao.where("name like ?", "R%");
 
-        for (Person person : persons) {
-            System.out.println("age > 30 Found: "+person.getName());
-        }
-
-        persons = Persister.selectWhere(Person.class, "name like ?", "R%");
-
-        for (Person person : persons) {
-            System.out.println("name = 'R%' Found: "+person.getName());
-        }
+        Assert.assertEquals(2, persons.size());
     }
 
 }

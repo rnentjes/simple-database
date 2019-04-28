@@ -6,14 +6,11 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * User: rnentjes
  * Date: 11/13/13
- * Time: 4:13 PM
+ * Time: 10:03 PM
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target( { ElementType.FIELD } )
-public @interface Column {
-
-    String name() default "";
+public @interface Clob {
 
 }

@@ -1,6 +1,11 @@
 package nl.astraeus.database.test.model;
 
-import nl.astraeus.database.annotations.*;
+import nl.astraeus.database.annotations.Cache;
+import nl.astraeus.database.annotations.Clob;
+import nl.astraeus.database.annotations.Default;
+import nl.astraeus.database.annotations.Id;
+import nl.astraeus.database.annotations.Length;
+import nl.astraeus.database.annotations.Table;
 import org.junit.Ignore;
 
 /**
@@ -27,6 +32,7 @@ public class Person {
 
     private Company company;
 
+    @Clob
     private String newColumnTest;
 
     // needed for retrieval from db
@@ -74,5 +80,13 @@ public class Person {
 
     public void setCompany(Company company) {
         this.company = company;
+    }
+
+    public String getNewColumnTest() {
+        return newColumnTest;
+    }
+
+    public void setNewColumnTest(String newColumnTest) {
+        this.newColumnTest = newColumnTest;
     }
 }

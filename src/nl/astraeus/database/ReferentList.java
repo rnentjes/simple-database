@@ -1,6 +1,13 @@
 package nl.astraeus.database;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.ListIterator;
+import java.util.Map;
 
 /**
  * Date: 11/16/13
@@ -10,10 +17,10 @@ public class ReferentList<M> implements List<M> {
 
     private Class<M> cls;
     private List<Long> idList = new ArrayList<>();
-    private MetaData meta;
+    private MetaData<M> meta;
     private Map<Long, M> incoming;
 
-    public ReferentList(Class<M> cls, MetaData meta) {
+    public ReferentList(Class<M> cls, MetaData<M> meta) {
         this.cls = cls;
         this.meta = meta;
     }
@@ -59,7 +66,7 @@ public class ReferentList<M> implements List<M> {
                 while (next == null && it.hasNext()) {
                     Long id = it.next();
 
-                    next = (M) Persister.find(cls, id);
+                    next = meta.find(id);
                 }
 
                 return (next != null);
@@ -76,7 +83,7 @@ public class ReferentList<M> implements List<M> {
                     next = getIncoming().get(nextId);
 
                     if (next == null) {
-                        next = (M) Persister.find(cls, nextId);
+                        next = meta.find(nextId);
                     }
                 }
 
@@ -171,7 +178,7 @@ public class ReferentList<M> implements List<M> {
         M result = getIncoming().get(id);
 
         if (result == null) {
-            result = (M) Persister.find(cls, id);
+            result = meta.find(id);
         }
 
         return result;
@@ -199,7 +206,7 @@ public class ReferentList<M> implements List<M> {
         M result = getIncoming().get(id);
 
         if (result == null) {
-            result = (M) Persister.find(cls, id);
+            result = meta.find(id);
         }
 
         return result;

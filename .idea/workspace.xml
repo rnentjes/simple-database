@@ -1,15 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="17f8d10d-4c97-4aa9-b7ad-cdd73e5a615c" name="Default" comment="Remove jitpack refs">
-      <change beforePath="$PROJECT_DIR$/.idea/libraries/Gradle__com_github_User_Repo_Tag.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/libraries/Gradle__com_h2database_h2_1_4_193.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/libraries/Gradle__org_slf4j_slf4j_simple_1_7_21.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/modules/simple-database_main.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/modules/simple-database_main.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/modules/simple-database_test.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/modules/simple-database_test.iml" afterDir="false" />
+    <list default="true" id="17f8d10d-4c97-4aa9-b7ad-cdd73e5a615c" name="Default" comment="Update version">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/build.gradle" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/settings.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/settings.gradle" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/.gradle/" />
     <ignored path="$PROJECT_DIR$/build/" />
@@ -134,8 +128,8 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/build.gradle">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="510">
-              <caret line="55" selection-start-line="38" selection-end-line="56" />
+            <state relative-caret-position="17">
+              <caret line="1" column="23" selection-start-line="1" selection-start-column="23" selection-end-line="1" selection-end-column="23" />
             </state>
           </provider>
         </entry>
@@ -228,6 +222,17 @@
             <path>
               <item name="simple-database" type="b2602c69:ProjectViewProjectNode" />
               <item name="SimpleDatabase" type="8a07ba80:GradleTreeStructureProvider$GradleModuleDirectoryNode" />
+            </path>
+            <path>
+              <item name="simple-database" type="b2602c69:ProjectViewProjectNode" />
+              <item name="SimpleDatabase" type="8a07ba80:GradleTreeStructureProvider$GradleModuleDirectoryNode" />
+              <item name="build" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="simple-database" type="b2602c69:ProjectViewProjectNode" />
+              <item name="SimpleDatabase" type="8a07ba80:GradleTreeStructureProvider$GradleModuleDirectoryNode" />
+              <item name="build" type="462c0819:PsiDirectoryNode" />
+              <item name="libs" type="462c0819:PsiDirectoryNode" />
             </path>
           </expand>
           <select />
@@ -624,7 +629,7 @@
       <workItem from="1546616098070" duration="2768000" />
       <workItem from="1556457918972" duration="449000" />
       <workItem from="1556460072923" duration="259000" />
-      <workItem from="1556460565953" duration="2519000" />
+      <workItem from="1556460565953" duration="3473000" />
     </task>
     <task id="LOCAL-00001" summary="Intellij settings">
       <created>1445189967799</created>
@@ -815,7 +820,21 @@
       <option name="project" value="LOCAL" />
       <updated>1556460716868</updated>
     </task>
-    <option name="localTasksCounter" value="28" />
+    <task id="LOCAL-00028" summary="Test jitpack">
+      <created>1556479920588</created>
+      <option name="number" value="00028" />
+      <option name="presentableId" value="LOCAL-00028" />
+      <option name="project" value="LOCAL" />
+      <updated>1556479920588</updated>
+    </task>
+    <task id="LOCAL-00029" summary="Update version">
+      <created>1556479951198</created>
+      <option name="number" value="00029" />
+      <option name="presentableId" value="LOCAL-00029" />
+      <option name="project" value="LOCAL" />
+      <updated>1556479951198</updated>
+    </task>
+    <option name="localTasksCounter" value="30" />
     <servers />
   </component>
   <component name="TestHistory">
@@ -851,7 +870,7 @@
     </history-entry>
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="38495000" />
+    <option name="totallyTimeSpent" value="39449000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -949,7 +968,9 @@
     <MESSAGE value="Remove workspace" />
     <MESSAGE value="Added Clob for String fields" />
     <MESSAGE value="Remove jitpack refs" />
-    <option name="LAST_COMMIT_MESSAGE" value="Remove jitpack refs" />
+    <MESSAGE value="Test jitpack" />
+    <MESSAGE value="Update version" />
+    <option name="LAST_COMMIT_MESSAGE" value="Update version" />
   </component>
   <component name="antWorkspaceConfiguration">
     <option name="IS_AUTOSCROLL_TO_SOURCE" value="false" />
@@ -1290,8 +1311,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/build.gradle">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="510">
-          <caret line="55" selection-start-line="38" selection-end-line="56" />
+        <state relative-caret-position="17">
+          <caret line="1" column="23" selection-start-line="1" selection-start-column="23" selection-end-line="1" selection-end-column="23" />
         </state>
       </provider>
     </entry>

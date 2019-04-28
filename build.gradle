@@ -1,5 +1,5 @@
 group 'nl.astraeus'
-version '2.0.5'
+version '2.0.6-SNAPSHOT'
 
 apply plugin: 'java'
 apply plugin: 'idea'
@@ -36,12 +36,7 @@ dependencies {
     compile "org.slf4j:slf4j-api:1.7.21"
 }
 
-/*
 uploadArchives {
-    onlyIf {
-        project.hasProperty(nexusUserName) && project.hasProperty(nexusPassword)
-    }
-    
     repositories {
         mavenDeployer {
             repository(url: "http://nexus.astraeus.nl/nexus/content/repositories/releases") {
@@ -53,7 +48,6 @@ uploadArchives {
         }
     }
 }
-*/
 
 findbugs {
     ignoreFailures = true

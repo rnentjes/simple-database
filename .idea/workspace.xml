@@ -1,22 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="17f8d10d-4c97-4aa9-b7ad-cdd73e5a615c" name="Default" comment="Added Clob for String fields">
-      <change afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__com_github_User_Repo_Tag.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__com_h2database_h2_1_4_199.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/hotswap_agent.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/hotswap_agent.xml" afterDir="false" />
+    <list default="true" id="17f8d10d-4c97-4aa9-b7ad-cdd73e5a615c" name="Default" comment="Remove jitpack refs">
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/Gradle__com_github_User_Repo_Tag.xml" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/libraries/Gradle__com_h2database_h2_1_4_193.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/libraries/Gradle__com_h2database_h2_1_4_196.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/libraries/Gradle__nl_astraeus_jdbc_simple_jdbc_stats_1_5_3.xml" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/libraries/Gradle__org_slf4j_slf4j_simple_1_7_21.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/modules.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/modules/simple-database.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/modules/simple-database.iml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/modules/simple-database_main.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/modules/simple-database_main.iml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/modules/simple-database_test.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/modules/simple-database_test.iml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/build.gradle" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/gradle/wrapper/gradle-wrapper.properties" beforeDir="false" afterPath="$PROJECT_DIR$/gradle/wrapper/gradle-wrapper.properties" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/settings.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/settings.gradle" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/.gradle/" />
     <ignored path="$PROJECT_DIR$/build/" />
@@ -46,8 +39,7 @@
     <option name="AUTO_SCROLL_FROM_SOURCE" value="false" />
   </component>
   <component name="DefaultGradleProjectSettings">
-    <option name="testRunner" value="GRADLE" />
-    <option name="delegatedBuild" value="true" />
+    <option name="isMigrated" value="true" />
   </component>
   <component name="ExternalProjectsData">
     <projectState path="$PROJECT_DIR$">
@@ -107,7 +99,25 @@
                 <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
                 <item name="simple-database" type="f1a62948:ProjectNode" />
                 <item name="Tasks" type="e4a08cd1:TasksNode" />
+                <item name="build" type="c8890929:TasksNode$1" />
+              </path>
+              <path>
+                <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
+                <item name="simple-database" type="f1a62948:ProjectNode" />
+                <item name="Tasks" type="e4a08cd1:TasksNode" />
                 <item name="other" type="c8890929:TasksNode$1" />
+              </path>
+              <path>
+                <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
+                <item name="simple-database" type="f1a62948:ProjectNode" />
+                <item name="Tasks" type="e4a08cd1:TasksNode" />
+                <item name="publishing" type="c8890929:TasksNode$1" />
+              </path>
+              <path>
+                <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
+                <item name="simple-database" type="f1a62948:ProjectNode" />
+                <item name="Tasks" type="e4a08cd1:TasksNode" />
+                <item name="upload" type="c8890929:TasksNode$1" />
               </path>
             </expand>
             <select />
@@ -124,8 +134,8 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/build.gradle">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="595">
-              <caret line="35" column="4" selection-start-line="35" selection-start-column="4" selection-end-line="35" selection-end-column="4" />
+            <state relative-caret-position="510">
+              <caret line="55" selection-start-line="38" selection-end-line="56" />
             </state>
           </provider>
         </entry>
@@ -189,8 +199,10 @@
         <option value="$PROJECT_DIR$/test/nl/astraeus/database/test/model/Person.java" />
         <option value="$PROJECT_DIR$/test/nl/astraeus/database/TestInsert.java" />
         <option value="$PROJECT_DIR$/src/nl/astraeus/database/FieldMetaData.java" />
-        <option value="$PROJECT_DIR$/build.gradle" />
         <option value="$PROJECT_DIR$/gradle/wrapper/gradle-wrapper.properties" />
+        <option value="$PROJECT_DIR$/local.properties" />
+        <option value="$PROJECT_DIR$/settings.gradle" />
+        <option value="$PROJECT_DIR$/build.gradle" />
       </list>
     </option>
   </component>
@@ -216,17 +228,6 @@
             <path>
               <item name="simple-database" type="b2602c69:ProjectViewProjectNode" />
               <item name="SimpleDatabase" type="8a07ba80:GradleTreeStructureProvider$GradleModuleDirectoryNode" />
-            </path>
-            <path>
-              <item name="simple-database" type="b2602c69:ProjectViewProjectNode" />
-              <item name="SimpleDatabase" type="8a07ba80:GradleTreeStructureProvider$GradleModuleDirectoryNode" />
-              <item name="gradle" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="simple-database" type="b2602c69:ProjectViewProjectNode" />
-              <item name="SimpleDatabase" type="8a07ba80:GradleTreeStructureProvider$GradleModuleDirectoryNode" />
-              <item name="gradle" type="462c0819:PsiDirectoryNode" />
-              <item name="wrapper" type="462c0819:PsiDirectoryNode" />
             </path>
           </expand>
           <select />
@@ -274,7 +275,7 @@
       </list>
     </option>
   </component>
-  <component name="RunManager" selected="Gradle.SimpleDatabase [build]">
+  <component name="RunManager" selected="Gradle.SimpleDatabase [uploadArchives]">
     <configuration default="true" type="AndroidRunConfigurationType" factoryName="Android App">
       <module name="" />
       <option name="DEPLOY" value="true" />
@@ -623,6 +624,7 @@
       <workItem from="1546616098070" duration="2768000" />
       <workItem from="1556457918972" duration="449000" />
       <workItem from="1556460072923" duration="259000" />
+      <workItem from="1556460565953" duration="2519000" />
     </task>
     <task id="LOCAL-00001" summary="Intellij settings">
       <created>1445189967799</created>
@@ -806,7 +808,14 @@
       <option name="project" value="LOCAL" />
       <updated>1520104705688</updated>
     </task>
-    <option name="localTasksCounter" value="27" />
+    <task id="LOCAL-00027" summary="Remove jitpack refs">
+      <created>1556460716868</created>
+      <option name="number" value="00027" />
+      <option name="presentableId" value="LOCAL-00027" />
+      <option name="project" value="LOCAL" />
+      <updated>1556460716868</updated>
+    </task>
+    <option name="localTasksCounter" value="28" />
     <servers />
   </component>
   <component name="TestHistory">
@@ -842,7 +851,7 @@
     </history-entry>
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="35976000" />
+    <option name="totallyTimeSpent" value="38495000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -856,7 +865,7 @@
   <component name="ToolWindowManager">
     <frame x="2637" y="0" width="1843" height="1399" extended-state="0" />
     <layout>
-      <window_info active="true" id="Project" order="0" visible="true" weight="0.19665737" />
+      <window_info active="true" id="Project" order="0" visible="true" weight="0.20501393" />
       <window_info id="Structure" order="1" weight="0.24982053" />
       <window_info id="Image Layers" order="2" />
       <window_info id="UI Designer" order="3" />
@@ -866,15 +875,15 @@
       <window_info id="Capture Tool" order="7" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" weight="0.52086675" />
-      <window_info anchor="bottom" id="Run" order="2" visible="true" weight="0.37720707" />
+      <window_info anchor="bottom" id="Run" order="2" visible="true" weight="0.2905297" />
       <window_info anchor="bottom" id="Debug" order="3" weight="0.3180272" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
       <window_info anchor="bottom" id="TODO" order="6" />
       <window_info anchor="bottom" id="Build" order="7" weight="0.32985553" />
-      <window_info anchor="bottom" id="Terminal" order="8" sideWeight="0.4940429" weight="0.2375602" />
+      <window_info anchor="bottom" id="Terminal" order="8" sideWeight="0.4940429" weight="0.40770465" />
       <window_info anchor="bottom" id="Event Log" order="9" sideWeight="0.5059571" side_tool="true" weight="0.2723112" />
-      <window_info anchor="bottom" id="Version Control" order="10" weight="0.43017656" />
+      <window_info anchor="bottom" id="Version Control" order="10" weight="0.4012841" />
       <window_info anchor="bottom" id="CheckStyle" order="11" />
       <window_info anchor="bottom" id="Statistic" order="12" />
       <window_info anchor="bottom" id="Messages" order="13" weight="0.28316328" />
@@ -939,41 +948,14 @@
     <MESSAGE value="Update readme" />
     <MESSAGE value="Remove workspace" />
     <MESSAGE value="Added Clob for String fields" />
-    <option name="LAST_COMMIT_MESSAGE" value="Added Clob for String fields" />
+    <MESSAGE value="Remove jitpack refs" />
+    <option name="LAST_COMMIT_MESSAGE" value="Remove jitpack refs" />
   </component>
   <component name="antWorkspaceConfiguration">
     <option name="IS_AUTOSCROLL_TO_SOURCE" value="false" />
     <option name="FILTER_TARGETS" value="false" />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/src/nl/astraeus/database/util/ReferenceGenerator.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="144">
-          <caret line="8" column="13" selection-start-line="8" selection-start-column="13" selection-end-line="8" selection-end-column="13" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/nl/astraeus/database/ColumnInfo.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="108">
-          <caret line="6" column="18" selection-start-line="6" selection-start-column="18" selection-end-line="6" selection-end-column="18" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/nl/astraeus/database/ColumnMetaData.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="126">
-          <caret line="7" column="22" lean-forward="true" selection-start-line="7" selection-start-column="22" selection-end-line="7" selection-end-column="22" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/test/nl/astraeus/database/TestSelectFrom.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="415">
-          <caret line="33" column="47" selection-start-line="30" selection-end-line="33" selection-end-column="47" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/test/nl/astraeus/database/example/Example.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="180">
@@ -1264,13 +1246,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/settings.gradle">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="17">
-          <caret line="1" lean-forward="true" selection-start-line="1" selection-end-line="1" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/gradle/wrapper/gradle-wrapper.properties">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="102">
@@ -1278,10 +1253,45 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$USER_HOME$/.gradle/wrapper/dists/gradle-4.10-all/54ye4nru8k2rpf7xwj15he4fo/gradle-4.10/src/core-api/org/gradle/api/PolymorphicDomainObjectContainer.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="204">
+          <caret line="27" column="17" selection-start-line="27" selection-start-column="17" selection-end-line="27" selection-end-column="17" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$USER_HOME$/.gradle/wrapper/dists/gradle-4.10-all/54ye4nru8k2rpf7xwj15he4fo/gradle-4.10/src/core-api/org/gradle/api/artifacts/repositories/AuthenticationContainer.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="170">
+          <caret line="26" column="72" lean-forward="true" selection-start-line="26" selection-start-column="72" selection-end-line="26" selection-end-column="72" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$USER_HOME$/.gradle/wrapper/dists/gradle-4.10-all/54ye4nru8k2rpf7xwj15he4fo/gradle-4.10/src/core-api/org/gradle/api/artifacts/repositories/AuthenticationSupported.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="588">
+          <caret line="133" column="20" selection-start-line="133" selection-start-column="20" selection-end-line="133" selection-end-column="20" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/settings.gradle">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="17">
+          <caret line="1" column="41" selection-start-line="1" selection-start-column="41" selection-end-line="1" selection-end-column="41" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/local.properties">
+      <provider selected="true" editor-type-id="text-editor">
+        <state>
+          <caret column="13" selection-end-column="13" />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/build.gradle">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="595">
-          <caret line="35" column="4" selection-start-line="35" selection-start-column="4" selection-end-line="35" selection-end-column="4" />
+        <state relative-caret-position="510">
+          <caret line="55" selection-start-line="38" selection-end-line="56" />
         </state>
       </provider>
     </entry>

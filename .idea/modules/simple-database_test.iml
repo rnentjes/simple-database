@@ -8,16 +8,16 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="library" name="Gradle: com.github.User:Repo:Tag" level="project" />
+    <orderEntry type="module" module-name="simple-database_main" />
+    <orderEntry type="library" name="Gradle: nl.astraeus:very-simple-templates:1.4" level="project" />
     <orderEntry type="library" name="Gradle: org.slf4j:slf4j-simple:1.7.23" level="project" />
+    <orderEntry type="library" name="Gradle: nl.astraeus:simple-jdbc-stats:1.6.0" level="project" />
+    <orderEntry type="library" name="Gradle: nl.astraeus.web:simple-web:0.3" level="project" />
     <orderEntry type="library" name="Gradle: org.slf4j:slf4j-api:1.7.23" level="project" />
+    <orderEntry type="library" name="Gradle: junit:junit:4.11" level="project" />
+    <orderEntry type="library" name="Gradle: com.h2database:h2:1.4.199" level="project" />
     <orderEntry type="library" name="Gradle: org.hamcrest:hamcrest-core:1.3" level="project" />
     <orderEntry type="library" name="Gradle: nl.astraeus.template:very-simple-templates:1.3" level="project" />
-    <orderEntry type="library" name="Gradle: nl.astraeus.web:simple-web:0.3" level="project" />
-    <orderEntry type="library" name="Gradle: nl.astraeus:simple-jdbc-stats:1.6.0" level="project" />
-    <orderEntry type="library" name="Gradle: nl.astraeus:very-simple-templates:1.4" level="project" />
-    <orderEntry type="library" name="Gradle: com.h2database:h2:1.4.199" level="project" />
-    <orderEntry type="library" name="Gradle: junit:junit:4.11" level="project" />
   </component>
   <component name="TestModuleProperties" production-module="simple-database_main" />
 </module>

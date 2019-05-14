@@ -38,12 +38,10 @@ public class ObjectPersister<T> {
         Long id = metaData.getId(object);
 
         if (id != null && id > 0) {
-            metaData.update(object);
+            update(object);
         } else {
-            metaData.insert(object);
+            insert(object);
         }
-
-        cache.set((Class<Object>) object.getClass(), id, object);
     }
 
     public void delete(T object) {
@@ -54,7 +52,7 @@ public class ObjectPersister<T> {
     }
 
     public T find(long id) {
-        T result = (T) metaData.find(id);
+        T result = metaData.find(id);
 
         cache.set(cls, id, result);
 

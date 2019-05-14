@@ -88,7 +88,7 @@ public class TestMultipleDatabase {
 
         persons = firstDao.where("age > ?", 32);
 
-        Assert.assertEquals(persons.size(), 2);
+        Assert.assertEquals(persons.size(), 1);
 
         persons = secondDao.where("age > ?", 32);
 
